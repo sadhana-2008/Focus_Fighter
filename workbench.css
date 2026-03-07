@@ -1,0 +1,28 @@
+/* VS Code Workbench Background User Style */
+body {
+    /* Set external GIF as the background for the entire editor workbench */
+    background-image: url('bg_gif.gif') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    /* Ensure the background is fixed and doesn't scroll with the text */
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+}
+
+/* Ensure the main workbench is transparent so the body's background shows through */
+.monaco-workbench {
+    background-color: transparent !important;
+}
+
+/* Set the opacity of the main editor groups to around 0.8 so background is visible behind code */
+.monaco-workbench .part.editor {
+    background-color: rgba(30, 30, 30, 0.8) !important;
+    opacity: 0.8 !important;
+}
+
+/* Ensure the editor text area does not hide the background */
+.monaco-editor,
+.monaco-editor-background,
+.monaco-editor .margin {
+    background-color: transparent !important;
+}
