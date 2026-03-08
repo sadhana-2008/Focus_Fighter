@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus Fighter Lobby</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* Base Reset */
         body,
@@ -118,6 +128,121 @@
         <button class="cinematic-btn main-btn" onclick="alert('Create Lobby clicked!')">Create Lobby</button>
         <button class="cinematic-btn main-btn" onclick="alert('Join Lobby clicked!')">Join Lobby</button>
     </div>
+
+    <!-- Character Selection Overlay (GSAP + Tailwind) -->
+    <div id="profile-overlay" class="fixed inset-0 z-50 hidden">
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 w-full h-full" style="background: url('/static/staticpurple_bg.jpg') no-repeat center center; 
+                    background-size: cover; 
+                    backdrop-filter: blur(12px) brightness(0.3); 
+                    -webkit-backdrop-filter: blur(12px) brightness(0.3);">
+        </div>
+
+        <!-- Header Controls -->
+        <div class="absolute top-0 w-full flex justify-between p-8 z-10">
+            <input type="text" placeholder="GAMER TAG"
+                class="bg-transparent border-b-2 border-white text-white outline-none px-2 py-1 w-64"
+                style="font-family: 'Press Start 2P', monospace;">
+            <div class="flex gap-6">
+                <i class="ph ph-x-circle text-[36px] text-white hover:scale-110 transition-transform cursor-pointer"
+                    onclick="closeOverlay()"></i>
+                <i class="ph ph-check-circle text-[36px] text-white hover:scale-110 transition-transform cursor-pointer"
+                    onclick="closeOverlay()"></i>
+            </div>
+        </div>
+
+        <!-- Carousel -->
+        <div class="carousel-wrapper relative z-0 flex gap-16 overflow-x-auto h-full items-center px-[30vw]"
+            style="scroll-snap-type: x mandatory;">
+            <style>
+                .carousel-wrapper::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .carousel-wrapper {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            </style>
+
+            <script>
+                // Generate exactly 8 cards
+                for (let i = 1; i <= 8; i++) {
+                    document.write(`
+                        <div class="char-card w-[240px] h-[360px] shrink-0 relative flex flex-col items-center justify-end overflow-hidden cursor-pointer" 
+                             style="scroll-snap-align: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;">
+                            <img src="/static/characters/char${i}.png" class="absolute inset-0 w-full h-full object-contain pointer-events-none p-4 pb-16">
+                            <button class="select-btn absolute bottom-6 bg-black/60 border border-white text-white px-6 py-2 text-[10px] z-10 hover:bg-white hover:text-black transition-colors" style="font-family: 'Press Start 2P', monospace;">SELECT</button>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- GSAP Animations -->
+    <script>
+        const profileOverlay = document.getElementById('profile-overlay');
+        const profileBtn = document.querySelector('.profile-btn');
+
+        // Mount Animation
+        profileBtn.onclick = () => {
+            profileOverlay.classList.remove('hidden');
+            gsap.fromTo('.char-card',
+                { y: 40, opacity: 0 },
+                { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'back.out(1.5)', clearProps: 'transform,opacity' }
+            );
+        };
+
+        function closeOverlay() {
+            profileOverlay.classList.add('hidden');
+        }
+
+        // Hover & Click Logic
+        const cards = document.querySelectorAll('.char-card');
+
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (!card.classList.contains('selected-card')) {
+                    gsap.to(card, { scale: 1.08, duration: 0.3, ease: 'power2.out' });
+                    card.style.borderColor = '#bc13fe';
+                    card.style.boxShadow = '0 0 20px #bc13fe';
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('selected-card')) {
+                    gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' });
+                    card.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    card.style.boxShadow = 'none';
+                }
+            });
+
+            const selectBtn = card.querySelector('.select-btn');
+            selectBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // Clear others
+                cards.forEach(c => {
+                    c.classList.remove('selected-card');
+                    gsap.to(c, { scale: 1, duration: 0.3 });
+                    c.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    c.style.boxShadow = 'none';
+                });
+
+                // Set selected
+                card.classList.add('selected-card');
+                card.style.borderColor = '#bc13fe';
+                card.style.boxShadow = '0 0 20px #bc13fe';
+
+                // Click Bounce
+                gsap.fromTo(card,
+                    { scale: 0.95 },
+                    { scale: 1.08, ease: 'elastic.out(1, 0.4)', duration: 0.6 }
+                );
+            });
+        });
+    </script>
 </body>
 
 </html>
