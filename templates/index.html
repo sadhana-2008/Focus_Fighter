@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Fighter Lobby</title>
+    <style>
+        /* Base Reset */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* Prevent scrolling */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+        }
+
+        /* Full Screen Background GIF */
+        .bg-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background-color: #222;
+            /* Fallback color so at least it won't be pitch black */
+            background-image: url('/static/bg_gif.gif?v=2');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            opacity: 0.85;
+        }
+
+        /* Common Cinematic Button Styles */
+        .cinematic-btn {
+            background-color: rgba(20, 20, 20, 0.45);
+            /* Dark semi-transparent */
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            /* White borders */
+            border-radius: 8px;
+            /* Slightly rounded for modern look */
+            font-size: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            /* Strengthened Glassmorphism effect */
+            -webkit-backdrop-filter: blur(8px);
+            /* Safari support */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .cinematic-btn:hover {
+            background-color: rgba(60, 60, 60, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            transform: scale(1.05);
+            border-color: #ffffff;
+        }
+
+        .cinematic-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Center Layout for Main Buttons Using Flexbox */
+        .center-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            /* Symmetrical spacing */
+            z-index: 10;
+            pointer-events: none;
+            /* Let clicks pass through empty space */
+        }
+
+        /* Main Buttons Sizing */
+        .main-btn {
+            padding: 20px 40px;
+            min-width: 220px;
+            pointer-events: auto;
+            /* Re-enable clicks for buttons */
+        }
+
+        /* Top Right Profile Button */
+        .profile-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 10px 25px;
+            font-size: 16px;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="bg-gif"></div>
+
+    <!-- Top Right Corner -->
+    <button class="cinematic-btn profile-btn" onclick="alert('Profile clicked!')">Profile</button>
+
+    <!-- Center Screen -->
+    <div class="center-container">
+        <button class="cinematic-btn main-btn" onclick="alert('Create Lobby clicked!')">Create Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="alert('Join Lobby clicked!')">Join Lobby</button>
+    </div>
+</body>
+
+</html>
