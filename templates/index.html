@@ -139,10 +139,14 @@
         </div>
 
         <!-- Header Controls -->
-        <div class="absolute top-0 w-full flex justify-between p-8 z-10">
+        <div class="absolute top-0 w-full flex justify-between p-8 z-10 items-center">
             <input type="text" placeholder="GAMER TAG"
-                class="bg-transparent border-b-2 border-white text-white outline-none px-2 py-1 w-64"
-                style="font-family: 'Press Start 2P', monospace;">
+                class="bg-transparent border-b-2 border-white text-white placeholder-[rgba(255,255,255,0.7)] outline-none px-2 py-1 w-64"
+                style="font-family: 'Press Start 2P', monospace; color: #FFFFFF;">
+
+            <h1 class="text-white text-center absolute left-1/2 -translate-x-1/2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
+                style="font-family: 'Press Start 2P', monospace;">CUSTOMIZE AVATAR</h1>
+
             <div class="flex gap-6">
                 <i class="ph ph-x-circle text-[36px] text-white hover:scale-110 transition-transform cursor-pointer"
                     onclick="closeOverlay()"></i>
@@ -172,7 +176,7 @@
                         <div class="char-card w-[240px] h-[360px] shrink-0 relative flex flex-col items-center justify-end overflow-hidden cursor-pointer" 
                              style="scroll-snap-align: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;">
                             <img src="/static/characters/char${i}.png" class="absolute inset-0 w-full h-full object-contain pointer-events-none p-4 pb-16">
-                            <button class="select-btn absolute bottom-6 bg-black/60 border border-white text-white px-6 py-2 text-[10px] z-10 hover:bg-white hover:text-black transition-colors" style="font-family: 'Press Start 2P', monospace;">SELECT</button>
+                            <span class="select-text absolute bottom-6 text-[10px] text-white/50 opacity-0 transition-opacity duration-300 pointer-events-none" style="font-family: 'Press Start 2P', monospace;">CLICK TO SELECT</span>
                         </div>
                     `);
                 }
@@ -205,8 +209,13 @@
             card.addEventListener('mouseenter', () => {
                 if (!card.classList.contains('selected-card')) {
                     gsap.to(card, { scale: 1.08, duration: 0.3, ease: 'power2.out' });
-                    card.style.borderColor = '#bc13fe';
-                    card.style.boxShadow = '0 0 20px #bc13fe';
+                    card.style.borderColor = 'rgb(255, 255, 255)';
+                    card.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.9)';
+                    const sText = card.querySelector('.select-text');
+                    if (sText) {
+                        sText.classList.remove('opacity-0', 'text-white/50');
+                        sText.classList.add('opacity-100', 'text-white');
+                    }
                 }
             });
 
@@ -215,11 +224,15 @@
                     gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' });
                     card.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                     card.style.boxShadow = 'none';
+                    const sText = card.querySelector('.select-text');
+                    if (sText) {
+                        sText.classList.remove('opacity-100', 'text-white');
+                        sText.classList.add('opacity-0', 'text-white/50');
+                    }
                 }
             });
 
-            const selectBtn = card.querySelector('.select-btn');
-            selectBtn.addEventListener('click', (e) => {
+            card.addEventListener('click', (e) => {
                 e.stopPropagation();
 
                 // Clear others
@@ -228,12 +241,24 @@
                     gsap.to(c, { scale: 1, duration: 0.3 });
                     c.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                     c.style.boxShadow = 'none';
+                    const cText = c.querySelector('.select-text');
+                    if (cText) {
+                        cText.innerText = 'CLICK TO SELECT';
+                        cText.classList.remove('opacity-100', 'text-white');
+                        cText.classList.add('opacity-0', 'text-white/50');
+                    }
                 });
 
                 // Set selected
                 card.classList.add('selected-card');
-                card.style.borderColor = '#bc13fe';
-                card.style.boxShadow = '0 0 20px #bc13fe';
+                card.style.borderColor = 'rgb(255, 255, 255)';
+                card.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.9)';
+                const sText = card.querySelector('.select-text');
+                if (sText) {
+                    sText.innerText = 'SELECTED';
+                    sText.classList.remove('opacity-0', 'text-white/50');
+                    sText.classList.add('opacity-100', 'text-white');
+                }
 
                 // Click Bounce
                 gsap.fromTo(card,
