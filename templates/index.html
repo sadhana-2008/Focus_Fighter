@@ -49,22 +49,18 @@
         /* Common Cinematic Button Styles */
         .cinematic-btn {
             background-color: rgba(20, 20, 20, 0.45);
-            /* Dark semi-transparent */
             color: #ffffff;
             border: 2px solid rgba(255, 255, 255, 0.8);
-            /* White borders */
             border-radius: 8px;
-            /* Slightly rounded for modern look */
-            font-size: 20px;
-            font-weight: 600;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            font-weight: 400;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(8px);
-            /* Strengthened Glassmorphism effect */
             -webkit-backdrop-filter: blur(8px);
-            /* Safari support */
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -73,6 +69,7 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
             transform: scale(1.05);
             border-color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
 
         .cinematic-btn:active {
@@ -90,18 +87,15 @@
             justify-content: center;
             align-items: center;
             gap: 40px;
-            /* Symmetrical spacing */
             z-index: 10;
             pointer-events: none;
-            /* Let clicks pass through empty space */
         }
 
         /* Main Buttons Sizing */
         .main-btn {
-            padding: 20px 40px;
+            padding: 16px 32px;
             min-width: 220px;
             pointer-events: auto;
-            /* Re-enable clicks for buttons */
         }
 
         /* Top Right Profile Button */
@@ -109,8 +103,8 @@
             position: absolute;
             top: 30px;
             right: 30px;
-            padding: 10px 25px;
-            font-size: 16px;
+            padding: 12px 20px;
+            font-size: 10px;
             z-index: 10;
         }
     </style>
