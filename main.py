@@ -9,6 +9,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/lobby')
+def lobby():
+    return render_template('lobby.html')
+
 if __name__ == '__main__':
     # Ensure static directory exists
     if not os.path.exists('static'):

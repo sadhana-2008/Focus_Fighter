@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Fighter Lobby</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        .bg-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background-image: url('/static/bg_gif.gif');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            opacity: 0.85;
+        }
+
+        .glass-box {
+            background: rgba(10, 25, 47, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+            border-radius: 12px;
+            /* Extra polish: subtle neon inner glow */
+            box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05);
+        }
+
+        .slot-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            height: 90px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slot {
+            width: 70px;
+            height: 90px;
+            font-size: 64px;
+            color: #00ffd2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            /* Add an inner background to each slot to look like a machine mechanism */
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Gradient mask for slots to fade out at top/bottom edges */
+        .slot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(10, 25, 47, 0.8) 0%, transparent 20%, transparent 80%, rgba(10, 25, 47, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        .slot-inner {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .char {
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .dash {
+            font-size: 64px;
+            color: #00ffd2;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            height: 90px;
+        }
+
+        .pulse-glow {
+            animation: textPulse 2s infinite alternate;
+        }
+
+        @keyframes textPulse {
+            0% {
+                text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.4);
+            }
+
+            100% {
+                text-shadow: 0 0 25px rgba(0, 255, 255, 1), 0 0 50px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        .player-card {
+            width: 80px;
+            height: 110px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .player-card.filled {
+            border-color: #00ffd2;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            background-color: rgba(0, 255, 255, 0.05);
+        }
+
+        .player-card.filled img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            transform: scale(1.2) translateY(5px);
+        }
+
+        .action-btn {
+            background: rgba(20, 20, 20, 0.6);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 14px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 10px;
+            transition: all 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .action-btn:hover {
+            border-color: #ffffff;
+            background: rgba(60, 60, 60, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .action-btn.neon-btn {
+            border-color: #00ffd2;
+            color: #00ffd2;
+            background: rgba(0, 255, 210, 0.05);
+            box-shadow: 0 0 15px rgba(0, 255, 210, 0.2);
+        }
+
+        .action-btn.neon-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 210, 0.6);
+            background: rgba(0, 255, 210, 0.15);
+            text-shadow: 0 0 8px rgba(0, 255, 210, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gif"></div>
+
+    <!-- Top Left Cancel Button -->
+    <button class="fixed top-8 left-8 action-btn z-50 text-[10px]" onclick="window.location.href='/'">
+        <i class="ph ph-arrow-left text-lg"></i> LEAVE LOBBY
+    </button>
+
+    <div class="relative z-10 w-full h-full flex flex-col items-center justify-center p-8">
+
+        <!-- Lottery Roll Box -->
+        <div class="glass-box px-16 py-12 mb-16 flex flex-col items-center">
+            <h2 class="text-[#00ffd2] text-[10px] mb-12 tracking-[4px]"
+                style="text-shadow: 0 0 8px rgba(0,255,255,0.4);">ROOM CODE GENERATED</h2>
+
+            <div class="slot-container" id="code-slots">
+                <!-- Slots will be generated by JS -->
+            </div>
+        </div>
+
+        <!-- Players Section -->
+        <div class="flex flex-col items-center">
+            <div class="text-white text-[10px] mb-8 tracking-[2px] opacity-80 text-shadow-sm">1 / 4 PLAYERS JOINED</div>
+            <div class="flex gap-8 mb-16">
+                <!-- Filled Slot (Current User) -->
+                <div class="player-card filled">
+                    <img src="/static/characters/char1.png" alt="Player 1 Avatar">
+                </div>
+                <!-- Empty Slots -->
+                <div class="player-card"><i class="ph ph-user text-white/20 text-3xl"></i></div>
+                <div class="player-card"><i class="ph ph-user text-white/20 text-3xl"></i></div>
+                <div class="player-card"><i class="ph ph-user text-white/20 text-3xl"></i></div>
+            </div>
+
+            <!-- Action Button -->
+            <button class="action-btn neon-btn" onclick="copyLink()">
+                <i class="ph ph-link text-xl"></i> COPY LOBBY LINK
+            </button>
+        </div>
+    </div>
+
+    <!-- GSAP Animations -->
+    <script>
+        const finalCode = "AX72-P";
+        const slotsContainer = document.getElementById('code-slots');
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        // Setup slots
+        finalCode.split('').forEach((char, index) => {
+            if (char === '-') {
+                const dash = document.createElement('div');
+                dash.className = 'dash';
+                dash.innerText = '-';
+                slotsContainer.appendChild(dash);
+            } else {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+
+                const inner = document.createElement('div');
+                inner.className = 'slot-inner';
+
+                // Add random characters for the spin (longer strip for longer spin)
+                const spinCount = 20 + (index * 5); // Add more characters for later slots to keep them spinning longer
+                for (let i = 0; i < spinCount; i++) {
+                    const randomChar = document.createElement('div');
+                    randomChar.className = 'char';
+                    randomChar.innerText = characters.charAt(Math.floor(Math.random() * characters.length));
+                    inner.appendChild(randomChar);
+                }
+
+                // Add final character
+                const targetChar = document.createElement('div');
+                targetChar.className = 'char final-char';
+                targetChar.innerText = char;
+                inner.appendChild(targetChar);
+
+                slot.appendChild(inner);
+                slotsContainer.appendChild(slot);
+            }
+        });
+
+        // Setup the animation using GSAP
+        const slotInners = document.querySelectorAll('.slot-inner');
+        const slotHeight = 90; // matches CSS height
+
+        // Ensure starting position is top
+        gsap.set('.slot-inner', { y: 0 });
+
+        // Trigger animation on load
+        window.onload = () => {
+            slotInners.forEach((inner, index) => {
+                // Calculate total distance to scroll: (total elements - 1) * element height
+                const totalElements = inner.children.length;
+                const distance = -((totalElements - 1) * slotHeight);
+
+                // Spin animation
+                gsap.to(inner, {
+                    y: distance,
+                    duration: 2 + (index * 0.4), // Stagger the stopping times
+                    ease: "power4.inOut",       // Start fast, slow down nicely
+                    onComplete: () => {
+                        // After stopping, add the pulsing neon glow
+                        const finalChar = inner.querySelector('.final-char');
+                        if (finalChar) {
+                            finalChar.classList.add('pulse-glow');
+                        }
+                    }
+                });
+            });
+        };
+
+        function copyLink() {
+            navigator.clipboard.writeText("http://127.0.0.1:5000/lobby?join=" + finalCode);
+            alert("Lobby link has been copied to your clipboard!");
+        }
+    </script>
+</body>
+
+</html>
