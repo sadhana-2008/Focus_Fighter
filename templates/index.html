@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus Fighter Lobby</title>
+    <!-- GLOBAL ERROR CATCHER for debugging -->
+    <script>
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            alert("FATAL JS CRASH!\n" + msg + "\nLine: " + lineNo);
+            return false;
+        };
+    </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- GSAP -->
@@ -133,9 +140,7 @@
 
         .lobby-box-wrapper {
             position: relative;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 1px;
-            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            background: transparent;
             display: inline-block;
             margin-bottom: 24px;
             transform: scale(0.85);
@@ -143,10 +148,9 @@
         }
 
         .lobby-box-content {
-            background-color: rgba(10, 25, 47, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            background-color: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
             padding: 20px 40px;
             display: flex;
             flex-direction: column;
@@ -217,27 +221,28 @@
         }
 
         .heavy-glow {
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6), 0 0 45px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8), 0 0 45px rgba(255, 255, 255, 0.6);
         }
 
         /* Player Slots */
         .player-slot-card {
             width: 70px;
             height: 90px;
-            background: rgba(255, 255, 255, 0.05);
+            background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            backdrop-filter: blur(8px);
+            backdrop-filter: none;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
         .player-slot-card.filled {
             border-color: #ffffff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: transparent;
         }
 
         .player-slot-card.filled img {
@@ -250,10 +255,10 @@
 
         /* Pomodoro Panel */
         .pomodoro-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: none;
             border-radius: 12px;
             padding: 16px 32px;
             display: flex;
@@ -270,7 +275,8 @@
         .pomo-btn {
             background: transparent;
             color: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: none;
+            /* Removed solid border for Ghost Button effect */
             border-radius: 4px;
             width: 30px;
             height: 30px;
@@ -283,31 +289,21 @@
 
         .pomo-btn:hover {
             color: #ffffff;
-            border-color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            /* Glow Outline on Hover */
             background: rgba(255, 255, 255, 0.1);
             transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.3);
         }
 
         /* Custom Pixel-Logic Toggle */
         .pixel-toggle {
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(8px);
             transition: all 0.3s ease;
-        }
-
-        .pixel-toggle.active {
-            border-color: #ffffff;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.15);
+            background: transparent;
         }
 
         .pixel-toggle i {
@@ -326,12 +322,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            height: 100%;
-            max-height: 85vh;
+            justify-content: center;
+            height: 100vh;
             width: 100%;
             position: relative;
             z-index: 10;
+            gap: 16px;
+            /* Final Viewport Fix wrapping */
         }
 
         /* Scanline Overlay */
@@ -352,10 +349,10 @@
             opacity: 0.05;
         }
 
-        /* High-End Pixel Text Glow */
+        /* Extreme Pixel Text Glow for Legibility */
         .pixel-text {
             font-family: 'Press Start 2P', monospace;
-            text-shadow: 0 0 10px white;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         /* Button Text Bloom */
@@ -444,16 +441,16 @@
     <div class="bg-gif"></div>
 
     <!-- Top Right Corner -->
-    <button class="cinematic-btn profile-btn" onclick="alert('Profile clicked!')">Profile</button>
+    <button class="cinematic-btn profile-btn" onclick="toggleUI('profile')">Profile</button>
 
     <!-- Center Screen (Main Menu) -->
     <div class="center-container" id="main-menu">
-        <button class="cinematic-btn main-btn" onclick="openFullscreenLobby()">Create Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="toggleUI('lobby')">Create Lobby</button>
         <button class="cinematic-btn main-btn" onclick="alert('Join Lobby clicked!')">Join Lobby</button>
     </div>
 
     <!-- Character Selection Overlay (GSAP + Tailwind) -->
-    <div id="profile-overlay" class="fixed inset-0 z-50 hidden">
+    <div id="profile-overlay" class="fixed inset-0 z-[100] min-h-screen hidden">
         <!-- Background Overlay -->
         <div class="absolute inset-0 w-full h-full" style="background: url('/static/staticpurple_bg.jpg') no-repeat center center; 
                     background-size: cover; 
@@ -462,48 +459,50 @@
         </div>
 
         <!-- Header Controls -->
-        <div class="absolute top-0 w-full flex justify-between p-8 z-10 items-center">
+        <div class="absolute top-0 w-full flex justify-between p-8 z-20 items-center">
             <input type="text" placeholder="GAMER TAG"
                 class="bg-transparent border-b-2 border-white text-white placeholder-[rgba(255,255,255,0.7)] outline-none px-2 py-1 w-64"
-                style="font-family: 'Press Start 2P', monospace; color: #FFFFFF;">
-
-            <h1 class="text-white text-center absolute left-1/2 -translate-x-1/2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
-                style="font-family: 'Press Start 2P', monospace;">CUSTOMIZE AVATAR</h1>
+                style="font-family: 'Press Start 2P', monospace; color: #FFFFFF; text-shadow: 0 0 8px rgba(0,0,0,0.8);">
 
             <div class="flex gap-6">
                 <i class="ph ph-x-circle text-[36px] text-white hover:scale-110 transition-transform cursor-pointer"
-                    onclick="closeOverlay()"></i>
+                    onclick="toggleUI('menu')" style="filter: drop-shadow(0 0 5px white);"></i>
                 <i class="ph ph-check-circle text-[36px] text-white hover:scale-110 transition-transform cursor-pointer"
-                    onclick="closeOverlay()"></i>
+                    onclick="toggleUI('menu')" style="filter: drop-shadow(0 0 5px white);"></i>
             </div>
         </div>
 
-        <!-- Carousel -->
-        <div class="carousel-wrapper relative z-0 flex gap-16 overflow-x-auto h-full items-center px-[30vw]"
-            style="scroll-snap-type: x mandatory;">
-            <style>
-                .carousel-wrapper::-webkit-scrollbar {
-                    display: none;
-                }
+        <div class="w-full flex-1 flex flex-col items-center justify-center -mt-10 relative z-10">
+            <h1 class="text-white text-center mb-6 heavy-glow tracking-widest text-2xl pixel-text"
+                style="font-family: 'Press Start 2P', monospace;">CUSTOMIZE AVATAR</h1>
 
-                .carousel-wrapper {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-            </style>
+            <!-- Carousel -->
+            <div class="carousel-wrapper relative z-0 flex gap-16 overflow-x-auto w-full items-center px-[30vw] pt-4"
+                style="scroll-snap-type: x mandatory;">
+                <style>
+                    .carousel-wrapper::-webkit-scrollbar {
+                        display: none;
+                    }
 
-            <script>
-                // Generate exactly 8 cards
-                for (let i = 1; i <= 8; i++) {
-                    document.write(`
-                        <div class="char-card w-[240px] h-[360px] shrink-0 relative flex flex-col items-center justify-end overflow-hidden cursor-pointer" 
-                             style="scroll-snap-align: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;">
-                            <img src="/static/characters/char${i}.png" class="absolute inset-0 w-full h-full object-contain pointer-events-none p-4 pb-16">
-                            <span class="select-text absolute bottom-6 text-[10px] text-white/50 opacity-0 transition-opacity duration-300 pointer-events-none" style="font-family: 'Press Start 2P', monospace;">CLICK TO SELECT</span>
+                    .carousel-wrapper {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                    }
+                </style>
+
+                <script>
+                    // Generate exactly 8 cards
+                    for (let i = 1; i <= 8; i++) {
+                        document.write(`
+                        <div class="char-card w-[240px] h-[360px] shrink-0 relative flex flex-col items-center justify-end overflow-visible cursor-pointer" 
+                             style="scroll-snap-align: center; background: transparent; border: none; opacity: 1;" data-char="char${i}.png">
+                            <img src="/static/characters/char${i}.png" class="absolute inset-x-0 bottom-12 w-full h-[120%] object-contain pointer-events-none drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                            <span class="select-text absolute bottom-2 text-[10px] text-white/50 opacity-0 transition-opacity duration-300 pointer-events-none" style="font-family: 'Press Start 2P', monospace;">CLICK TO SELECT</span>
                         </div>
                     `);
-                }
-            </script>
+                    }
+                </script>
+            </div>
         </div>
     </div>
 
@@ -515,7 +514,7 @@
 
             <div class="flex flex-col items-center">
                 <!-- Lottery Code Generator -->
-                <div class="lobby-box-wrapper shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                <div class="lobby-box-wrapper">
                     <div class="lobby-box-content">
                         <!-- Removed "ROOM CODE GENERATED" to space -->
                         <div class="slot-container mb-2" id="fs-code-slots">
@@ -539,7 +538,7 @@
                 </div>
 
                 <!-- Pomodoro Settings Panel (Vertical Stack) -->
-                <div class="flex flex-col items-center gap-4 relative z-10 w-[700px]">
+                <div class="flex flex-col items-center gap-1 relative z-10 w-[700px]">
                     <!-- Fight Duration Row -->
                     <div class="pomodoro-panel" style="width: 100%; margin-bottom: 0;">
                         <div
@@ -549,25 +548,33 @@
                         <div class="flex items-center gap-6 justify-center flex-1">
                             <!-- Minutes -->
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-minus text-lg"></i></button>
-                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text">25</div>
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-plus text-lg"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i
+                                        class="ph ph-minus text-lg"></i></button>
+                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text"
+                                    id="fight-min">25</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i
+                                        class="ph ph-plus text-lg"></i></button>
                             </div>
 
                             <div class="text-white opacity-50 text-4xl pixel-text">:</div>
 
                             <!-- Seconds -->
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-minus text-lg"></i></button>
-                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text">00</div>
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-plus text-lg"></i></button>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('fight-min', 'fight-sec', -15)"><i
+                                        class="ph ph-minus text-lg"></i></button>
+                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text"
+                                    id="fight-sec">00</div>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('fight-min', 'fight-sec', 15)"><i
+                                        class="ph ph-plus text-lg"></i></button>
                             </div>
                         </div>
                         <div class="w-[200px]"></div> <!-- Spacer for perfect centering -->
                     </div>
 
                     <!-- Include Breaks Toggle (Directly Below) -->
-                    <div class="flex items-center gap-4 my-2">
+                    <div class="flex items-center gap-4 my-0">
                         <div class="text-white text-[10px] tracking-[1px] opacity-80 whitespace-nowrap pixel-text">
                             INCLUDE BREAKS</div>
                         <div class="pixel-toggle active" id="breaks-toggle" onclick="toggleBreaks()">
@@ -585,18 +592,26 @@
                         <div class="flex items-center gap-6 justify-center flex-1">
                             <!-- Minutes -->
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-minus text-lg"></i></button>
-                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text">05</div>
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-plus text-lg"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i
+                                        class="ph ph-minus text-lg"></i></button>
+                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text"
+                                    id="break-min">05</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i
+                                        class="ph ph-plus text-lg"></i></button>
                             </div>
 
                             <div class="text-white opacity-50 text-4xl pixel-text">:</div>
 
                             <!-- Seconds -->
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-minus text-lg"></i></button>
-                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text">00</div>
-                                <button class="pomo-btn timer-ctrl"><i class="ph ph-plus text-lg"></i></button>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('break-min', 'break-sec', -15)"><i
+                                        class="ph ph-minus text-lg"></i></button>
+                                <div class="text-white text-4xl tracking-widest heavy-glow pomo-num pixel-text"
+                                    id="break-sec">00</div>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('break-min', 'break-sec', 15)"><i
+                                        class="ph ph-plus text-lg"></i></button>
                             </div>
                         </div>
                         <div class="w-[200px]"></div> <!-- Spacer for perfect centering -->
@@ -606,11 +621,11 @@
 
             <!-- Footer Actions -->
             <div class="footer-action-container">
-                <button class="footer-btn" onclick="alert('Code Copied!')">
-                    <i class="ph ph-link text-lg"></i> <span class="pixel-text">COPY CODE</span>
+                <button class="footer-btn" id="copy-btn" onclick="copyRoomCode()">
+                    <i class="ph ph-link text-lg"></i> <span class="pixel-text" id="copy-text">COPY CODE</span>
                 </button>
                 <div class="flex gap-4">
-                    <button class="footer-btn" onclick="closeFullscreenLobby()">
+                    <button class="footer-btn" onclick="toggleUI('menu')">
                         <span class="pixel-text">LEAVE LOBBY</span>
                     </button>
                     <button class="footer-btn primary-glow">
@@ -624,19 +639,131 @@
     <!-- GSAP Animations -->
     <script>
         const profileOverlay = document.getElementById('profile-overlay');
-        const profileBtn = document.querySelector('.profile-btn');
+        const fsLobby = document.getElementById('fullscreen-lobby');
+        const mainMenu = document.getElementById('main-menu');
+        const profileBtnTop = document.querySelector('.profile-btn');
+        const fsCodeSlots = document.getElementById('fs-code-slots');
 
-        // Mount Animation
-        profileBtn.onclick = () => {
-            profileOverlay.classList.remove('hidden');
-            gsap.fromTo('.char-card',
-                { y: 40, opacity: 0 },
-                { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'back.out(1.5)', clearProps: 'transform,opacity' }
-            );
-        };
+        // Initial setup for code slots DOM
+        const rollChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const initialCode = "AX72-P";
 
-        function closeOverlay() {
-            profileOverlay.classList.add('hidden');
+        initialCode.split('').forEach((char, index) => {
+            if (char === '-') {
+                const dash = document.createElement('div');
+                dash.className = 'dash-char';
+                dash.innerText = '-';
+                fsCodeSlots.appendChild(dash);
+            } else {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+
+                const inner = document.createElement('div');
+                inner.className = 'slot-inner';
+
+                const spinCount = 15 + (index * 4);
+                for (let i = 0; i < spinCount; i++) {
+                    const randomChar = document.createElement('div');
+                    randomChar.className = 'char text-white/40';
+                    randomChar.innerText = rollChars.charAt(Math.floor(Math.random() * rollChars.length));
+                    inner.appendChild(randomChar);
+                }
+
+                const finalCharDOM = document.createElement('div');
+                finalCharDOM.className = 'char final-char';
+                finalCharDOM.innerText = char;
+                inner.appendChild(finalCharDOM);
+
+                slot.appendChild(inner);
+                fsCodeSlots.appendChild(slot);
+            }
+        });
+
+        const slotInners = document.querySelectorAll('#fs-code-slots .slot-inner');
+
+        function toggleUI(screenID) {
+            try {
+                // Unify Logic Guard
+                // Hide everything first cleanly
+                profileOverlay.classList.add('hidden');
+                profileOverlay.style.display = 'none';
+
+                gsap.killTweensOf(fsLobby);
+                fsLobby.classList.remove('active');
+                fsLobby.style.opacity = '0';
+
+                mainMenu.style.opacity = '0';
+                mainMenu.style.pointerEvents = 'none';
+                profileBtnTop.style.opacity = '0';
+                profileBtnTop.style.pointerEvents = 'none';
+
+                if (screenID === 'profile') {
+                    profileOverlay.classList.remove('hidden');
+                    profileOverlay.style.display = 'flex';
+                    profileOverlay.style.opacity = '1';
+                    profileOverlay.style.pointerEvents = 'auto';
+
+                    // GSAP Fallback
+                    gsap.killTweensOf('.char-card');
+                    gsap.set('.char-card', { opacity: 1 });
+
+                    gsap.fromTo('.char-card',
+                        { y: 40, opacity: 0 },
+                        { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'back.out(1.5)', clearProps: 'transform' }
+                    );
+                } else if (screenID === 'lobby') {
+                    fsLobby.classList.add('active');
+                    gsap.to(fsLobby, { opacity: 1, duration: 0.5 });
+
+                    // Live Code Generation
+                    let generatedCode = '';
+                    for (let i = 0; i < 5; i++) {
+                        generatedCode += rollChars.charAt(Math.floor(Math.random() * rollChars.length));
+                    }
+                    generatedCode = generatedCode.substring(0, 2) + '-' + generatedCode.substring(2);
+
+                    // Update DOM final slots
+                    const newChars = generatedCode.split('').filter(c => c !== '-');
+                    document.querySelectorAll('.final-char').forEach((el, index) => {
+                        if (newChars[index]) {
+                            el.innerText = newChars[index];
+                        }
+                        el.classList.remove('heavy-glow');
+                    });
+
+                    // Reset and run GSAP Spinner
+                    gsap.set(slotInners, { y: 0 });
+                    slotInners.forEach((inner, index) => {
+                        const totalElements = inner.children.length;
+                        const distance = -((totalElements - 1) * 90);
+
+                        gsap.to(inner, {
+                            y: distance,
+                            duration: 1.5 + (index * 0.2), // Base 1.5s
+                            ease: "power4.inOut",
+                            onComplete: () => {
+                                const finalChar = inner.querySelector('.final-char');
+                                if (finalChar) {
+                                    finalChar.classList.add('heavy-glow');
+                                }
+                            }
+                        });
+                    });
+
+                    // Fade components
+                    gsap.fromTo('.pomodoro-panel', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.5, ease: "power2.out" });
+                    gsap.fromTo('.footer-btn', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.8 });
+                    gsap.fromTo('.player-slot-card', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.6, ease: "back.out(1.5)" });
+
+                } else if (screenID === 'menu') {
+                    mainMenu.style.opacity = '1';
+                    mainMenu.style.pointerEvents = 'auto';
+                    profileBtnTop.style.opacity = '1';
+                    profileBtnTop.style.pointerEvents = 'auto';
+                }
+            } catch (err) {
+                alert("JS ERROR in toggleUI: " + err.message + "\nStack: " + err.stack);
+            }
         }
 
         // Hover & Click Logic
@@ -645,9 +772,11 @@
         cards.forEach(card => {
             card.addEventListener('mouseenter', () => {
                 if (!card.classList.contains('selected-card')) {
-                    gsap.to(card, { scale: 1.08, duration: 0.3, ease: 'power2.out' });
-                    card.style.borderColor = 'rgb(255, 255, 255)';
-                    card.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.9)';
+                    gsap.to(card, { scale: 1.05, duration: 0.3, ease: 'power2.out' });
+                    const img = card.querySelector('img');
+                    if (img) img.style.filter = 'drop-shadow(0 0 25px rgba(255, 255, 255, 0.8))';
+                    card.style.textShadow = '0 0 15px white';
+
                     const sText = card.querySelector('.select-text');
                     if (sText) {
                         sText.classList.remove('opacity-0', 'text-white/50');
@@ -659,8 +788,9 @@
             card.addEventListener('mouseleave', () => {
                 if (!card.classList.contains('selected-card')) {
                     gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.out' });
-                    card.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                    card.style.boxShadow = 'none';
+                    const img = card.querySelector('img');
+                    if (img) img.style.filter = 'drop-shadow(0 0 15px rgba(255, 255, 255, 0.3))';
+                    card.style.textShadow = 'none';
                     const sText = card.querySelector('.select-text');
                     if (sText) {
                         sText.classList.remove('opacity-100', 'text-white');
@@ -676,8 +806,10 @@
                 cards.forEach(c => {
                     c.classList.remove('selected-card');
                     gsap.to(c, { scale: 1, duration: 0.3 });
-                    c.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                    c.style.boxShadow = 'none';
+                    const img = c.querySelector('img');
+                    if (img) img.style.filter = 'drop-shadow(0 0 15px rgba(255, 255, 255, 0.3))';
+                    c.style.textShadow = 'none';
+
                     const cText = c.querySelector('.select-text');
                     if (cText) {
                         cText.innerText = 'CLICK TO SELECT';
@@ -688,8 +820,9 @@
 
                 // Set selected state & Memory
                 card.classList.add('selected-card');
-                card.style.borderColor = 'rgb(255, 255, 255)';
-                card.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.9)';
+                const img = card.querySelector('img');
+                if (img) img.style.filter = 'drop-shadow(0 0 30px rgba(255, 255, 255, 1))';
+                card.style.textShadow = '0 0 20px white';
                 const sText = card.querySelector('.select-text');
                 if (sText) {
                     sText.innerText = 'SELECTED';
@@ -703,6 +836,12 @@
                 const charName = charImgSrc.substring(charImgSrc.lastIndexOf('/') + 1);
                 localStorage.setItem('selectedChar', charName);
 
+                // Instantly update Lobby host slot without reloading
+                const hostAvatar = document.getElementById('host-avatar');
+                if (hostAvatar) {
+                    hostAvatar.src = '/static/characters/' + charName;
+                }
+
                 // Click Bounce
                 gsap.fromTo(card,
                     { scale: 0.95 },
@@ -710,115 +849,6 @@
                 );
             });
         });
-
-        // Full-Screen Lobby Logic & Animation
-        const mainMenu = document.getElementById('main-menu');
-        const profileBtnTop = document.querySelector('.profile-btn');
-        const fsLobby = document.getElementById('fullscreen-lobby');
-        const fsCodeSlots = document.getElementById('fs-code-slots');
-
-        const generatedCode = "AX72-P";
-        const rollChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-        // Generate Slot DOM once
-        generatedCode.split('').forEach((char, index) => {
-            if (char === '-') {
-                const dash = document.createElement('div');
-                dash.className = 'dash-char';
-                dash.innerText = '-';
-                fsCodeSlots.appendChild(dash);
-            } else {
-                const slot = document.createElement('div');
-                slot.className = 'slot';
-
-                const inner = document.createElement('div');
-                inner.className = 'slot-inner';
-
-                // Add random chars for spin effect
-                const spinCount = 15 + (index * 4);
-                for (let i = 0; i < spinCount; i++) {
-                    const randomChar = document.createElement('div');
-                    randomChar.className = 'char text-white/40';
-                    randomChar.innerText = rollChars.charAt(Math.floor(Math.random() * rollChars.length));
-                    inner.appendChild(randomChar);
-                }
-
-                // Final character
-                const finalCharDOM = document.createElement('div');
-                finalCharDOM.className = 'char final-char';
-                finalCharDOM.innerText = char;
-                inner.appendChild(finalCharDOM);
-
-                slot.appendChild(inner);
-                fsCodeSlots.appendChild(slot);
-            }
-        });
-
-        const slotInners = document.querySelectorAll('#fs-code-slots .slot-inner');
-
-        function openFullscreenLobby() {
-            // Hide menu
-            mainMenu.style.opacity = '0';
-            mainMenu.style.pointerEvents = 'none';
-            profileBtnTop.style.opacity = '0';
-            profileBtnTop.style.pointerEvents = 'none';
-
-            // Sync Character from Memory
-            const savedChar = localStorage.getItem('selectedChar');
-            const hostSlot = document.getElementById('host-player-slot');
-            const hostAvatar = document.getElementById('host-avatar');
-
-            if (savedChar) {
-                hostAvatar.src = '/static/characters/' + savedChar;
-            }
-            hostSlot.classList.add('host-glow');
-
-            // Show lobby layer
-            fsLobby.classList.add('active');
-            gsap.to(fsLobby, { opacity: 1, duration: 0.5 });
-
-            // Reset slots
-            gsap.set(slotInners, { y: 0 });
-            document.querySelectorAll('.final-char').forEach(el => el.classList.remove('heavy-glow'));
-
-            // Run Spin Animation
-            slotInners.forEach((inner, index) => {
-                const totalElements = inner.children.length;
-                const distance = -((totalElements - 1) * 90);
-
-                gsap.to(inner, {
-                    y: distance,
-                    duration: 1.5 + (index * 0.2), // Base 1.5s as requested
-                    ease: "power4.inOut",
-                    onComplete: () => {
-                        const finalChar = inner.querySelector('.final-char');
-                        if (finalChar) {
-                            finalChar.classList.add('heavy-glow');
-                        }
-                    }
-                });
-            });
-
-            // Fade in other elements slightly after slots start spinning
-            gsap.fromTo('.pomodoro-panel', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.5, ease: "power2.out" });
-            gsap.fromTo('.footer-btn', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.8 });
-            gsap.fromTo('.player-slot-card', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.6, ease: "back.out(1.5)" });
-        }
-
-        function closeFullscreenLobby() {
-            gsap.to(fsLobby, {
-                opacity: 0,
-                duration: 0.4,
-                onComplete: () => {
-                    fsLobby.classList.remove('active');
-                    // Show menu again
-                    mainMenu.style.opacity = '1';
-                    mainMenu.style.pointerEvents = 'auto';
-                    profileBtnTop.style.opacity = '1';
-                    profileBtnTop.style.pointerEvents = 'auto';
-                }
-            });
-        }
 
         // Toggle Pixel-Logic
         function toggleBreaks() {
@@ -831,7 +861,7 @@
                 icon.className = "ph ph-x-circle";
                 gsap.fromTo(tgl, { scale: 0.9 }, { scale: 1, duration: 0.5, ease: "elastic.out(1,0.5)" });
 
-                // Hide Break Timer
+                // Hide Break Timer & Reset
                 gsap.to(breakPanel, {
                     height: 0,
                     opacity: 0,
@@ -840,6 +870,8 @@
                     ease: "power2.in",
                     onComplete: () => {
                         breakPanel.style.display = 'none';
+                        document.getElementById('break-min').innerText = '05';
+                        document.getElementById('break-sec').innerText = '00';
                     }
                 });
             } else {
@@ -862,12 +894,155 @@
                 const targetNum = btn.parentNode.querySelector('.pomo-num');
                 if (targetNum) {
                     gsap.fromTo(targetNum,
-                        { y: -2 },
-                        { y: 0, duration: 0.2, ease: "bounce.out" }
+                        { scale: 1.2 },
+                        { scale: 1, duration: 0.2, ease: "bounce.out" }
                     );
                 }
             });
         });
+
+        // Elite Logic: Timer Adjusment
+        function adjustTime(elementId, amount) {
+            const el = document.getElementById(elementId);
+            let current = parseInt(el.innerText);
+            let newTime = current + amount;
+
+            if (newTime < 5) newTime = 5;
+            if (newTime > 60) newTime = 60;
+
+            el.innerText = newTime < 10 ? '0' + newTime : newTime;
+        }
+
+        // Elite Logic: Seconds Adjustment
+        function adjustSeconds(minId, secId, amount) {
+            const secEl = document.getElementById(secId);
+            const minEl = document.getElementById(minId);
+            let secCurrent = parseInt(secEl.innerText);
+            let minCurrent = parseInt(minEl.innerText);
+
+            let newSec = secCurrent + amount;
+
+            if (newSec >= 60) {
+                newSec -= 60;
+                adjustTime(minId, 1);
+            } else if (newSec < 0) {
+                // Check if min is > 5 to allow subtraction
+                if (minCurrent >= 5) {
+                    if (minCurrent === 5 && newSec < 0) {
+                        newSec = 0; // Don't let it go below 5:00
+                    } else {
+                        newSec = 60 + newSec;
+                        minEl.innerText = (minCurrent - 1) < 10 ? '0' + (minCurrent - 1) : (minCurrent - 1);
+                    }
+                } else {
+                    newSec = 0;
+                }
+            }
+
+            secEl.innerText = newSec === 0 ? '00' : newSec;
+
+            // Re-apply jitter to the seconds element
+            gsap.fromTo(secEl,
+                { scale: 1.2 },
+                { scale: 1, duration: 0.2, ease: "bounce.out" }
+            );
+        }
+
+        // Elite Logic: Copy Code
+        function copyRoomCode() {
+            // Grab the current characters from the DOM code slots
+            let currentCode = '';
+            const slotElements = document.getElementById('fs-code-slots').children;
+            for (let el of slotElements) {
+                if (el.classList.contains('dash-char')) {
+                    currentCode += '-';
+                } else {
+                    const finalChar = el.querySelector('.final-char');
+                    if (finalChar) currentCode += finalChar.innerText;
+                }
+            }
+
+            // Secure Clipboard Logic with Hidden Input Fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(currentCode).catch(() => fallbackCopy(currentCode));
+            } else {
+                fallbackCopy(currentCode);
+            }
+
+            function fallbackCopy(text) {
+                const hiddenInput = document.createElement("input");
+                hiddenInput.value = text;
+                hiddenInput.style.position = "absolute";
+                hiddenInput.style.opacity = "0";
+                document.body.appendChild(hiddenInput);
+                hiddenInput.select();
+                try {
+                    document.execCommand("copy");
+                } catch (err) { }
+                document.body.removeChild(hiddenInput);
+            }
+
+            const copyBtn = document.getElementById('copy-btn');
+            const copyText = document.getElementById('copy-text');
+            const codeSlots = document.getElementById('fs-code-slots');
+
+            copyText.innerText = "COPIED! ✨";
+            copyBtn.classList.add('primary-glow');
+
+            // Button Flash (White Neon Glow to Border)
+            gsap.fromTo(copyBtn,
+                { scale: 1.1, backgroundColor: 'rgba(255,255,255,0.3)', borderColor: '#ffffff', boxShadow: '0 0 20px white' },
+                { scale: 1, backgroundColor: 'rgba(20, 20, 20, 0.6)', borderColor: 'rgba(255,255,255,0.2)', boxShadow: '0 0 0px transparent', duration: 0.5 }
+            );
+
+            // Slots Neon "Photo" Flash
+            gsap.fromTo(codeSlots,
+                { filter: "brightness(2) drop-shadow(0 0 40px white)" },
+                { filter: "brightness(1) drop-shadow(0 0 0px transparent)", duration: 0.8, ease: "power2.out" }
+            );
+
+            setTimeout(() => {
+                copyText.innerText = "COPY CODE";
+                copyBtn.classList.remove('primary-glow');
+            }, 2000);
+        }
+
+        // Elite Logic: Bulletproof Character Sync
+        function initCharacterSync() {
+            const savedChar = localStorage.getItem('selectedChar') || 'char1.png';
+            const charFallback = savedChar.includes('.png') ? savedChar : `char${savedChar}.png`;
+
+            // Apply selected styling to the correct card in profile menu
+            const cardsNodes = document.querySelectorAll('.char-card');
+            cardsNodes.forEach(c => {
+                if (c.getAttribute('data-char') === charFallback) {
+                    c.classList.add('selected-card');
+                    const img = c.querySelector('img');
+                    if (img) img.style.filter = 'drop-shadow(0 0 30px rgba(255, 255, 255, 1))';
+                    c.style.textShadow = '0 0 20px white';
+                    const sText = c.querySelector('.select-text');
+                    if (sText) {
+                        sText.innerText = 'SELECTED';
+                        sText.classList.remove('opacity-0', 'text-white/50');
+                        sText.classList.add('opacity-100', 'text-white');
+                    }
+                }
+            });
+
+            // Update main lobby
+            const hostAvatar = document.getElementById('host-avatar');
+            const hostSlot = document.getElementById('host-player-slot');
+
+            if (hostAvatar) {
+                hostAvatar.src = '/static/characters/' + charFallback;
+            }
+            if (hostSlot) {
+                hostSlot.style.filter = "drop-shadow(0 0 12px white)";
+                hostSlot.classList.add('host-glow');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initCharacterSync);
     </script>
 </body>
 
