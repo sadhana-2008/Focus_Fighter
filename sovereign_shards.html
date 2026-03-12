@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sovereign Shards – UI Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Press+Start+2P&family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amethyst: #9932CC;
+    --deep-violet: #4B0082;
+    --neon-purple: #BF5FFF;
+    --crimson: #DC143C;
+    --magenta: #FF00AA;
+    --gold: #FFD700;
+    --silver: #C0C0C0;
+    --charcoal: #1A1020;
+    --stone: #2A1F35;
+    --lavender: #D8B4FE;
+    --obsidian: #0D0A14;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cinzel', serif;
+    background: var(--obsidian);
+    color: var(--lavender);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── NAV ── */
+  #nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 0;
+    background: rgba(10,5,20,0.92);
+    border-bottom: 1px solid rgba(153,50,204,0.4);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-btn {
+    background: rgba(153,50,204,0.15);
+    border: 1px solid rgba(153,50,204,0.5);
+    color: var(--lavender);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--amethyst);
+    color: #fff;
+    box-shadow: 0 0 12px var(--amethyst);
+  }
+
+  /* ── FRAMES ── */
+  .frame {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .frame.active { display: flex; }
+
+  /* ══════════════════════════════════════
+     FRAME 1 – STRONGHOLD DASHBOARD
+  ══════════════════════════════════════ */
+  #frame1 {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(75,0,130,0.35) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(153,50,204,0.2) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%231A1020'/%3E%3Crect x='0' y='0' width='30' height='30' fill='%23201530' opacity='0.5'/%3E%3Crect x='30' y='30' width='30' height='30' fill='%23201530' opacity='0.5'/%3E%3Crect x='0' y='28' width='60' height='4' fill='%230D0A14' opacity='0.6'/%3E%3Crect x='28' y='0' width='4' height='60' fill='%230D0A14' opacity='0.6'/%3E%3C/svg%3E");
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Main content */
+  #f1-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 28px;
+    overflow: hidden;
+  }
+
+  .f1-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 22px;
+    color: var(--neon-purple);
+    text-shadow: 0 0 20px var(--amethyst), 0 0 40px rgba(153,50,204,0.5);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .f1-subtitle {
+    font-size: 11px;
+    color: rgba(216,180,254,0.5);
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+
+  /* Faction cards */
+  .faction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .faction-card {
+    background: rgba(26,16,32,0.8);
+    border: 1px solid rgba(153,50,204,0.35);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  .faction-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(153,50,204,0.08), transparent);
+    pointer-events: none;
+  }
+  .faction-card:hover {
+    border-color: var(--amethyst);
+    box-shadow: 0 0 20px rgba(153,50,204,0.3), inset 0 0 20px rgba(153,50,204,0.05);
+    transform: translateY(-2px);
+  }
+
+  .faction-card.blue-card { border-color: rgba(100,100,255,0.5); }
+  .faction-card.blue-card::before { background: linear-gradient(135deg, rgba(100,50,255,0.1), transparent); }
+  .faction-card.blue-card:hover { border-color: #6464FF; box-shadow: 0 0 20px rgba(100,100,255,0.4); }
+
+  .faction-card.red-card { border-color: rgba(220,20,60,0.4); }
+  .faction-card.red-card::before { background: linear-gradient(135deg, rgba(220,20,60,0.08), transparent); }
+
+  .faction-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .faction-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .faction-card.blue-card .faction-dot { background: #6464FF; box-shadow: 0 0 8px #6464FF; }
+  .faction-card.red-card .faction-dot { background: var(--crimson); box-shadow: 0 0 8px var(--crimson); }
+
+  .faction-hp-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin: 10px 0 8px;
+    overflow: hidden;
+  }
+  .faction-hp-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .blue-card .faction-hp-fill { background: linear-gradient(90deg, #4040CC, #8080FF); width: 85%; }
+  .red-card .faction-hp-fill { background: linear-gradient(90deg, #8B0000, var(--crimson)); width: 38%; }
+
+  .faction-stat {
+    font-size: 10px;
+    color: rgba(216,180,254,0.6);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tooltip-class {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10,5,20,0.95);
+    border: 1px solid var(--amethyst);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--lavender);
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(153,50,204,0.4);
+    pointer-events: none;
+  }
+  .faction-card:hover .tooltip-class { display: block; }
+
+  /* Spend Essence Button */
+  #spend-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(153,50,204,0.3), rgba(75,0,130,0.4));
+    border: 1px solid var(--amethyst);
+    color: var(--neon-purple);
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(153,50,204,0.2);
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+  #spend-btn:hover {
+    background: linear-gradient(135deg, rgba(153,50,204,0.6), rgba(75,0,130,0.7));
+    box-shadow: 0 0 30px rgba(153,50,204,0.5);
+    transform: translateY(-1px);
+  }
+  #spend-btn .lock-icon { font-size: 16px; }
+
+  /* Chronicle */
+  #chronicle {
+    background: rgba(13,10,20,0.7);
+    border: 1px solid rgba(153,50,204,0.25);
+    border-radius: 6px;
+    padding: 14px 16px;
+    flex: 0 0 auto;
+  }
+  #chronicle h3 {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(216,180,254,0.5);
+    margin-bottom: 10px;
+  }
+  .log-entry {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--lavender);
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(153,50,204,0.1);
+    opacity: 0.9;
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-time { color: rgba(216,180,254,0.4); margin-right: 8px; font-size: 10px; }
+
+  /* Sidebar – Essence Vault */
+  #vault-sidebar {
+    width: 200px;
+    background: rgba(13,10,20,0.85);
+    border-left: 1px solid rgba(153,50,204,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px;
+    gap: 16px;
+  }
+  .vault-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(216,180,254,0.5);
+    text-align: center;
+    border-bottom: 1px solid rgba(153,50,204,0.3);
+    padding-bottom: 12px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .lantern {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 12px 8px;
+    background: rgba(26,16,50,0.6);
+    border-radius: 8px;
+    border: 1px solid rgba(153,50,204,0.2);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .lantern:hover { border-color: var(--amethyst); box-shadow: 0 0 15px rgba(153,50,204,0.25); }
+
+  .lantern-body {
+    font-size: 32px;
+    position: relative;
+    animation: float-lantern 3s ease-in-out infinite;
+  }
+  .lantern.blue-lantern .lantern-body { filter: drop-shadow(0 0 10px #8080FF); }
+  .lantern.red-lantern .lantern-body { filter: drop-shadow(0 0 6px rgba(220,20,60,0.5)); opacity: 0.75; }
+
+  @keyframes float-lantern {
+    0%,100% { transform: translateY(0px) rotate(-2deg); }
+    50% { transform: translateY(-5px) rotate(2deg); }
+  }
+
+  .lantern-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(216,180,254,0.6);
+    text-align: center;
+  }
+
+  .essence-counter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .blue-lantern .essence-counter { color: #A0A0FF; text-shadow: 0 0 10px #6060FF; }
+  .red-lantern .essence-counter { color: rgba(220,100,100,0.8); text-shadow: 0 0 6px rgba(220,20,60,0.4); }
+
+  .flame-indicator {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin: 0 auto;
+  }
+  .blue-lantern .flame-indicator { background: #8080FF; box-shadow: 0 0 8px #6060FF, 0 0 16px #4040CC; animation: pulse-flame 1.5s ease-in-out infinite; }
+  .red-lantern .flame-indicator { background: var(--crimson); box-shadow: 0 0 4px var(--crimson); animation: flicker 0.3s ease-in-out infinite alternate; }
+
+  @keyframes pulse-flame {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.8; }
+  }
+  @keyframes flicker {
+    0% { opacity: 0.4; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* ══════════════════════════════════════
+     FRAME 2 – BATTLE ARENA
+  ══════════════════════════════════════ */
+  #frame2 {
+    background: #0D1A0D;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #f2-header {
+    background: rgba(10,5,20,0.9);
+    border-bottom: 2px solid rgba(153,50,204,0.5);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .essence-stake {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+  }
+  .stake-blue { color: #8080FF; text-shadow: 0 0 8px #6060FF; }
+  .stake-red { color: var(--crimson); text-shadow: 0 0 8px var(--crimson); }
+  .vs-badge {
+    background: var(--amethyst);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  #f2-arena {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,80,0,0.15) 0px, rgba(0,80,0,0.15) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(0,80,0,0.15) 0px, rgba(0,80,0,0.15) 1px, transparent 1px, transparent 32px),
+      linear-gradient(180deg, #0D1A0D 0%, #142E14 60%, #0D1A0D 100%);
+  }
+
+  /* Pixel characters */
+  .warrior {
+    position: absolute;
+    bottom: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #knight { left: 20%; animation: warrior-idle 0.8s step-end infinite; }
+  #orc { right: 20%; animation: warrior-idle 0.8s step-end infinite 0.4s; transform: scaleX(-1); }
+
+  @keyframes warrior-idle {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  #orc { animation-name: orc-idle; }
+  @keyframes orc-idle {
+    0%,100% { transform: scaleX(-1) translateY(0); }
+    50% { transform: scaleX(-1) translateY(-4px); }
+  }
+
+  .warrior-sprite {
+    font-size: 64px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8));
+  }
+  #knight .warrior-sprite { filter: drop-shadow(0 0 12px rgba(100,100,255,0.6)); }
+  #orc .warrior-sprite { filter: drop-shadow(0 0 12px rgba(220,20,60,0.4)); }
+
+  .warrior-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--lavender);
+    background: rgba(10,5,20,0.8);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .hp-bar-wrap {
+    width: 120px;
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid rgba(75,0,130,0.5);
+  }
+  .hp-fill {
+    height: 100%;
+    transition: width 1s ease;
+  }
+  .knight-hp { background: linear-gradient(90deg, var(--deep-violet), var(--amethyst)); width: 85%; }
+  .orc-hp { background: linear-gradient(90deg, #400000, var(--crimson)); width: 35%; }
+
+  .arena-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+  }
+  .arena-round {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: rgba(216,180,254,0.4);
+    letter-spacing: 2px;
+  }
+
+  #attack-btn {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #8B0000, var(--crimson));
+    border: none;
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 12px 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 0 20px rgba(220,20,60,0.4);
+    transition: all 0.2s;
+  }
+  #attack-btn:hover { box-shadow: 0 0 35px rgba(220,20,60,0.7); transform: translateX(-50%) scale(1.05); }
+  #attack-btn:active { transform: translateX(-50%) scale(0.97); }
+
+  /* ══════════════════════════════════════
+     FRAME 3 – SOUL SHATTER
+  ══════════════════════════════════════ */
+  #frame3 {
+    background: #060310;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #frame3.shake { animation: screen-shake 0.5s ease-in-out; }
+  @keyframes screen-shake {
+    0%,100% { transform: translate(0,0); }
+    20% { transform: translate(-8px, 4px); }
+    40% { transform: translate(8px, -4px); }
+    60% { transform: translate(-6px, 2px); }
+    80% { transform: translate(6px, -2px); }
+  }
+
+  #f3-crimson-flash {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(220,20,60,0.25), transparent 70%);
+    animation: flash-pulse 2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes flash-pulse {
+    0%,100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .proclamation {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2vw, 20px);
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold), 0 0 40px rgba(255,215,0,0.5);
+    text-align: center;
+    line-height: 1.8;
+    z-index: 10;
+    padding: 0 40px;
+    animation: proc-enter 0.8s ease-out forwards;
+  }
+  @keyframes proc-enter {
+    0% { opacity: 0; transform: scale(0.7); }
+    70% { transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .proc-sub {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 14px;
+    color: var(--crimson);
+    text-shadow: 0 0 15px var(--crimson);
+    text-align: center;
+    margin-top: 16px;
+    z-index: 10;
+    letter-spacing: 2px;
+  }
+
+  /* Shards container */
+  #shards-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .shard {
+    position: absolute;
+    font-size: 18px;
+    animation: shard-fly 1.8s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes shard-fly {
+    0% { opacity: 1; transform: scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: scale(0.2) rotate(720deg) translate(var(--tx), var(--ty)); }
+  }
+
+  .soul-orb {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #E8B4FF, var(--amethyst));
+    box-shadow: 0 0 12px var(--neon-purple), 0 0 24px rgba(153,50,204,0.5);
+    animation: orb-collect 2s ease-in-out forwards;
+    opacity: 0;
+  }
+  @keyframes orb-collect {
+    0% { opacity: 1; transform: scale(1); }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: scale(0.1) translate(200px, -200px); }
+  }
+
+  /* Scoreboard */
+  #f3-scores {
+    display: flex;
+    gap: 60px;
+    margin-bottom: 40px;
+    z-index: 10;
+  }
+  .f3-score-box {
+    text-align: center;
+    padding: 16px 24px;
+    border-radius: 8px;
+    position: relative;
+  }
+  .f3-score-box.winner {
+    background: rgba(100,100,255,0.15);
+    border: 2px solid #6464FF;
+    box-shadow: 0 0 25px rgba(100,100,255,0.3);
+  }
+  .f3-score-box.loser {
+    background: rgba(40,10,10,0.5);
+    border: 2px solid rgba(220,20,60,0.3);
+    opacity: 0.5;
+  }
+  .f3-score-label { font-size: 10px; color: rgba(216,180,254,0.6); letter-spacing: 2px; margin-bottom: 8px; }
+  .f3-score-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+  }
+  .winner .f3-score-num { color: #A0A0FF; text-shadow: 0 0 12px #6060FF; }
+  .loser .f3-score-num { color: rgba(200,80,80,0.6); text-decoration: line-through; }
+
+  .broken-counter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--crimson);
+    margin-top: 6px;
+    animation: glitch 0.3s ease-in-out infinite;
+  }
+  @keyframes glitch {
+    0%,100% { transform: translate(0); }
+    33% { transform: translate(-2px, 1px); clip-path: inset(20% 0 30% 0); }
+    66% { transform: translate(2px, -1px); clip-path: inset(60% 0 10% 0); }
+  }
+
+  /* ══════════════════════════════════════
+     FRAME 4 – GREAT HALL LEADERBOARD
+  ══════════════════════════════════════ */
+  #frame4 {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(153,50,204,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(75,0,130,0.3) 0%, transparent 50%),
+      linear-gradient(180deg, #0D0520 0%, #050010 100%);
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Nebula stars */
+  #nebula {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+  #f4-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 20px;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.6);
+    letter-spacing: 3px;
+    margin: 20px 0 8px;
+    z-index: 10;
+    position: relative;
+  }
+  #f4-sub { font-size: 10px; letter-spacing: 3px; color: rgba(216,180,254,0.5); margin-bottom: 30px; z-index: 10; position: relative; }
+
+  /* Monoliths */
+  #monoliths {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0px;
+    z-index: 10;
+    position: relative;
+    flex: 1;
+    padding-bottom: 20px;
+  }
+
+  .monolith {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Crown */
+  .sovereign-crown {
+    font-size: 48px;
+    animation: crown-float 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px var(--gold)) drop-shadow(0 0 24px rgba(255,215,0,0.4));
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  @keyframes crown-float {
+    0%,100% { transform: translateX(-50%) translateY(0); filter: drop-shadow(0 0 12px var(--gold)) drop-shadow(0 0 24px rgba(255,215,0,0.5)); }
+    50% { transform: translateX(-50%) translateY(-8px); filter: drop-shadow(0 0 20px var(--gold)) drop-shadow(0 0 40px rgba(255,215,0,0.7)); }
+  }
+
+  .monolith-stone {
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px 12px 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .monolith-stone:hover { transform: translateY(-4px); }
+
+  /* First place */
+  .mono-1 .monolith-stone {
+    width: 220px; height: 320px;
+    background: linear-gradient(180deg, #1A0D30 0%, #0D0A22 100%);
+    border: 2px solid rgba(153,50,204,0.6);
+    box-shadow: 0 0 40px rgba(153,50,204,0.3), inset 0 0 30px rgba(153,50,204,0.05);
+  }
+  .mono-2 .monolith-stone {
+    width: 170px; height: 260px;
+    background: linear-gradient(180deg, #111020 0%, #080615 100%);
+    border: 1px solid rgba(100,100,100,0.4);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+  .mono-3 .monolith-stone {
+    width: 150px; height: 220px;
+    background: linear-gradient(180deg, #0F0E18 0%, #07060F 100%);
+    border: 1px solid rgba(80,80,80,0.3);
+  }
+
+  .mono-rank {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 28px;
+    color: rgba(255,255,255,0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  .mono-faction-name {
+    font-family: 'Cinzel Decorative', serif;
+    text-align: center;
+    z-index: 1;
+    text-shadow: 0 0 12px currentColor;
+    padding: 0 4px;
+  }
+  .mono-1 .mono-faction-name { font-size: 14px; color: var(--neon-purple); margin-top: 16px; }
+  .mono-2 .mono-faction-name { font-size: 11px; color: var(--silver); }
+  .mono-3 .mono-faction-name { font-size: 11px; color: #C0844A; }
+
+  .mono-score {
+    font-family: 'Press Start 2P', monospace;
+    margin-top: 10px;
+    z-index: 1;
+    text-align: center;
+  }
+  .mono-1 .mono-score { font-size: 18px; color: var(--neon-purple); text-shadow: 0 0 15px var(--amethyst); }
+  .mono-2 .mono-score { font-size: 13px; color: var(--silver); }
+  .mono-3 .mono-score { font-size: 13px; color: #C0844A; }
+
+  .mono-gem {
+    width: 24px; height: 24px;
+    background: radial-gradient(circle at 35% 35%, #E8B4FF, var(--amethyst), var(--deep-violet));
+    border-radius: 4px;
+    transform: rotate(45deg);
+    box-shadow: 0 0 15px var(--amethyst), 0 0 30px rgba(153,50,204,0.5);
+    margin-top: 10px;
+    animation: gem-pulse 2s ease-in-out infinite;
+    z-index: 1;
+  }
+  @keyframes gem-pulse {
+    0%,100% { box-shadow: 0 0 15px var(--amethyst), 0 0 30px rgba(153,50,204,0.3); }
+    50% { box-shadow: 0 0 25px var(--neon-purple), 0 0 50px rgba(153,50,204,0.6); }
+  }
+
+  /* Thorny vines for cursed */
+  .mono-3 .monolith-stone::after {
+    content: '🌿🌿🌿';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    text-align: center;
+    font-size: 20px;
+    filter: hue-rotate(270deg) saturate(2);
+  }
+  .mono-3 .monolith-stone::before {
+    content: '⚠️ WEAKENED';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--magenta);
+    text-shadow: 0 0 8px var(--magenta);
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  /* gem glow overlay on #1 */
+  .mono-1 .monolith-stone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(153,50,204,0.12), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Plunder total */
+  .mono-plunder-badge {
+    background: rgba(100,255,100,0.15);
+    border: 1px solid rgba(100,255,100,0.4);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #80FF80;
+    margin-top: 8px;
+    z-index: 1;
+  }
+
+  /* ── MODAL: Raid Map ── */
+  #raid-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5,3,15,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    animation: modal-in 0.3s ease-out;
+  }
+  #raid-modal.open { display: flex; }
+  @keyframes modal-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .raid-panel {
+    background: linear-gradient(135deg, #14082A, #0D0A18);
+    border: 2px solid var(--amethyst);
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 520px;
+    width: 90%;
+    box-shadow: 0 0 60px rgba(153,50,204,0.4);
+    position: relative;
+  }
+  .raid-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 18px;
+    color: var(--gold);
+    text-shadow: 0 0 15px var(--gold);
+    margin-bottom: 6px;
+  }
+  .raid-sub {
+    font-size: 11px;
+    color: rgba(216,180,254,0.5);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .raid-boss {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: rgba(153,50,204,0.1);
+    border: 1px solid rgba(153,50,204,0.3);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .raid-boss:hover { border-color: var(--amethyst); background: rgba(153,50,204,0.2); transform: translateX(4px); }
+  .boss-emoji { font-size: 32px; }
+  .boss-info { flex: 1; }
+  .boss-name { font-family: 'Cinzel Decorative', serif; font-size: 13px; color: var(--neon-purple); margin-bottom: 4px; }
+  .boss-req { font-size: 10px; color: rgba(216,180,254,0.5); }
+  .boss-reward { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--gold); }
+  .raid-close {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: none;
+    border: none;
+    color: rgba(216,180,254,0.5);
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .raid-close:hover { color: var(--crimson); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--obsidian); }
+  ::-webkit-scrollbar-thumb { background: var(--amethyst); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div style="font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--neon-purple);margin-right:16px;text-shadow:0 0 10px var(--amethyst);">⚔ THE SOVEREIGN SHARDS</div>
+  <button class="nav-btn active" onclick="showFrame(1,this)">I · Stronghold</button>
+  <button class="nav-btn" onclick="showFrame(2,this)">II · Battle Arena</button>
+  <button class="nav-btn" onclick="showFrame(3,this)">III · Soul-Shatter</button>
+  <button class="nav-btn" onclick="showFrame(4,this)">IV · Great Hall</button>
+</nav>
+
+<!-- ════ FRAME 1 ════ -->
+<div id="frame1" class="frame active">
+  <div id="f1-main">
+    <div class="f1-title">⚔ The Stronghold</div>
+    <div class="f1-subtitle">RESTING STATE · ESSENCE OVERVIEW</div>
+
+    <div class="faction-grid">
+      <!-- Blue -->
+      <div class="faction-card blue-card">
+        <div class="tooltip-class">🛡 Class: Paladins of the Azure Veil<br>Bonus: +15% Essence on kills</div>
+        <div class="faction-name"><span class="faction-dot"></span>FACTION BLUE</div>
+        <div class="faction-hp-bar"><div class="faction-hp-fill"></div></div>
+        <div class="faction-stat"><span>HP: 8,500 / 10,000</span><span>⚡ Active</span></div>
+      </div>
+      <!-- Red -->
+      <div class="faction-card red-card">
+        <div class="tooltip-class">💀 Class: Necromancers of the Wailing Reach<br>Bonus: +10% on time survived</div>
+        <div class="faction-name"><span class="faction-dot"></span>FACTION RED</div>
+        <div class="faction-hp-bar"><div class="faction-hp-fill"></div></div>
+        <div class="faction-stat"><span>HP: 1,800 / 4,800</span><span>⚠ Weakened</span></div>
+      </div>
+      <!-- Green -->
+      <div class="faction-card" style="border-color:rgba(0,200,100,0.4);">
+        <div class="tooltip-class">🌿 Class: Rangers of the Thornwood<br>Bonus: +20% Essence from quests</div>
+        <div class="faction-name"><span class="faction-dot" style="background:#00C864;box-shadow:0 0 8px #00C864;"></span>FACTION GREEN</div>
+        <div class="faction-hp-bar"><div class="faction-hp-fill" style="background:linear-gradient(90deg,#005520,#00C864);width:60%;"></div></div>
+        <div class="faction-stat"><span>HP: 6,000 / 10,000</span><span>🔋 Steady</span></div>
+      </div>
+      <!-- Gold -->
+      <div class="faction-card" style="border-color:rgba(255,215,0,0.4);">
+        <div class="tooltip-class">⚔ Class: Wardens of the Solar Throne<br>Bonus: +25% on boss raids</div>
+        <div class="faction-name"><span class="faction-dot" style="background:#FFD700;box-shadow:0 0 8px #FFD700;"></span>FACTION GOLD</div>
+        <div class="faction-hp-bar"><div class="faction-hp-fill" style="background:linear-gradient(90deg,#886600,#FFD700);width:72%;"></div></div>
+        <div class="faction-stat"><span>HP: 7,200 / 10,000</span><span>✨ Surging</span></div>
+      </div>
+    </div>
+
+    <button id="spend-btn" onclick="document.getElementById('raid-modal').classList.add('open')">
+      <span class="lock-icon">🗝</span>
+      SPEND ESSENCE — Unlock Epic Raid Bosses
+      <span style="font-size:10px;color:rgba(216,180,254,0.6);margin-left:4px;">(10,000+ Required)</span>
+    </button>
+
+    <div id="chronicle">
+      <h3>📜 THE CHRONICLE — EVENT LOG</h3>
+      <div class="log-entry"><span class="log-time">22:14</span>Faction Blue has harvested the spirit of the fallen.</div>
+      <div class="log-entry"><span class="log-time">22:11</span>Faction Red suffers the Curse of Weakening — HP critically low.</div>
+      <div class="log-entry"><span class="log-time">22:08</span>Faction Green claims the Eastern Forest Shrine. +800 Essence.</div>
+      <div class="log-entry"><span class="log-time">22:03</span>Faction Gold completes Raid: The Iron Citadel. +1,200 Essence.</div>
+    </div>
+  </div>
+
+  <!-- Essence Vault Sidebar -->
+  <div id="vault-sidebar">
+    <div class="vault-title">🏮 ESSENCE VAULT</div>
+
+    <div class="lantern blue-lantern">
+      <div class="lantern-body">🏮</div>
+      <div class="flame-indicator"></div>
+      <div class="lantern-label">FACTION BLUE</div>
+      <div class="essence-counter">12,450</div>
+    </div>
+
+    <div class="lantern red-lantern">
+      <div class="lantern-body" style="font-size:26px;opacity:0.7;">🏮</div>
+      <div class="flame-indicator"></div>
+      <div class="lantern-label">FACTION RED</div>
+      <div class="essence-counter">4,120</div>
+    </div>
+
+    <div class="lantern" style="border-color:rgba(0,200,100,0.25);">
+      <div class="lantern-body" style="font-size:28px;">🏮</div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#00C864;box-shadow:0 0 8px #00C864;margin:0 auto;animation:pulse-flame 1.8s ease-in-out infinite;"></div>
+      <div class="lantern-label">FACTION GREEN</div>
+      <div class="essence-counter" style="color:#80FF80;text-shadow:0 0 8px #00C864;font-size:11px;">9,880</div>
+    </div>
+
+    <div class="lantern" style="border-color:rgba(255,215,0,0.25);">
+      <div class="lantern-body" style="font-size:30px;">🏮</div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#FFD700;box-shadow:0 0 8px #FFD700;margin:0 auto;animation:pulse-flame 2s ease-in-out infinite;"></div>
+      <div class="lantern-label">FACTION GOLD</div>
+      <div class="essence-counter" style="color:#FFD700;text-shadow:0 0 8px #AA8800;font-size:11px;">7,240</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FRAME 2 ════ -->
+<div id="frame2" class="frame">
+  <div id="f2-header">
+    <div style="font-size:10px;color:rgba(216,180,254,0.5);letter-spacing:2px;">⚔ BATTLE ARENA · CONFLICT STATE</div>
+    <div class="essence-stake">
+      <span class="stake-blue">🏮 12,450</span>
+      <span class="vs-badge">VS</span>
+      <span class="stake-red">🏮 4,120</span>
+    </div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:8px;color:rgba(216,180,254,0.4);">ROUND 3</div>
+  </div>
+  <div id="f2-arena">
+    <!-- Knight -->
+    <div class="warrior" id="knight">
+      <div class="warrior-name">SIR ALDRIC</div>
+      <div class="hp-bar-wrap"><div class="hp-fill knight-hp"></div></div>
+      <div class="warrior-sprite">🧙</div>
+    </div>
+    <!-- Orc -->
+    <div class="warrior" id="orc">
+      <div class="warrior-name">GRAK</div>
+      <div class="hp-bar-wrap"><div class="hp-fill orc-hp"></div></div>
+      <div class="warrior-sprite">👹</div>
+    </div>
+    <div class="arena-label">
+      <div class="arena-round">— ROUND 3 —</div>
+    </div>
+    <button id="attack-btn" onclick="deliverFinalBlow()">⚔ DELIVER FINAL BLOW</button>
+  </div>
+</div>
+
+<!-- ════ FRAME 3 ════ -->
+<div id="frame3" class="frame">
+  <div id="f3-crimson-flash"></div>
+  <div id="shards-container"></div>
+
+  <div id="f3-scores">
+    <div class="f3-score-box winner">
+      <div class="f3-score-label">FACTION BLUE</div>
+      <div class="f3-score-num" id="f3-blue-score">16,570</div>
+      <div style="font-family:'Press Start 2P',monospace;font-size:7px;color:#80FF80;margin-top:6px;">+ 4,120 PLUNDERED</div>
+    </div>
+    <div class="f3-score-box loser">
+      <div class="f3-score-label">FACTION RED</div>
+      <div class="f3-score-num" id="f3-red-score">4,120</div>
+      <div class="broken-counter">SHATTERED</div>
+    </div>
+  </div>
+
+  <div class="proclamation">FACTION BLUE HAS<br>PLUNDERED ALL ESSENCE<br>FROM FACTION RED!</div>
+  <div class="proc-sub">⚔ SOUL-SHATTER EVENT ⚔</div>
+</div>
+
+<!-- ════ FRAME 4 ════ -->
+<div id="frame4" class="frame">
+  <div id="nebula"></div>
+  <div id="f4-title">⚜ THE GREAT HALL ⚜</div>
+  <div id="f4-sub">SOVEREIGN LEADERBOARD · END STATE</div>
+  <div id="monoliths">
+    <!-- #2 -->
+    <div class="monolith mono-2" style="margin-right:-10px;z-index:1;">
+      <div class="monolith-stone">
+        <div class="mono-rank">#2</div>
+        <div class="mono-faction-name">Faction Green</div>
+        <div class="mono-score">9,880</div>
+        <div style="margin-top:8px;font-size:10px;color:rgba(216,180,254,0.4);font-family:'Press Start 2P',monospace;">#RANGERS</div>
+      </div>
+    </div>
+    <!-- #1 -->
+    <div class="monolith mono-1" style="z-index:2;">
+      <div class="sovereign-crown">👑</div>
+      <div class="monolith-stone">
+        <div class="mono-rank">#1</div>
+        <div class="mono-gem"></div>
+        <div class="mono-faction-name">Faction Blue</div>
+        <div class="mono-score">16,570</div>
+        <div class="mono-plunder-badge">+4,120 PLUNDERED</div>
+        <div style="margin-top:8px;font-size:9px;color:rgba(216,180,254,0.5);font-family:'Press Start 2P',monospace;">#PALADINS</div>
+      </div>
+    </div>
+    <!-- #3 -->
+    <div class="monolith mono-3" style="margin-left:-10px;z-index:1;">
+      <div class="monolith-stone" style="position:relative;">
+        <div class="mono-rank">#3</div>
+        <div class="mono-faction-name" style="margin-top:20px;">Faction Gold</div>
+        <div class="mono-score">7,240</div>
+        <div style="margin-top:8px;font-size:9px;color:var(--magenta);font-family:'Press Start 2P',monospace;text-shadow:0 0 8px var(--magenta);">CURSED</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ RAID MODAL ════ -->
+<div id="raid-modal">
+  <div class="raid-panel">
+    <button class="raid-close" onclick="document.getElementById('raid-modal').classList.remove('open')">✕</button>
+    <div class="raid-title">🗺 Epic Raid Boss Map</div>
+    <div class="raid-sub">UNLOCKED · 10,000+ ESSENCE REQUIRED</div>
+
+    <div class="raid-boss">
+      <div class="boss-emoji">🐉</div>
+      <div class="boss-info">
+        <div class="boss-name">Kael'vrath the Unbound</div>
+        <div class="boss-req">Requires: 10,000 Essence · 4 players</div>
+      </div>
+      <div class="boss-reward">+3,500 ✦</div>
+    </div>
+    <div class="raid-boss">
+      <div class="boss-emoji">☠️</div>
+      <div class="boss-info">
+        <div class="boss-name">The Lich of Velmoor</div>
+        <div class="boss-req">Requires: 12,000 Essence · 6 players</div>
+      </div>
+      <div class="boss-reward">+5,000 ✦</div>
+    </div>
+    <div class="raid-boss">
+      <div class="boss-emoji">🌑</div>
+      <div class="boss-info">
+        <div class="boss-name">Void Titan: Null-Primus</div>
+        <div class="boss-req">Requires: 15,000 Essence · 8 players</div>
+      </div>
+      <div class="boss-reward">+8,200 ✦</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showFrame(n, btn) {
+  document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('frame' + n).classList.add('active');
+  btn.classList.add('active');
+  if (n === 3) triggerSoulShatter();
+  if (n === 4) spawnStars();
+}
+
+function deliverFinalBlow() {
+  const orc = document.getElementById('orc');
+  orc.style.transition = 'opacity 0.5s, transform 0.5s';
+  orc.style.opacity = '0.1';
+  orc.style.transform = 'scaleX(-1) scale(0.8)';
+  const btnEl = document.getElementById('attack-btn');
+  btnEl.textContent = '💀 VICTORY — PLUNDERING...';
+  btnEl.style.background = 'linear-gradient(135deg, #4B0082, var(--amethyst))';
+  setTimeout(() => {
+    document.querySelectorAll('.nav-btn')[2].click();
+  }, 1200);
+}
+
+function triggerSoulShatter() {
+  const f3 = document.getElementById('frame3');
+  f3.classList.add('shake');
+  setTimeout(() => f3.classList.remove('shake'), 600);
+
+  const container = document.getElementById('shards-container');
+  container.innerHTML = '';
+
+  const shardEmojis = ['💎','✨','🔮','⭐','💠'];
+  for (let i = 0; i < 18; i++) {
+    const shard = document.createElement('div');
+    shard.className = 'shard';
+    shard.textContent = shardEmojis[Math.floor(Math.random() * shardEmojis.length)];
+    const startX = 55 + Math.random() * 10;
+    const startY = 30 + Math.random() * 20;
+    const tx = (Math.random() - 0.5) * 600 + 'px';
+    const ty = (Math.random() - 0.5) * 400 + 'px';
+    shard.style.cssText = `left:${startX}%;top:${startY}%;--tx:${tx};--ty:${ty};animation-delay:${Math.random()*0.8}s;font-size:${12+Math.random()*20}px;`;
+    container.appendChild(shard);
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const orb = document.createElement('div');
+    orb.className = 'soul-orb';
+    orb.style.cssText = `left:${50+Math.random()*15}%;top:${35+Math.random()*20}%;animation-delay:${Math.random()*1.2}s;width:${10+Math.random()*14}px;height:${10+Math.random()*14}px;`;
+    container.appendChild(orb);
+  }
+}
+
+let starsSpawned = false;
+function spawnStars() {
+  if (starsSpawned) return;
+  starsSpawned = true;
+  const nebula = document.getElementById('nebula');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const d = (2 + Math.random() * 4).toFixed(1) + 's';
+    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${d};animation-delay:${Math.random()*4}s;width:${Math.random()<0.8?2:3}px;height:${Math.random()<0.8?2:3}px;opacity:${0.2+Math.random()*0.6};`;
+    nebula.appendChild(star);
+  }
+}
+
+// Auto-spawn stars for frame 4 if visited directly
+window.addEventListener('load', () => {
+  if (document.getElementById('frame4').classList.contains('active')) spawnStars();
+});
+</script>
+</body>
+</html>
