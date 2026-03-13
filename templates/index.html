@@ -19,7 +19,8 @@
         /* =====================
            BASE RESET
         ======================== */
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -62,10 +63,12 @@
             transition: transform 0.4s ease, filter 0.3s ease;
             pointer-events: auto;
         }
+
         #settings-gear:hover {
             transform: rotate(45deg) scale(1.1);
             filter: drop-shadow(0 0 16px white);
         }
+
         #settings-gear.open {
             transform: rotate(90deg);
         }
@@ -92,8 +95,9 @@
             opacity: 0;
             pointer-events: none;
             transform: translateY(-12px);
-            box-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
+
         #settings-hub.visible {
             opacity: 1;
             pointer-events: auto;
@@ -104,14 +108,15 @@
             width: 72px;
             height: 72px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.7);
-            box-shadow: 0 0 20px rgba(255,255,255,0.4);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
+
         .hub-avatar-ring img {
             width: 100%;
             height: 100%;
@@ -131,15 +136,15 @@
         .hub-divider {
             width: 100%;
             height: 1px;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
         .hub-btn {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
             color: white;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.35);
             border-radius: 8px;
             padding: 12px 18px;
             cursor: pointer;
@@ -150,10 +155,11 @@
             transition: all 0.25s ease;
             backdrop-filter: blur(4px);
         }
+
         .hub-btn:hover {
-            background: rgba(255,255,255,0.18);
+            background: rgba(255, 255, 255, 0.18);
             border-color: white;
-            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
             transform: scale(1.03);
         }
 
@@ -193,6 +199,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             pointer-events: auto;
         }
+
         .cinematic-btn:hover {
             background-color: rgba(60, 60, 60, 0.8);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
@@ -200,7 +207,10 @@
             border-color: #ffffff;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
-        .cinematic-btn:active { transform: scale(0.98); }
+
+        .cinematic-btn:active {
+            transform: scale(0.98);
+        }
 
         .main-btn {
             padding: 16px 32px;
@@ -223,6 +233,7 @@
             background: url('/static/staticpurple_bg.jpg') no-repeat center center;
             background-size: cover;
         }
+
         #profile-overlay::before {
             content: '';
             position: absolute;
@@ -230,6 +241,7 @@
             backdrop-filter: blur(12px) brightness(0.4);
             -webkit-backdrop-filter: blur(12px) brightness(0.4);
         }
+
         #profile-overlay.visible {
             opacity: 1;
             pointer-events: auto;
@@ -250,6 +262,7 @@
             pointer-events: none;
             transition: opacity 0.4s ease;
         }
+
         #lobby-overlay.visible {
             opacity: 1;
             pointer-events: auto;
@@ -262,7 +275,10 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        .carousel-wrapper::-webkit-scrollbar { display: none; }
+
+        .carousel-wrapper::-webkit-scrollbar {
+            display: none;
+        }
 
         /* =====================
            PIXEL FONT
@@ -271,8 +287,9 @@
             font-family: 'Press Start 2P', monospace;
             text-shadow: 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
         }
+
         .heavy-glow {
-            text-shadow: 0 0 15px rgba(255,255,255,1), 0 0 30px rgba(255,255,255,0.8), 0 0 45px rgba(255,255,255,0.6);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8), 0 0 45px rgba(255, 255, 255, 0.6);
         }
 
         /* =====================
@@ -285,6 +302,7 @@
             margin-bottom: 24px;
             transform: scale(0.85);
         }
+
         .lobby-box-content {
             background-color: transparent;
             backdrop-filter: none;
@@ -293,6 +311,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .slot-container {
             display: flex;
             gap: 12px;
@@ -301,6 +320,7 @@
             height: 90px;
             overflow: visible;
         }
+
         .slot {
             width: 55px;
             height: 75px;
@@ -309,36 +329,41 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(255,255,255,0.08);
-            border: 2px solid rgba(255,255,255,0.4);
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 8px;
             overflow: hidden;
             position: relative;
             font-family: 'Press Start 2P', monospace;
             backdrop-filter: blur(8px);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             box-sizing: border-box;
         }
+
         .slot::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(10,25,47,0.9) 0%, transparent 20%, transparent 80%, rgba(10,25,47,0.9) 100%);
+            background: linear-gradient(to bottom, rgba(10, 25, 47, 0.9) 0%, transparent 20%, transparent 80%, rgba(10, 25, 47, 0.9) 100%);
             pointer-events: none;
         }
+
         .slot-inner {
             display: flex;
             flex-direction: column;
             width: 100%;
         }
+
         .char {
-            height: 71px; /* 75 minus borders */
+            height: 71px;
+            /* 75 minus borders */
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
-            text-shadow: 0 0 10px rgba(255,255,255,0.6);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
         }
+
         .dash-char {
             font-size: 32px;
             color: #fff;
@@ -349,28 +374,31 @@
             margin: 0 8px;
             text-shadow: 0 0 20px white;
         }
+
         .player-slot-card {
             width: 80px;
             height: 80px;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
         }
-        .player-slot-card.filled { 
-            border-color: rgba(255,255,255,0.8); 
-            box-shadow: 0 0 20px rgba(255,255,255,0.2), inset 0 0 10px rgba(255,255,255,0.1); 
+
+        .player-slot-card.filled {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1);
         }
-        .player-slot-card.filled img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            padding: 10px; 
+
+        .player-slot-card.filled img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
             transform: scale(1.1);
         }
 
@@ -387,9 +415,10 @@
             position: relative;
             z-index: 10;
         }
+
         .pomo-btn {
             background: transparent;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             border: none;
             border-radius: 4px;
             width: 30px;
@@ -400,39 +429,61 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .pomo-btn:hover {
             color: #fff;
-            border: 1px solid rgba(255,255,255,0.8);
-            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
             transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(255,255,255,0.5), inset 0 0 5px rgba(255,255,255,0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.3);
         }
-        .pixel-toggle { display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; background: transparent; }
-        .pixel-toggle i { font-size: 32px; color: rgba(255,255,255,0.5); transition: all 0.3s ease; }
-        .pixel-toggle.active i { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,1); }
+
+        .pixel-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .pixel-toggle i {
+            font-size: 32px;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .pixel-toggle.active i {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 1);
+        }
 
         .lobby-main-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Prevent pushing items off top */
+            justify-content: flex-start;
+            /* Prevent pushing items off top */
             height: 100vh;
             width: 100%;
             position: relative;
             z-index: 10;
             gap: 20px;
             padding-top: 8vh;
-            overflow-y: auto; /* Safety scroll */
+            overflow-y: auto;
+            /* Safety scroll */
         }
+
         .scanlines {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1));
             background-size: 100% 4px;
             pointer-events: none;
             z-index: 5;
             opacity: 0.05;
         }
+
         .footer-action-container {
             width: 800px;
             display: flex;
@@ -442,10 +493,11 @@
             position: relative;
             z-index: 10;
         }
+
         .footer-btn {
-            background: rgba(20,20,20,0.6);
+            background: rgba(20, 20, 20, 0.6);
             color: white;
-            border: 1px solid rgba(255,255,255,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             padding: 0 24px;
             border-radius: 8px;
             cursor: pointer;
@@ -459,15 +511,218 @@
             transition: all 0.3s;
             backdrop-filter: blur(4px);
         }
-        .footer-btn:hover { border-color: #fff; background: rgba(60,60,60,0.8); box-shadow: 0 0 15px rgba(255,255,255,0.4); transform: scale(1.05); }
-        .footer-btn.primary-glow { border-color: #fff; background: rgba(255,255,255,0.1); box-shadow: 0 0 20px rgba(255,255,255,0.3); text-shadow: 0 0 8px rgba(255,255,255,0.8); }
-        .footer-btn.primary-glow:hover { background: rgba(255,255,255,0.2); box-shadow: 0 0 30px rgba(255,255,255,0.6); transform: scale(1.05); }
+
+        .footer-btn:hover {
+            border-color: #fff;
+            background: rgba(60, 60, 60, 0.8);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .footer-btn.primary-glow {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-btn.primary-glow:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+            transform: scale(1.05);
+        }
 
         @keyframes hostPulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.6); }
-            50% { box-shadow: 0 0 30px rgba(255,255,255,0.8); border-color: rgba(255,255,255,1); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+                border-color: rgba(255, 255, 255, 0.6);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+                border-color: rgba(255, 255, 255, 1);
+            }
         }
-        .host-glow { animation: hostPulse 2s infinite ease-in-out; background-color: rgba(255,255,255,0.15) !important; }
+
+        .host-glow {
+            animation: hostPulse 2s infinite ease-in-out;
+            background-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* =====================
+           GROUP POINTS PANEL
+        ======================== */
+        #group-points-panel {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: 290px;
+            height: calc(100vh - 80px);
+            z-index: 800;
+            background: linear-gradient(160deg, rgba(10, 5, 20, 0.97), rgba(25, 10, 40, 0.95));
+            border-left: 2px solid rgba(138, 43, 226, 0.5);
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(138, 43, 226, 0.1);
+            padding: 20px 18px;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #group-points-panel.open {
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .gp-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #d4af37;
+            text-align: center;
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.9);
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 4px;
+            letter-spacing: 2px;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            background: rgba(138, 43, 226, 0.12);
+            border-color: rgba(138, 43, 226, 0.8);
+            box-shadow: 0 0 14px rgba(138, 43, 226, 0.4);
+            transform: translateX(-4px);
+        }
+
+        .rune-circle {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.5) 0%, rgba(0, 0, 0, 0.8) 70%);
+            border: 2px solid #8a2be2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 14px #8a2be2, inset 0 0 10px #8a2be2;
+            animation: runePulse 2.5s infinite alternate;
+            font-size: 20px;
+        }
+
+        @keyframes runePulse {
+            0% {
+                box-shadow: 0 0 8px #8a2be2, inset 0 0 5px #8a2be2;
+                border-color: rgba(138, 43, 226, 0.5);
+            }
+
+            100% {
+                box-shadow: 0 0 22px #d4af37, inset 0 0 14px #8a2be2;
+                border-color: #d4af37;
+            }
+        }
+
+        .team-info {
+            flex: 1;
+        }
+
+        .team-name-lbl {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+        }
+
+        .team-pts-lbl {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 13px;
+            color: #00ffd2;
+            text-shadow: 0 0 10px rgba(0, 255, 210, 0.8);
+        }
+
+        .gp-log {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
+            margin-top: 4px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .gp-log-entry {
+            margin-bottom: 6px;
+            color: rgba(0, 255, 210, 0.6);
+        }
+
+        /* =====================
+           BATTLE OVERLAY
+        ======================== */
+        #battle-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 850;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .b-flash {
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            z-index: 851;
+        }
+
+        .b-banner {
+            z-index: 855;
+            background: rgba(8, 4, 18, 0.95);
+            border-top: 3px solid #d4af37;
+            border-bottom: 3px solid #d4af37;
+            padding: 20px 40px;
+            text-align: center;
+            transform: scale(0);
+            opacity: 0;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
+        }
+
+        .b-banner-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: #fff;
+            line-height: 1.8;
+            text-shadow: 0 0 10px #fff, 0 0 25px #8a2be2;
+        }
+
+        .magic-frag {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: #00ffd2;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffd2, 0 0 20px #00ffd2;
+            z-index: 852;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -475,10 +730,36 @@
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
 
-    <!-- LAYER 1000: Persistent Gear Nav (always on top) -->
-    <nav style="position: fixed; inset: 0; pointer-events: none; z-index: 1000;">
-        <i class="ph ph-gear-six" id="settings-gear" onclick="event.stopPropagation(); toggleSettingsHub()"></i>
+    <!-- LAYER 1000: Persistent Nav -->
+    <nav
+        style="position: fixed; top: 20px; right: 24px; z-index: 1000; display: flex; gap: 14px; align-items: center; pointer-events: none;">
+        <!-- Group Points Toggle -->
+        <i class="ph ph-shield-star" id="gp-nav-icon" style="pointer-events:auto; cursor:pointer; font-size:34px; color:#d4af37;
+                  filter: drop-shadow(0 0 8px #d4af37); transition: transform 0.3s;"
+            onclick="event.stopPropagation(); toggleGroupPanel()" title="Realm Standings"></i>
+        <!-- Gear -->
+        <i class="ph ph-gear-six" id="settings-gear" style="pointer-events:auto;"
+            onclick="event.stopPropagation(); toggleSettingsHub()"></i>
     </nav>
+
+    <!-- LAYER 800: Group Points Sidebar -->
+    <div id="group-points-panel">
+        <div class="gp-title">⚔️ REALM STANDINGS</div>
+        <div id="gp-teams-list">
+            <div
+                style="font-family:'Press Start 2P',monospace;font-size:7px;color:rgba(255,255,255,0.3);text-align:center;padding:20px 0;">
+                Summoning data...</div>
+        </div>
+        <div class="gp-log" id="gp-log"></div>
+    </div>
+
+    <!-- LAYER 850: Battle Victory Overlay -->
+    <div id="battle-overlay">
+        <div class="b-flash" id="b-flash"></div>
+        <div class="b-banner" id="b-banner">
+            <div class="b-banner-text" id="b-banner-text"></div>
+        </div>
+    </div>
 
     <!-- LAYER 900: Settings Hub (Glassmorphic Popover) -->
     <div id="settings-hub">
@@ -499,6 +780,7 @@
     <div id="main-menu">
         <button class="cinematic-btn main-btn" onclick="navigateTo('lobby-overlay')">Create Lobby</button>
         <button class="cinematic-btn main-btn" onclick="alert('Join Lobby coming soon!')">Join Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="window.location.href='/leaderboard'">🏆 Leaderboard</button>
     </div>
 
     <!-- LAYER 300: Character Selection Overlay -->
@@ -506,7 +788,8 @@
         <!-- The purple cloud background is applied via CSS (background + ::before blur) -->
 
         <!-- Header Controls (above the blur) -->
-        <div class="absolute top-0 w-full flex justify-between p-8 z-20 items-center" style="position: relative; z-index: 10;">
+        <div class="absolute top-0 w-full flex justify-between p-8 z-20 items-center"
+            style="position: relative; z-index: 10;">
             <input type="text" id="gamer-tag-input" placeholder="GAMER TAG"
                 class="bg-transparent border-b-2 border-white text-white outline-none px-2 py-1 w-64"
                 style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFF; text-shadow: 0 0 5px white; pointer-events: auto;"
@@ -523,8 +806,11 @@
         </div>
 
         <!-- Content (above the blur) -->
-        <div style="position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: -40px;">
-            <h1 style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: white; text-shadow: 0 0 15px white, 0 0 30px white; letter-spacing: 4px; margin-bottom: 28px;">CUSTOMIZE AVATAR</h1>
+        <div
+            style="position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: -40px;">
+            <h1
+                style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: white; text-shadow: 0 0 15px white, 0 0 30px white; letter-spacing: 4px; margin-bottom: 28px;">
+                CUSTOMIZE AVATAR</h1>
 
             <!-- Carousel -->
             <div id="character-carousel" class="carousel-wrapper"
@@ -547,14 +833,19 @@
 
                 <!-- Player Slots -->
                 <div class="flex flex-col items-center mb-8">
-                    <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1 / 4 PLAYERS JOINED</div>
+                    <div class="pixel-text"
+                        style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1
+                        / 4 PLAYERS JOINED</div>
                     <div class="flex gap-4">
                         <div class="player-slot-card filled" id="host-player-slot">
                             <img src="/static/characters/char1.png" id="host-avatar" alt="Player 1 Avatar">
                         </div>
-                        <div class="player-slot-card"><i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
-                        <div class="player-slot-card"><i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
-                        <div class="player-slot-card"><i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                        <div class="player-slot-card"><i class="ph ph-user"
+                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                        <div class="player-slot-card"><i class="ph ph-user"
+                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                        <div class="player-slot-card"><i class="ph ph-user"
+                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
                     </div>
                 </div>
 
@@ -562,43 +853,65 @@
                 <div class="flex flex-col items-center gap-4" style="width: 800px;">
                     <!-- Fight Duration -->
                     <div class="pomodoro-panel">
-                        <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">FIGHT DURATION</div>
+                        <div class="pixel-text"
+                            style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">FIGHT DURATION
+                        </div>
                         <div class="flex items-center gap-8 justify-center">
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="fight-min" style="font-size: 36px; color: white;">25</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i
+                                        class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="fight-min"
+                                    style="font-size: 36px; color: white;">25</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i
+                                        class="ph ph-plus" style="font-size: 18px;"></i></button>
                             </div>
                             <div class="pixel-text" style="font-size: 36px; color: white; opacity: 0.5;">:</div>
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('fight-min','fight-sec',-15)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="fight-sec" style="font-size: 36px; color: white;">00</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('fight-min','fight-sec',15)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('fight-min','fight-sec',-15)"><i class="ph ph-minus"
+                                        style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="fight-sec"
+                                    style="font-size: 36px; color: white;">00</div>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('fight-min','fight-sec',15)"><i class="ph ph-plus"
+                                        style="font-size: 18px;"></i></button>
                             </div>
                         </div>
                     </div>
                     <!-- Include Breaks Toggle (Ultra Compact) -->
                     <div class="flex items-center gap-4" style="margin: -5px 0 5px 0;">
-                        <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; white-space: nowrap; letter-spacing: 1px;">INCLUDE BREAKS</div>
+                        <div class="pixel-text"
+                            style="font-size: 8px; color: white; opacity: 0.8; white-space: nowrap; letter-spacing: 1px;">
+                            INCLUDE BREAKS</div>
                         <div class="pixel-toggle active" id="breaks-toggle" onclick="toggleBreaks()">
                             <i class="ph ph-check-circle" id="breaks-icon"></i>
                         </div>
                     </div>
 
                     <!-- Break Time Row (Compact) -->
-                    <div class="pomodoro-panel overflow-hidden" id="break-timer-panel" style="padding: 4px 32px; margin-bottom: 0;">
-                        <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">BREAK TIME</div>
+                    <div class="pomodoro-panel overflow-hidden" id="break-timer-panel"
+                        style="padding: 4px 32px; margin-bottom: 0;">
+                        <div class="pixel-text"
+                            style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">BREAK TIME</div>
                         <div class="flex items-center gap-8 justify-center">
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="break-min" style="font-size: 32px; color: white;">05</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i
+                                        class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="break-min"
+                                    style="font-size: 32px; color: white;">05</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i
+                                        class="ph ph-plus" style="font-size: 18px;"></i></button>
                             </div>
                             <div class="pixel-text" style="font-size: 32px; color: white; opacity: 0.5;">:</div>
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('break-min','break-sec',-15)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="break-sec" style="font-size: 32px; color: white;">00</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('break-min','break-sec',15)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('break-min','break-sec',-15)"><i class="ph ph-minus"
+                                        style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="break-sec"
+                                    style="font-size: 32px; color: white;">00</div>
+                                <button class="pomo-btn timer-ctrl"
+                                    onclick="adjustSeconds('break-min','break-sec',15)"><i class="ph ph-plus"
+                                        style="font-size: 18px;"></i></button>
                             </div>
                         </div>
                     </div>
@@ -637,10 +950,10 @@
             SCREENS.forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
-                
+
                 el.classList.remove('visible');
                 el.style.pointerEvents = 'none';
-                
+
                 if (id === 'main-menu') {
                     el.style.opacity = (targetId === 'main-menu') ? '1' : '0';
                     el.style.display = (targetId === 'main-menu') ? 'flex' : 'none';
@@ -656,7 +969,7 @@
 
             target.style.display = 'flex';
             target.style.pointerEvents = 'auto';
-            
+
             // Trigger GSAP for smooth entry
             gsap.to(target, { opacity: 1, duration: 0.4 });
 
@@ -673,7 +986,7 @@
                 if (targetId === 'profile-overlay') {
                     // Hide gear to prevent overlap with X button
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
-                    
+
                     setTimeout(() => {
                         gsap.killTweensOf('.char-card');
                         gsap.fromTo('.char-card',
@@ -848,16 +1161,16 @@
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const nums = "0123456789";
             let code = "";
-            for(let i=0; i<4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            for (let i = 0; i < 4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
             code += "-";
             code += nums.charAt(Math.floor(Math.random() * nums.length));
-            
+
             currentRoomCode = code;
 
             // 2. Build DOM
             const container = document.getElementById('fs-code-slots');
             container.innerHTML = '';
-            
+
             currentRoomCode.split('').forEach((char, index) => {
                 if (char === '-') {
                     const dash = document.createElement('div');
@@ -871,7 +1184,7 @@
                 slot.className = 'slot';
                 const inner = document.createElement('div');
                 inner.className = 'slot-inner';
-                
+
                 // Add deco chars
                 const spinCount = 15 + (index * 5);
                 for (let i = 0; i < spinCount; i++) {
@@ -881,25 +1194,25 @@
                     rChar.textContent = rollChars.charAt(Math.floor(Math.random() * rollChars.length));
                     inner.appendChild(rChar);
                 }
-                
+
                 // Final char
                 const finalChar = document.createElement('div');
                 finalChar.className = 'char final-char';
                 finalChar.textContent = char;
                 inner.appendChild(finalChar);
-                
+
                 slot.appendChild(inner);
                 container.appendChild(slot);
             });
 
-                const inners = container.querySelectorAll('.slot-inner');
+            const inners = container.querySelectorAll('.slot-inner');
             inners.forEach((inner, idx) => {
                 const dist = -((inner.children.length - 1) * 71); // 71 matches inner height
-                gsap.fromTo(inner, 
+                gsap.fromTo(inner,
                     { y: 0 },
-                    { 
-                        y: dist, 
-                        duration: 1.8 + (idx * 0.3), 
+                    {
+                        y: dist,
+                        duration: 1.8 + (idx * 0.3),
                         ease: "power4.inOut",
                         delay: 0.1,
                         onComplete: () => {
@@ -915,7 +1228,7 @@
         function showLobbyAnimations() {
             generateRoomCode();
             gsap.fromTo('.pomodoro-panel', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.4, ease: "power2.out" });
-            gsap.fromTo('.footer-btn',     { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.7  });
+            gsap.fromTo('.footer-btn', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.7 });
             gsap.fromTo('.player-slot-card', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.5, ease: "back.out(1.5)" });
         }
 
@@ -928,13 +1241,13 @@
                 document.execCommand('copy');
                 document.body.removeChild(ta);
             });
-            const copyBtn  = document.getElementById('copy-btn');
+            const copyBtn = document.getElementById('copy-btn');
             const copyText = document.getElementById('copy-text');
             copyText.textContent = "COPIED! ✨";
             copyBtn.classList.add('primary-glow');
             gsap.fromTo(copyBtn,
                 { scale: 1.1, backgroundColor: 'rgba(255,255,255,0.3)' },
-                { scale: 1,   backgroundColor: 'rgba(20,20,20,0.6)',   duration: 0.5 }
+                { scale: 1, backgroundColor: 'rgba(20,20,20,0.6)', duration: 0.5 }
             );
             setTimeout(() => {
                 copyText.textContent = "COPY ID";
@@ -955,7 +1268,7 @@
         function adjustTime(elementId, amount) {
             const el = document.getElementById(elementId);
             let v = parseInt(el.textContent) + amount;
-            if (v < 5)  v = 5;
+            if (v < 5) v = 5;
             if (v > 60) v = 60;
             el.textContent = v < 10 ? '0' + v : v;
         }
@@ -1000,8 +1313,8 @@
                 icon.className = "ph ph-check-circle";
                 gsap.fromTo(tgl, { scale: 0.9 }, { scale: 1, duration: 0.5, ease: "elastic.out(1,0.5)" });
                 breakPanel.style.display = 'flex';
-                gsap.fromTo(breakPanel, 
-                    { height: 0, opacity: 0, marginTop: -10 }, 
+                gsap.fromTo(breakPanel,
+                    { height: 0, opacity: 0, marginTop: -10 },
                     { height: 'auto', opacity: 1, marginTop: 0, duration: 0.5, ease: "back.out(1.2)" }
                 );
             }
@@ -1036,6 +1349,110 @@
             initCharacterSync();
             syncHubAvatar();
         });
+
+        // ─────────────────────────────────────────────
+        // GROUP POINTS PANEL
+        // ─────────────────────────────────────────────
+        let gpPanelOpen = false;
+        let gpInterval = null;
+        const gpPanel = document.getElementById('group-points-panel');
+        const gpLog = document.getElementById('gp-log');
+
+        function toggleGroupPanel() {
+            gpPanelOpen = !gpPanelOpen;
+            if (gpPanelOpen) {
+                gpPanel.classList.add('open');
+                fetchTeams();
+                gpInterval = setInterval(fetchTeams, 6000);
+            } else {
+                gpPanel.classList.remove('open');
+                clearInterval(gpInterval);
+            }
+        }
+
+        function fetchTeams() {
+            fetch('/api/teams')
+                .then(r => r.json())
+                .then(teams => renderTeams(teams))
+                .catch(() => { });
+        }
+
+        function renderTeams(teams) {
+            const list = document.getElementById('gp-teams-list');
+            list.innerHTML = '';
+            teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.innerHTML = `
+                    <div class="rune-circle">${team.emblem}</div>
+                    <div class="team-info">
+                        <div class="team-name-lbl">${team.name}</div>
+                        <div class="team-pts-lbl">${Number(team.points).toLocaleString()}</div>
+                    </div>`;
+                list.appendChild(card);
+            });
+        }
+
+        function addGpLog(msg) {
+            const entry = document.createElement('div');
+            entry.className = 'gp-log-entry';
+            entry.textContent = '▶ ' + msg;
+            gpLog.prepend(entry);
+            // Keep log trimmed
+            while (gpLog.children.length > 8) gpLog.removeChild(gpLog.lastChild);
+        }
+
+        // ─────────────────────────────────────────────
+        // BATTLE VICTORY ANIMATION
+        // ─────────────────────────────────────────────
+        function triggerVictoryAnimation(victorName, defeatedName, points) {
+            // Flash
+            gsap.fromTo('#b-flash', { opacity: 0.9 }, { opacity: 0, duration: 1.2, ease: 'power2.out' });
+
+            // Banner
+            const txt = document.getElementById('b-banner-text');
+            txt.innerHTML = `<span style="color:#00ffd2">${victorName}</span><br>seized<br><span style="color:#d4af37">${Number(points).toLocaleString()} pts</span><br>from <span style="color:#ff4466">${defeatedName}</span>!`;
+            gsap.fromTo('#b-banner',
+                { scale: 0, opacity: 0, rotationX: 70 },
+                {
+                    scale: 1, opacity: 1, rotationX: 0, duration: 0.7, ease: 'elastic.out(1,0.5)',
+                    onComplete: () => setTimeout(() =>
+                        gsap.to('#b-banner', { scale: 0, opacity: 0, duration: 0.5, ease: 'back.in(2)' })
+                        , 3500)
+                }
+            );
+
+            // Particles
+            const container = document.getElementById('battle-overlay');
+            for (let i = 0; i < 28; i++) {
+                const frag = document.createElement('div');
+                frag.className = 'magic-frag';
+                const sx = window.innerWidth / 2 + (Math.random() - 0.5) * 120;
+                const sy = window.innerHeight / 2 + (Math.random() - 0.5) * 120;
+                frag.style.left = sx + 'px';
+                frag.style.top = sy + 'px';
+                container.appendChild(frag);
+                gsap.to(frag, {
+                    x: (Math.random() - 0.5) * 320, y: (Math.random() - 0.5) * 320,
+                    duration: 0.7, ease: 'power2.out',
+                    onComplete: () => {
+                        gsap.to(frag, {
+                            left: (window.innerWidth - 145) + 'px',
+                            top: (120 + Math.random() * 200) + 'px',
+                            x: 0, y: 0,
+                            duration: 0.9 + Math.random() * 0.6,
+                            ease: 'power2.inOut',
+                            onComplete: () => frag.remove()
+                        });
+                    }
+                });
+            }
+
+            // Log it
+            addGpLog(`${victorName} seized ${points} pts from ${defeatedName}`);
+        }
+
+        // Demo: call from browser console with triggerVictoryAnimation('Team Alpha','Team Titan',1250)
     </script>
 </body>
 
