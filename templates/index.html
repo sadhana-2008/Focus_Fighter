@@ -296,11 +296,24 @@
         ======================== */
         .pixel-text {
             font-family: 'Press Start 2P', monospace;
-            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7), 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         .heavy-glow {
-            text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8), 0 0 45px rgba(255, 255, 255, 0.6);
+            /* Tighter glow: dark anchor + tight white halo — edges stay sharp */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(255, 255, 255, 1), 0 0 12px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Bottom vignette gradient overlay */
+        .bottom-vignette {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 22%;
+            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
         }
 
         /* =====================
@@ -390,19 +403,19 @@
             width: 80px;
             height: 80px;
             background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 18px rgba(0,0,0,0.6), inset 0 0 10px rgba(255, 255, 255, 0.05);
         }
 
         .player-slot-card.filled {
-            border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px rgba(0,0,0,0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         .player-slot-card.filled img {
@@ -567,6 +580,9 @@
 <body>
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
+
+    <!-- LAYER 5: Bottom vignette (behind footer buttons) -->
+    <div class="bottom-vignette"></div>
 
     <!-- LAYER 1000: Persistent Gear Nav (always on top) -->
     <nav
