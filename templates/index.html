@@ -482,6 +482,50 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 1);
         }
 
+        /* =====================
+           JOIN LAYER STYLES
+        ======================== */
+        #join-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .join-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            text-align: center;
+            letter-spacing: 15px;
+            text-indent: 15px; /* Offset to center the letter spacing perfectly */
+            font-family: 'Press Start 2P', monospace;
+            font-size: 32px;
+            outline: none;
+            padding: 10px 0;
+            width: 300px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            caret-color: transparent; /* Hide vertical blinking line */
+        }
+        
+        .join-input::selection {
+            background: transparent; /* Remove blue highlight */
+        }
+
+        .join-input:focus {
+            border-bottom: 4px solid rgba(255, 255, 255, 1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+        }
+
         .lobby-main-content {
             display: flex;
             flex-direction: column;
@@ -612,7 +656,7 @@
     <!-- LAYER 200: Main Menu -->
     <div id="main-menu">
         <button class="cinematic-btn main-btn" onclick="navigateTo('lobby-overlay')">Create Lobby</button>
-        <button class="cinematic-btn main-btn" onclick="alert('Join Lobby coming soon!')">Join Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="navigateTo('join-layer')">Join Lobby</button>
     </div>
 
     <!-- LAYER 300: Character Selection Overlay -->
@@ -648,6 +692,29 @@
             <div id="character-carousel" class="carousel-wrapper"
                 style="display: flex; gap: 64px; overflow-x: auto; width: 100%; align-items: center; padding: 16px 30vw; scroll-snap-type: x mandatory; pointer-events: auto;">
                 <!-- Cards injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYER 300: Join Layer -->
+    <div id="join-layer">
+        <div class="scanlines"></div>
+        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+            <h1 class="pixel-text heavy-glow" style="font-size: 24px; color: white; margin-bottom: 60px;">ENTER ROOM CODE</h1>
+            
+            <div id="join-input-wrapper" style="position: relative; margin-bottom: 80px;">
+                <input type="text" id="room-code-input" class="join-input" maxlength="6" autocomplete="off" spellcheck="false" placeholder="XXXX-X" />
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="flex gap-6">
+                <button class="footer-btn" onclick="navigateTo('main-menu')">
+                    <span class="pixel-text">BACK</span>
+                </button>
+                <button class="footer-btn primary-glow" onclick="attemptJoinRoom()">
+                    <i class="ph-fill ph-play" style="font-size: 20px; margin-top: 2px;"></i>
+                    <span class="pixel-text">JOIN</span>
+                </button>
             </div>
         </div>
     </div>
@@ -774,7 +841,7 @@
         // ─────────────────────────────────────────────
         // STATE MACHINE
         // ─────────────────────────────────────────────
-        const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay'];
+        const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay', 'join-layer'];
         let previousScreen = null; // tracks where "close profile" returns to
 
         let isBrightMode = false;
@@ -830,18 +897,70 @@
                     initCharacterSync();
                     gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 }
-                if (targetId === 'profile-overlay') {
-                    // Hide gear to prevent overlap with X button
+                if (targetId === 'profile-overlay' || targetId === 'join-layer') {
+                    // Hide gear to prevent overlap
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
 
-                    setTimeout(() => {
-                        gsap.killTweensOf('.char-card');
-                        gsap.fromTo('.char-card',
-                            { y: 40, opacity: 0 },
-                            { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'back.out(1.5)' }
-                        );
-                    }, 50);
+                    if (targetId === 'profile-overlay') {
+                        setTimeout(() => {
+                            gsap.killTweensOf('.char-card');
+                            gsap.fromTo('.char-card',
+                                { y: 40, opacity: 0 },
+                                { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'back.out(1.5)' }
+                            );
+                        }, 50);
+                    } else if (targetId === 'join-layer') {
+                        // clear input on open
+                        const input = document.getElementById('room-code-input');
+                        if(input) {
+                            input.value = '';
+                            setTimeout(() => input.focus(), 100);
+                        }
+                    }
                 }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // JOIN LOBBY LOGIC
+        // ─────────────────────────────────────────────
+        function setupJoinInput() {
+            const input = document.getElementById('room-code-input');
+            const wrapper = document.getElementById('join-input-wrapper');
+            if(!input) return;
+
+            input.addEventListener('input', (e) => {
+                let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                if (val.length > 4) {
+                    val = val.slice(0, 4) + '-' + val.slice(4, 5);
+                }
+                e.target.value = val;
+
+                // Subtle jump effect on typing
+                gsap.killTweensOf(wrapper);
+                gsap.fromTo(wrapper, 
+                    { y: -5, scale: 1.02 }, 
+                    { y: 0, scale: 1, duration: 0.3, ease: 'bounce.out' }
+                );
+            });
+        }
+
+        function attemptJoinRoom() {
+            const input = document.getElementById('room-code-input');
+            const val = input.value;
+            // Basic validation for XXXX-X format
+            if(val.length === 6 && val.includes('-')) {
+                // Success: Transition to lobby
+                navigateTo('lobby-overlay');
+                // You can add logic here to make the lobby reflect the joined room specifically
+            } else {
+                // Fail: Shake animation
+                gsap.timeline()
+                    .to(input, { x: -10, duration: 0.05 })
+                    .to(input, { x: 10, duration: 0.05 })
+                    .to(input, { x: -10, duration: 0.05 })
+                    .to(input, { x: 10, duration: 0.05 })
+                    .to(input, { x: 0, duration: 0.05 });
             }
         }
 
@@ -1195,6 +1314,7 @@
             navigateTo('main-menu');
             initCharacterSync();
             syncHubAvatar();
+            setupJoinInput();
         });
     </script>
 </body>
