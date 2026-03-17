@@ -41,7 +41,7 @@
             z-index: 0;
             pointer-events: none;
             background-color: #222;
-            background-image: url('/static/bg_gif.gif?v=2');
+            background-image: url('/static/campfire_bg.gif');
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
@@ -296,12 +296,12 @@
         ======================== */
         .pixel-text {
             font-family: 'Press Start 2P', monospace;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7), 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         .heavy-glow {
             /* Tighter glow: dark anchor + tight white halo — edges stay sharp */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(255, 255, 255, 1), 0 0 12px rgba(255, 255, 255, 0.8);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 6px rgba(255, 255, 255, 1), 0 0 12px rgba(255, 255, 255, 0.8);
         }
 
         /* Bottom vignette gradient overlay */
@@ -311,7 +311,7 @@
             left: 0;
             width: 100%;
             height: 22%;
-            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
             z-index: 5;
             pointer-events: none;
         }
@@ -410,12 +410,12 @@
             align-items: center;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 0 18px rgba(0,0,0,0.6), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.05);
         }
 
         .player-slot-card.filled {
             border-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px rgba(0,0,0,0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         .player-slot-card.filled img {
@@ -505,7 +505,8 @@
             color: white;
             text-align: center;
             letter-spacing: 15px;
-            text-indent: 15px; /* Offset to center the letter spacing perfectly */
+            text-indent: 15px;
+            /* Offset to center the letter spacing perfectly */
             font-family: 'Press Start 2P', monospace;
             font-size: 32px;
             outline: none;
@@ -513,11 +514,13 @@
             width: 300px;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            caret-color: transparent; /* Hide vertical blinking line */
+            caret-color: transparent;
+            /* Hide vertical blinking line */
         }
-        
+
         .join-input::selection {
-            background: transparent; /* Remove blue highlight */
+            background: transparent;
+            /* Remove blue highlight */
         }
 
         .join-input:focus {
@@ -655,7 +658,7 @@
 
     <!-- LAYER 200: Main Menu -->
     <div id="main-menu">
-        <button class="cinematic-btn main-btn" onclick="navigateTo('lobby-overlay')">Create Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="createLobby()">Create Lobby</button>
         <button class="cinematic-btn main-btn" onclick="navigateTo('join-layer')">Join Lobby</button>
     </div>
 
@@ -700,10 +703,12 @@
     <div id="join-layer">
         <div class="scanlines"></div>
         <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-            <h1 class="pixel-text heavy-glow" style="font-size: 24px; color: white; margin-bottom: 60px;">ENTER ROOM CODE</h1>
-            
+            <h1 class="pixel-text heavy-glow" style="font-size: 24px; color: white; margin-bottom: 60px;">ENTER ROOM
+                CODE</h1>
+
             <div id="join-input-wrapper" style="position: relative; margin-bottom: 80px;">
-                <input type="text" id="room-code-input" class="join-input" maxlength="6" autocomplete="off" spellcheck="false" placeholder="XXXX-X" />
+                <input type="text" id="room-code-input" class="join-input" maxlength="6" autocomplete="off"
+                    spellcheck="false" placeholder="XXXX-X" />
             </div>
 
             <!-- Footer Actions -->
@@ -735,7 +740,7 @@
                     <div class="pixel-text"
                         style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1
                         / 4 PLAYERS JOINED</div>
-                    <div class="flex gap-4">
+                    <div class="flex gap-4" style="position: relative;">
                         <div class="player-slot-card filled" id="host-player-slot">
                             <img src="/static/characters/char1.png" id="host-avatar" alt="Player 1 Avatar">
                         </div>
@@ -827,9 +832,9 @@
                     <button class="footer-btn" onclick="navigateTo('main-menu')">
                         <span class="pixel-text">LEAVE LOBBY</span>
                     </button>
-                    <button class="footer-btn primary-glow">
-                        <i class="ph-fill ph-play" style="font-size: 20px; margin-top: 2px;"></i>
-                        <span class="pixel-text">START FIGHT</span>
+                    <button class="footer-btn primary-glow" id="start-fight-btn">
+                        <i class="ph-fill ph-play" id="start-fight-icon" style="font-size: 20px; margin-top: 2px;"></i>
+                        <span class="pixel-text" id="start-fight-text">START FIGHT</span>
                     </button>
                 </div>
             </div>
@@ -843,6 +848,7 @@
         // ─────────────────────────────────────────────
         const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay', 'join-layer'];
         let previousScreen = null; // tracks where "close profile" returns to
+        let userRole = 'spectator'; // 'host' | 'guest' | 'spectator'
 
         let isBrightMode = false;
         function toggleBrightMode() {
@@ -912,7 +918,7 @@
                     } else if (targetId === 'join-layer') {
                         // clear input on open
                         const input = document.getElementById('room-code-input');
-                        if(input) {
+                        if (input) {
                             input.value = '';
                             setTimeout(() => input.focus(), 100);
                         }
@@ -927,7 +933,7 @@
         function setupJoinInput() {
             const input = document.getElementById('room-code-input');
             const wrapper = document.getElementById('join-input-wrapper');
-            if(!input) return;
+            if (!input) return;
 
             input.addEventListener('input', (e) => {
                 let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -938,23 +944,24 @@
 
                 // Subtle jump effect on typing
                 gsap.killTweensOf(wrapper);
-                gsap.fromTo(wrapper, 
-                    { y: -5, scale: 1.02 }, 
+                gsap.fromTo(wrapper,
+                    { y: -5, scale: 1.02 },
                     { y: 0, scale: 1, duration: 0.3, ease: 'bounce.out' }
                 );
             });
         }
 
+        let guestJoinedCode = ''; // Stores the code typed by the Guest
+
         function attemptJoinRoom() {
             const input = document.getElementById('room-code-input');
             const val = input.value;
-            // Basic validation for XXXX-X format
-            if(val.length === 6 && val.includes('-')) {
-                // Success: Transition to lobby
+            if (val.length === 6 && val.includes('-')) {
+                userRole = 'guest';
+                guestJoinedCode = val.toUpperCase(); // Save the code they typed
                 navigateTo('lobby-overlay');
-                // You can add logic here to make the lobby reflect the joined room specifically
+                syncLobbyData(); // Snap sync from localStorage
             } else {
-                // Fail: Shake animation
                 gsap.timeline()
                     .to(input, { x: -10, duration: 0.05 })
                     .to(input, { x: 10, duration: 0.05 })
@@ -962,6 +969,12 @@
                     .to(input, { x: 10, duration: 0.05 })
                     .to(input, { x: 0, duration: 0.05 });
             }
+        }
+
+        function createLobby() {
+            userRole = 'host';
+            guestJoinedCode = ''; // ensure no leftover guest code
+            navigateTo('lobby-overlay');
         }
 
         // ─────────────────────────────────────────────
@@ -1122,22 +1135,27 @@
         let currentRoomCode = "";
         const rollChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        function generateRoomCode() {
-            // 1. Generate random 5-char string (format: ABCD-1)
+        // fixedCode: if provided (guest), use it instead of generating random
+        function generateRoomCode(fixedCode = null) {
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const nums = "0123456789";
-            let code = "";
-            for (let i = 0; i < 4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
-            code += "-";
-            code += nums.charAt(Math.floor(Math.random() * nums.length));
 
-            currentRoomCode = code;
+            if (fixedCode) {
+                currentRoomCode = fixedCode.toUpperCase();
+            } else {
+                let code = "";
+                for (let i = 0; i < 4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+                code += "-";
+                code += nums.charAt(Math.floor(Math.random() * nums.length));
+                currentRoomCode = code;
+            }
 
-            // 2. Build DOM
+            // Build DOM — identical for both host and guest
             const container = document.getElementById('fs-code-slots');
             container.innerHTML = '';
 
-            currentRoomCode.split('').forEach((char, index) => {
+            let slotIdx = 0; // ignores the dash character
+            currentRoomCode.split('').forEach((char) => {
                 if (char === '-') {
                     const dash = document.createElement('div');
                     dash.className = 'dash-char';
@@ -1151,17 +1169,17 @@
                 const inner = document.createElement('div');
                 inner.className = 'slot-inner';
 
-                // Add deco chars
-                const spinCount = 15 + (index * 5);
+                // Spin chars
+                const spinCount = 15 + (slotIdx * 5);
                 for (let i = 0; i < spinCount; i++) {
                     const rChar = document.createElement('div');
                     rChar.className = 'char';
-                    rChar.style.color = 'rgba(255,255,255,0.35)'; // More visible during spin
+                    rChar.style.color = 'rgba(255,255,255,0.35)';
                     rChar.textContent = rollChars.charAt(Math.floor(Math.random() * rollChars.length));
                     inner.appendChild(rChar);
                 }
 
-                // Final char
+                // Final char (random for host, typed code for guest)
                 const finalChar = document.createElement('div');
                 finalChar.className = 'char final-char';
                 finalChar.textContent = char;
@@ -1169,11 +1187,13 @@
 
                 slot.appendChild(inner);
                 container.appendChild(slot);
+                slotIdx++;
             });
 
+            // GSAP slot-spin — same for host and guest
             const inners = container.querySelectorAll('.slot-inner');
             inners.forEach((inner, idx) => {
-                const dist = -((inner.children.length - 1) * 71); // 71 matches inner height
+                const dist = -((inner.children.length - 1) * 71);
                 gsap.fromTo(inner,
                     { y: 0 },
                     {
@@ -1192,11 +1212,99 @@
         }
 
         function showLobbyAnimations() {
-            generateRoomCode();
+            // Host gets a fresh random code; Guest gets their typed code — same animation either way
+            generateRoomCode(guestJoinedCode || null);
+            guestJoinedCode = ''; // reset after use
+            applyPermissionLock();
             gsap.fromTo('.pomodoro-panel', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.4, ease: "power2.out" });
             gsap.fromTo('.footer-btn', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.7 });
             gsap.fromTo('.player-slot-card', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.5, ease: "back.out(1.5)" });
         }
+
+        // ─────────────────────────────────────────────
+        // PERMISSION LOCK LOGIC (HOST VS GUEST)
+        // ─────────────────────────────────────────────
+        function applyPermissionLock() {
+            const timerCtrls = document.querySelectorAll('.timer-ctrl');
+            const breaksToggle = document.getElementById('breaks-toggle');
+            const startBtn = document.getElementById('start-fight-btn');
+            const startIcon = document.getElementById('start-fight-icon');
+            const startText = document.getElementById('start-fight-text');
+
+            if (userRole === 'guest') {
+                // Lock all timer +/- controls for Guest
+                timerCtrls.forEach(ctrl => {
+                    ctrl.style.pointerEvents = 'none';
+                    ctrl.style.opacity = '0.3';
+                });
+                if (breaksToggle) { breaksToggle.style.pointerEvents = 'none'; breaksToggle.style.opacity = '0.4'; }
+                if (startBtn) {
+                    startBtn.classList.remove('primary-glow');
+                    startBtn.style.pointerEvents = 'none';
+                    startBtn.style.opacity = '0.45';
+                    startBtn.style.boxShadow = 'none';
+                }
+                if (startIcon) { startIcon.className = 'ph ph-hourglass-high'; startIcon.style.fontSize = '16px'; }
+                if (startText) { startText.innerText = 'WAITING FOR HOST...'; startText.style.fontSize = '9px'; }
+            } else {
+                // Full controls for Host
+                timerCtrls.forEach(ctrl => {
+                    ctrl.style.pointerEvents = 'auto';
+                    ctrl.style.opacity = '1';
+                });
+                if (breaksToggle) { breaksToggle.style.pointerEvents = 'auto'; breaksToggle.style.opacity = '1'; }
+                if (startBtn) {
+                    startBtn.classList.add('primary-glow');
+                    startBtn.style.pointerEvents = 'auto';
+                    startBtn.style.opacity = '1';
+                    startBtn.style.boxShadow = '';
+                }
+                if (startIcon) { startIcon.className = 'ph-fill ph-play'; startIcon.style.fontSize = '20px'; }
+                if (startText) { startText.innerText = 'START FIGHT'; startText.style.fontSize = ''; }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // SHARED WHITEBOARD (localStorage State Sync)
+        // ─────────────────────────────────────────────
+        function getCurrentLobbyState() {
+            return {
+                fightMin: document.getElementById('fight-min')?.innerText || '25',
+                fightSec: document.getElementById('fight-sec')?.innerText || '00',
+                breakMin: document.getElementById('break-min')?.innerText || '05',
+                breakSec: document.getElementById('break-sec')?.innerText || '00',
+                includeBreaks: document.getElementById('breaks-toggle')?.classList.contains('active') || true,
+            };
+        }
+
+        function broadcastLobbyState() {
+            if (userRole !== 'host') return; // Only host can broadcast
+            localStorage.setItem('lobby_state', JSON.stringify(getCurrentLobbyState()));
+        }
+
+        function syncLobbyData() {
+            // Read Host's state from shared whiteboard
+            const raw = localStorage.getItem('lobby_state');
+            if (!raw) return; // No state yet — use defaults
+            try {
+                const state = JSON.parse(raw);
+                const fightMin = document.getElementById('fight-min');
+                const fightSec = document.getElementById('fight-sec');
+                const breakMin = document.getElementById('break-min');
+                const breakSec = document.getElementById('break-sec');
+                if (fightMin) fightMin.innerText = state.fightMin;
+                if (fightSec) fightSec.innerText = state.fightSec;
+                if (breakMin) breakMin.innerText = state.breakMin;
+                if (breakSec) breakSec.innerText = state.breakSec;
+            } catch(e) { console.warn('Sync failed', e); }
+        }
+
+        // Real-time cross-tab listener (Guest Auto-Update)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'lobby_state' && userRole === 'guest') {
+                syncLobbyData();
+            }
+        });
 
         function copyRoomCode() {
             navigator.clipboard.writeText(currentRoomCode).catch(() => {
@@ -1237,6 +1345,7 @@
             if (v < 5) v = 5;
             if (v > 60) v = 60;
             el.textContent = v < 10 ? '0' + v : v;
+            broadcastLobbyState(); // Broadcast every time Host changes a value
         }
 
         function adjustSeconds(minId, secId, amount) {
@@ -1253,6 +1362,7 @@
             }
             secEl.textContent = sec === 0 ? '00' : (sec < 10 ? '0' + sec : sec);
             gsap.fromTo(secEl, { scale: 1.2 }, { scale: 1, duration: 0.2, ease: "bounce.out" });
+            broadcastLobbyState(); // Broadcast every time Host changes seconds
         }
 
 
