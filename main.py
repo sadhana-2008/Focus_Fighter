@@ -2,8 +2,37 @@ from flask import Flask, render_template, send_from_directory, jsonify, request
 import os
 import socket
 import shutil
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///focus_fighter.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+class Player(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    selected_char = db.Column(db.String(120), default='char1.png')
+    xp = db.Column(db.Integer, default=0)
+    level = db.Column(db.Integer, default=1)
+    health = db.Column(db.Integer, default=100)
+    attack = db.Column(db.Integer, default=10)
+    defense = db.Column(db.Integer, default=10)
+    speed = db.Column(db.Integer, default=10)
+
+    def to_dict(self):
+        return {
+            "username": self.username,
+            "selected_char": self.selected_char,
+            "xp": self.xp,
+            "level": self.level,
+            "stats": {
+                "health": self.health,
+                "attack": self.attack,
+                "defense": self.defense,
+                "speed": self.speed
+            }
+        }
 
 # ─────────────────────────────────────────────
 # IN-MEMORY TEAM DATABASE (Group Points System)
@@ -22,6 +51,10 @@ def index():
 @app.route('/lobby')
 def lobby():
     return render_template('lobby.html')
+
+@app.route('/arsenal')
+def arsenal():
+    return render_template('arsenal.html')
 
 @app.route('/leaderboard')
 def leaderboard():
@@ -72,7 +105,42 @@ def distraction_penalty():
         return jsonify({"success": True, "lost": penalty, "remaining": teams_db[team_id]['points']})
     return jsonify({"success": False, "message": "Invalid team ID"}), 400
 
+@app.route('/api/player', methods=['POST'])
+def update_player():
+    data = request.json
+    username = data.get('username')
+    if not username:
+        return jsonify({"error": "Username required"}), 400
+    
+    player = Player.query.filter_by(username=username).first()
+    if not player:
+        player = Player(username=username)
+        db.session.add(player)
+    
+    player.selected_char = data.get('selected_char', player.selected_char)
+    player.xp = data.get('xp', player.xp)
+    player.level = data.get('level', player.level)
+    
+    stats = data.get('stats', {})
+    player.health = stats.get('health', player.health)
+    player.attack = stats.get('attack', player.attack)
+    player.defense = stats.get('defense', player.defense)
+    player.speed = stats.get('speed', player.speed)
+    
+    db.session.commit()
+    return jsonify(player.to_dict())
+
+@app.route('/api/player/<username>', methods=['GET'])
+def get_player(username):
+    player = Player.query.filter_by(username=username).first()
+    if not player:
+        return jsonify({"error": "Player not found"}), 404
+    return jsonify(player.to_dict())
+
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+        
     # Ensure static directory exists
     if not os.path.exists('static'):
         os.makedirs('static')
@@ -84,12 +152,13 @@ if __name__ == '__main__':
             print("Successfully moved 'bg_gif.gif' to the 'static' folder.")
         except Exception as e:
             print(f"Failed to move 'bg_gif.gif': {e}")
+            
     # Find local IP to display
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     
     print("="*50)
-    print("Starting Focus Fighter Web App...")
+    print("Starting Focus Fighter Web App with Database...")
     print(f"Open this link in your browser: http://127.0.0.1:5000")
     print(f"Or on your local network: http://{local_ip}:5000")
     print("="*50)

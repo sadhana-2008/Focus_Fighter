@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsenal - Antigravity Field</title>
+    <!-- Google Fonts (Optional, falling back to sans-serif if offline) -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- React, ReactDOM, Babel, Framer Motion (Local) -->
+    <script src="/static/libs/react.js"></script>
+    <script src="/static/libs/react-dom.js"></script>
+    <script src="/static/libs/babel.min.js"></script>
+    <script src="/static/libs/framer-motion.js"></script>
+    
+    <style>
+        html, body { 
+            margin: 0; 
+            padding: 0;
+            background: #0a0a0c; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh;
+        }
+
+        body { 
+            background: linear-gradient(to bottom, #020617, #000); 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 10;
+        }
+
+        .left-panel { width: 360px; flex-shrink: 0; }
+        .right-panel { flex: 1; min-width: 400px; }
+
+        /* Component Cards */
+        .glass-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+        }
+
+        /* Inventory Grid */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-glass);
+        }
+
+        .inventory-slot {
+            aspect-ratio: 1/1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .inventory-slot:hover {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            background: rgba(168, 85, 247, 0.05);
+            transform: scale(1.02);
+        }
+
+        .slot-neon-border {
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            pointer-events: none;
+            opacity: 0.3;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Stats & Bars */
+        .stat-row { margin-bottom: 1.5rem; }
+        .stat-label-container { display: flex; justify-content: space-between; margin-bottom: 0.5rem; padding: 0 0.5rem; }
+        .stat-name { font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-num { font-family: 'Press Start 2P', cursive; font-size: 10px; color: #fff; }
+        
+        .progress-track { height: 8px; background: rgba(0, 0, 0, 0.4); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .progress-fill { height: 100%; border-radius: 999px; }
+
+        /* Buttons */
+        .btn-base {
+            padding: 0.85rem 1.5rem;
+            border-radius: 1rem;
+            font-size: 10px;
+            font-family: 'Press Start 2P', cursive;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary { background: linear-gradient(135deg, #db2777, #7e22ce); }
+        .btn-secondary { background: linear-gradient(135deg, #2563eb, #0891b2); }
+        .btn-gold { background: linear-gradient(135deg, #d97706, #fbbf24); }
+
+        .btn-base:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Typography */
+        .pixel-font { font-family: 'Press Start 2P', cursive; }
+        .text-neon-purple { color: var(--accent-purple); text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+        .text-neon-cyan { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+
+        /* Utilities */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-4 { gap: 1rem; }
+        .gap-8 { gap: 2rem; }
+        .w-full { width: 100%; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-8 { margin-top: 2rem; }
+        .p-8 { padding: 2rem; }
+        .rounded-full { border-radius: 999px; }
+        .opacity-50 { opacity: 0.5; }
+
+        /* Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        {% raw %}
+        const { useState, useEffect, useMemo } = React;
+        const FramerMotion = window.Motion || window.FramerMotion;
+        const { motion, AnimatePresence } = FramerMotion;
+
+        const rarityColors = {
+            common: '#9CA3AF',    // Gray
+            uncommon: '#10B981',  // Green
+            rare: '#3B82F6',      // Blue
+            epic: '#8B5CF6',      // Purple
+            legendary: '#F59E0B'  // Gold/Orange
+        };
+
+        const runeSymbols = ['✦', '◆', '★', '◇', '✧', '◈'];
+
+        // --- 1. RuneFragment Component ---
+        const RuneFragment = ({ delay, targetX, targetY, color, size = 6, runeSymbol = '✦' }) => {
+            return (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                    animate={{
+                        opacity: [0, 1, 0],
+                        scale: [0.5, 1, 0.5],
+                        x: targetX,
+                        y: targetY,
+                    }}
+                    transition={{
+                        duration: 1,
+                        delay: delay,
+                        ease: "easeOut"
+                    }}
+                    className="absolute pointer-events-none"
+                    style={{
+                        color: color,
+                        fontSize: `${size}px`,
+                        textShadow: `0 0 10px ${color}`
+                    }}
+                >
+                    {runeSymbol}
+                </motion.div>
+            );
+        };
+
+        // --- 2. Orbital Particles ---
+        const OrbitalParticles = ({ rarity, color }) => {
+            if (rarity === 'common' || rarity === 'uncommon') return null;
+            
+            const count = rarity === 'legendary' ? 6 : (rarity === 'epic' ? 4 : 3);
+            return (
+                <div className="absolute inset-0 pointer-events-none">
+                    {[...Array(count)].map((_, i) => {
+                        const angle = (i / count) * Math.PI * 2;
+                        const radius = 40;
+                        return (
+                            <motion.div
+                                key={`orbit-${i}`}
+                                animate={{ rotate: 360 }}
+                                transition={{
+                                    duration: rarity === 'legendary' ? 2 : (rarity === 'epic' ? 3 : 4),
+                                    repeat: Infinity,
+                                    ease: 'linear',
+                                    delay: i * 0.3
+                                }}
+                                className="absolute inset-0"
+                            >
+                                <div
+                                    className="absolute w-2 h-2 flex items-center justify-center font-bold"
+                                    style={{
+                                        left: `calc(50% + ${Math.cos(angle) * radius}px)`,
+                                        top: `calc(50% + ${Math.sin(angle) * radius}px)`,
+                                        color: color,
+                                        textShadow: `0 0 10px ${color}`,
+                                        fontSize: '10px'
+                                    }}
+                                >
+                                    {runeSymbols[i % runeSymbols.length]}
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+            );
+        };
+
+        // --- 3. InventoryItem Component ---
+        const InventoryItem = ({ item, index, onMove }) => {
+            const rarityColor = rarityColors[item.rarity];
+            const floatDuration = {
+                common: 5,
+                uncommon: 4,
+                rare: 3,
+                epic: 2.5,
+                legendary: 2
+            }[item.rarity];
+
+            const [isHovered, setIsHovered] = useState(false);
+
+            return (
+                <motion.div
+                    className="relative w-24 h-24 flex items-center justify-center cursor-pointer group"
+                    whileHover={{ scale: 1.1 }}
+                    onHoverStart={() => setIsHovered(true)}
+                    onHoverEnd={() => setIsHovered(false)}
+                    onClick={() => onMove(item)}
+                >
+                    {/* Rotating Borders for High Rarity */}
+                    {(item.rarity === 'epic' || item.rarity === 'legendary') && (
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                            className="absolute inset-0 border-2 border-dashed rounded-xl opacity-40"
+                            style={{ borderColor: rarityColor }}
+                        />
+                    )}
+                    {item.rarity === 'legendary' && (
+                        <motion.div
+                            animate={{ rotate: -360 }}
+                            transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+                            className="absolute -inset-2 border border-dotted rounded-full opacity-30"
+                            style={{ borderColor: rarityColor }}
+                        />
+                    )}
+
+                    {/* Main Item Body */}
+                    <motion.div
+                        animate={{
+                            y: isHovered ? [-8, -20, -8] : [-8, 12, -8],
+                            rotateY: isHovered ? [-10, 10, -10] : [-5, 5, -5],
+                            rotateX: isHovered ? [-6, 6, -6] : [-3, 3, -3],
+                            boxShadow: [
+                                `0 0 15px ${rarityColor}44`,
+                                `0 0 30px ${rarityColor}88`,
+                                `0 0 15px ${rarityColor}44`
+                            ]
+                        }}
+                        transition={{
+                            duration: isHovered ? floatDuration / 2 : floatDuration,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.15
+                        }}
+                        className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center border-2"
+                        style={{ borderColor: `${rarityColor}88` }}
+                    >
+                        <span className="text-3xl">{item.icon}</span>
+                        <OrbitalParticles rarity={item.rarity} color={rarityColor} />
+                    </motion.div>
+
+                    {/* Legendary Glow Aura */}
+                    {item.rarity === 'legendary' && (
+                        <div className="absolute inset-0 bg-yellow-400/10 blur-xl rounded-full -z-10 animate-pulse" />
+                    )}
+                </motion.div>
+            );
+        };
+
+        // --- 4. EmptySlot Component ---
+        const EmptySlot = () => {
+            return (
+                <div className="relative w-24 h-24 flex items-center justify-center">
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.3, 1],
+                            opacity: [0.3, 0.6, 0.3]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute inset-2 rounded-lg border-2 border-purple-500/30"
+                    />
+                    <motion.div
+                        animate={{
+                            scale: [0.8, 1.2, 0.8],
+                            opacity: [0.5, 0, 0.5]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                        className="absolute inset-2 rounded-lg border-2 border-purple-400/50"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <motion.div
+                            animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                            className="w-2 h-2 rounded-full bg-purple-500"
+                            style={{ boxShadow: '0 0 15px #8B5CF6' }}
+                        />
+                    </div>
+                </div>
+            );
+        };
+
+        // --- 5. Core Stats Table ---
+        const CoreStats = ({ stats }) => {
+            const statData = [
+                { label: 'Intellect', color: '#a855f7', value: stats.attack || 45 },
+                { label: 'Stamina', color: '#10B981', value: stats.health || 32 },
+                { label: 'Focus', color: '#3B82F6', value: stats.defense || 38 },
+                { label: 'Creativity', color: '#ec4899', value: stats.speed || 28 }
+            ];
+
+            return (
+                <div className="mt-8">
+                    <div className="text-white/40 font-bold mb-6 text-[10px] tracking-widest uppercase pixel-font">Core Stats</div>
+                    {statData.map((s, i) => (
+                        <div key={s.label} className="stat-row">
+                            <div className="stat-label-container">
+                                <span className="stat-name">{s.label}</span>
+                                <span className="stat-num">{s.value}</span>
+                            </div>
+                            <div className="progress-track">
+                                <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${s.value}%` }}
+                                    transition={{ duration: 1.5, delay: 0.2 + i * 0.1, ease: "easeOut" }}
+                                    className="progress-fill shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+                                    style={{ background: `linear-gradient(to right, ${s.color}88, ${s.color})` }}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- 6. Character Identity ---
+        const CharacterPanel = ({ name, level, role, stats }) => {
+            return (
+                <div className="glass-card left-panel flex flex-col items-center">
+                    {/* Avatar Container */}
+                    <motion.div 
+                        animate={{ y: [-5, 5, -5] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-48 h-48 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center p-6 mb-6 shadow-2xl relative overflow-hidden"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-50" />
+                        <img src="/static/characters/char1.png" className="w-full h-full object-contain filter drop-shadow(0 0 15px white)" />
+                    </motion.div>
+
+                    <div className="text-center w-full">
+                        <h1 className="pixel-font text-2xl text-white mb-2 tracking-tighter text-neon-cyan">{name}</h1>
+                        <p className="text-white/40 text-[10px] font-bold tracking-widest mb-8 uppercase">Level {level} {role}</p>
+                        
+                        <div className="bg-black/20 rounded-2xl p-6 border border-white/5 shadow-inner">
+                            <CoreStats stats={stats} />
+                        </div>
+                        
+                        <div className="flex gap-4 mt-8 w-full">
+                            <button className="btn-base btn-primary flex-1">Equip</button>
+                            <button className="btn-base btn-secondary flex-1">Upgrade</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- 7. Boss Loot Card ---
+        const BossLootCard = () => {
+            return (
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-8 p-6 rounded-3xl border border-yellow-500/30 bg-gradient-to-r from-yellow-900/40 to-black/60 backdrop-blur-xl flex items-center gap-6 shadow-2xl relative overflow-hidden border-2"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none" />
+                    <div className="w-20 h-20 bg-yellow-500/20 rounded-2xl flex items-center justify-center border border-yellow-500/40 shadow-inner overflow-hidden flex-none">
+                        <motion.span 
+                            animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }}
+                            transition={{ duration: 4, repeat: Infinity }}
+                            className="text-4xl"
+                        >
+                            🎁
+                        </motion.span>
+                    </div>
+                    <div className="flex-1">
+                        <div className="text-yellow-400 font-bold text-xs mb-1 uppercase tracking-widest pixel-font">Boss Loot Available!</div>
+                        <div className="text-white/50 text-[10px] font-medium leading-relaxed">Victory awaits the bold. Complete the current dungeon to unlock a Legendary Artifact.</div>
+                    </div>
+                    <button className="btn-base btn-gold px-8 py-3 rounded-xl shadow-xl hover:scale-105 transition-transform flex-none">
+                        Open
+                    </button>
+                </motion.div>
+            );
+        };
+
+        // --- Main Arsenal Application ---
+        const ArsenalApp = () => {
+            const [essence, setEssence] = useState(12450);
+
+            const characters = [
+                {
+                    name: "WikiKnight",
+                    level: 12,
+                    role: "Scholar",
+                    stats: { health: 32, attack: 45, defense: 38, speed: 28 },
+                    items: [
+                        { id: 1, name: 'Shattered Soul', icon: '🎩', rarity: 'epic', type: 'Magic' },
+                        { id: 2, name: 'Void Blade', icon: '⚔️', rarity: 'rare', type: 'Weapon' },
+                        { id: 3, name: 'Rune Shield', icon: '🛡️', rarity: 'rare', type: 'Defense' },
+                        { id: 4, name: 'Spirit Potion', icon: '🧪', rarity: 'uncommon', type: 'Consumable' },
+                        { id: 5, name: 'Iron Ring', icon: '💍', rarity: 'uncommon', type: 'Artifact' },
+                        { id: 6, name: 'Crystal Wand', icon: '🪄', rarity: 'epic', type: 'Magic' },
+                        { id: 7, name: 'Ancient Scroll', icon: '📜', rarity: 'common', type: 'Scroll' },
+                        { id: 8, name: 'Mana Vile', icon: '🍶', rarity: 'rare', type: 'Consumable' },
+                        { id: 9, name: 'Plat Ring', icon: '💍', rarity: 'legendary', type: 'Artifact' },
+                        null, null, null, null, null, null, null, null, null, null, null
+                    ]
+                },
+                {
+                    name: "CodeWitch",
+                    level: 15,
+                    role: "Architect",
+                    stats: { health: 25, attack: 55, defense: 20, speed: 42 },
+                    items: [
+                        { id: 10, name: 'Void Tome', icon: '📖', rarity: 'epic', type: 'Magic' },
+                        { id: 11, name: 'Lich Staff', icon: '🪄', rarity: 'legendary', type: 'Weapon' },
+                        { id: 12, name: 'Aether Robe', icon: '👘', rarity: 'rare', type: 'Defense' },
+                        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null
+                    ]
+                }
+            ];
+
+            const bgRunes = useMemo(() => [...Array(20)].map((_, i) => ({
+                id: i,
+                symbol: runeSymbols[i % runeSymbols.length],
+                x: Math.random() * 100,
+                y: Math.random() * 100,
+                duration: 25 + Math.random() * 15
+            })), []);
+
+            return (
+                <div className="relative w-full min-height-screen antigravity-bg flex flex-col items-center">
+                    
+                    {/* Background Runes */}
+                    <div className="fixed inset-0 pointer-events-none -z-10 bg-fixed">
+                        {bgRunes.map(rune => (
+                            <motion.div
+                                key={rune.id}
+                                animate={{
+                                    y: ['-10%', '110%'],
+                                    opacity: [0, 0.2, 0],
+                                    rotate: [0, 360]
+                                }}
+                                transition={{ duration: rune.duration, repeat: Infinity, ease: "linear" }}
+                                className="absolute text-purple-500/10 pixel-font text-[10px]"
+                                style={{ top: `${rune.y}%`, left: `${rune.x}%` }}
+                            >
+                                {rune.symbol}
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    {/* Main Content Wrapper */}
+                    <div className="w-full flex flex-col gap-16 py-12">
+                        {characters.map((char, index) => (
+                            <div key={char.name} className="dashboard-container">
+                                {/* Left Section */}
+                                <CharacterPanel 
+                                    name={char.name} 
+                                    level={char.level} 
+                                    role={char.role}
+                                    stats={char.stats}
+                                />
+
+                                {/* Right Section */}
+                                <div className="right-panel">
+                                    <div className="glass-card flex flex-col">
+                                        <div className="flex justify-between items-center mb-6 px-4">
+                                            <h2 className="pixel-font text-white text-sm tracking-widest text-neon-purple uppercase">{char.name}'s Arsenal</h2>
+                                            <div className="flex items-baseline gap-2">
+                                                <span className="text-white font-bold text-sm">
+                                                    {char.items.filter(it => it).length}
+                                                </span>
+                                                <span className="text-white/20 text-[10px] font-medium tracking-widest">/ 20 SLOTS</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="inventory-grid">
+                                            {char.items.map((item, i) => (
+                                                <div key={i} className="inventory-slot">
+                                                    <div className="slot-neon-border" />
+                                                    {item ? (
+                                                        <InventoryItem item={item} index={i} onMove={() => {}} />
+                                                    ) : (
+                                                        <div className="w-1 h-1 bg-white/10 rounded-full" />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {index === 0 && <BossLootCard />}
+
+                                        {/* Status Footer inside card */}
+                                        <div className="mt-8 pt-6 border-t border-white/5 pixel-font text-[8px] text-white/30 tracking-widest flex gap-8">
+                                            <span>STABILITY: OPTIMAL</span>
+                                            <span>GRAVITY: 0.2G</span>
+                                            <span>FIELD: ACTIVE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ArsenalApp />);
+        {% endraw %}
+    </script>
+</body>
+</html>

@@ -363,9 +363,99 @@
         }
 
         // Elite Logic: Bulletproof Character Sync
-        function initCharacterSync() {
-            const savedChar = localStorage.getItem('selectedChar') || 'char1.png';
+        async function syncPlayerData(username, data) {
+            try {
+                const response = await fetch('/api/player', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, ...data })
+                });
+                return await response.json();
+            } catch (err) {
+                console.error("Sync failed:", err);
+            }
+        }
+
+        async function fetchPlayerData(username) {
+            try {
+                const response = await fetch(`/api/player/${username}`);
+                if (response.ok) return await response.json();
+            } catch (err) {
+                console.error("Fetch failed:", err);
+            }
+            return null;
+        }
+
+        // Hover & Click Logic
+        const cards = document.querySelectorAll('.char-card');
+
+        cards.forEach(card => {
+            // ... existing hover listeners remain same ...
+
+            card.addEventListener('click', async (e) => {
+                e.stopPropagation();
+
+                // Clear others
+                cards.forEach(c => {
+                    c.classList.remove('selected-card');
+                    gsap.to(c, { scale: 1, duration: 0.3 });
+                    const img = c.querySelector('img');
+                    if (img) img.style.filter = 'drop-shadow(0 0 15px rgba(255, 255, 255, 0.3))';
+                    c.style.textShadow = 'none';
+
+                    const cText = c.querySelector('.select-text');
+                    if (cText) {
+                        cText.innerText = 'CLICK TO SELECT';
+                        cText.classList.remove('opacity-100', 'text-white');
+                        cText.classList.add('opacity-0', 'text-white/50');
+                    }
+                });
+
+                // Set selected state & Memory
+                card.classList.add('selected-card');
+                const img = card.querySelector('img');
+                if (img) img.style.filter = 'drop-shadow(0 0 30px rgba(255, 255, 255, 1))';
+                card.style.textShadow = '0 0 20px white';
+                const sText = card.querySelector('.select-text');
+                if (sText) {
+                    sText.innerText = 'SELECTED';
+                    sText.classList.remove('opacity-0', 'text-white/50');
+                    sText.classList.add('opacity-100', 'text-white');
+                }
+
+                // Save Character Selection internally
+                const charImgSrc = card.querySelector('img').src;
+                const charName = charImgSrc.substring(charImgSrc.lastIndexOf('/') + 1);
+                localStorage.setItem('selectedChar', charName);
+
+                // SYNC WITH BACKEND
+                const username = localStorage.getItem('gamerTag') || 'PLAYER ONE';
+                await syncPlayerData(username, { selected_char: charName });
+
+                // Instantly update Lobby host slot without reloading
+                const hostAvatar = document.getElementById('host-avatar');
+                if (hostAvatar) {
+                    hostAvatar.src = '/static/characters/' + charName;
+                }
+
+                // Click Bounce
+                gsap.fromTo(card,
+                    { scale: 0.95 },
+                    { scale: 1.08, ease: 'elastic.out(1, 0.4)', duration: 0.6 }
+                );
+            });
+        });
+
+        // Elite Logic: Bulletproof Character Sync
+        async function initCharacterSync() {
+            const username = localStorage.getItem('gamerTag') || 'PLAYER ONE';
+            const serverData = await fetchPlayerData(username);
+            
+            const savedChar = serverData?.selected_char || localStorage.getItem('selectedChar') || 'char1.png';
             const charFallback = savedChar.includes('.png') ? savedChar : `char${savedChar}.png`;
+
+            // Update localStorage
+            localStorage.setItem('selectedChar', charFallback);
 
             // Apply selected styling to the correct card in profile menu
             const cardsNodes = document.querySelectorAll('.char-card');

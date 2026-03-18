@@ -164,6 +164,65 @@
         }
 
         /* =====================
+           LAYER 1000: GLOBAL NAV (Left)
+        ======================== */
+        #global-nav-left {
+            position: fixed;
+            top: 100px;
+            left: 24px;
+            z-index: 1000;
+            display: flex;
+            gap: 16px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-icon-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 18px;
+            border-radius: 14px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-icon-btn i {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            filter: drop-shadow(0 0-8px rgba(255, 255, 255, 0.3));
+        }
+
+        .nav-icon-btn span {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-icon-btn:hover {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-icon-btn:hover i {
+            color: #fff;
+            filter: drop-shadow(0 0 12px #fff);
+        }
+
+        .nav-icon-btn:hover span {
+            opacity: 1;
+        }
+
+        /* =====================
            LAYER 200: MAIN MENU
         ======================== */
         #main-menu {
@@ -730,6 +789,18 @@
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
 
+    <!-- LAYER 1000: Global Navigation (Top Left) -->
+    <nav id="global-nav-left">
+        <a href="/arsenal" class="nav-icon-btn" title="Arsenal Field">
+            <i class="ph ph-sword"></i>
+            <span>Arsenal</span>
+        </a>
+        <a href="/leaderboard" class="nav-icon-btn" title="Realm Standings">
+            <i class="ph ph-trophy"></i>
+            <span>Ranking</span>
+        </a>
+    </nav>
+
     <!-- LAYER 1000: Persistent Nav -->
     <nav
         style="position: fixed; top: 20px; right: 24px; z-index: 1000; display: flex; gap: 14px; align-items: center; pointer-events: none;">
@@ -957,6 +1028,8 @@
                 if (id === 'main-menu') {
                     el.style.opacity = (targetId === 'main-menu') ? '1' : '0';
                     el.style.display = (targetId === 'main-menu') ? 'flex' : 'none';
+                    // Show global nav when on main menu
+                    gsap.to('#global-nav-left', { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 } else {
                     el.style.opacity = '0';
                     el.style.display = 'none';
@@ -984,8 +1057,9 @@
                     gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 }
                 if (targetId === 'profile-overlay') {
-                    // Hide gear to prevent overlap with X button
+                    // Hide gear and global nav to prevent overlap with X button and input
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
+                    gsap.to('#global-nav-left', { opacity: 0, pointerEvents: 'none', duration: 0.3 });
 
                     setTimeout(() => {
                         gsap.killTweensOf('.char-card');
