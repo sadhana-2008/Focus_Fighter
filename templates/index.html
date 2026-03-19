@@ -541,8 +541,7 @@
             z-index: 10;
             gap: 20px;
             padding-top: 8vh;
-            overflow-y: auto;
-            /* Safety scroll */
+            overflow: hidden;
         }
 
         .scanlines {
@@ -728,6 +727,7 @@
     <div id="lobby-overlay">
         <div class="scanlines"></div>
 
+        <div id="lobby-setup">
         <div class="lobby-main-content py-4">
             <!-- Lottery Code Slots -->
             <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
@@ -832,12 +832,31 @@
                     <button class="footer-btn" onclick="navigateTo('main-menu')">
                         <span class="pixel-text">LEAVE LOBBY</span>
                     </button>
-                    <button class="footer-btn primary-glow" id="start-fight-btn">
+                    <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
                         <i class="ph-fill ph-play" id="start-fight-icon" style="font-size: 20px; margin-top: 2px;"></i>
                         <span class="pixel-text" id="start-fight-text">START FIGHT</span>
                     </button>
-                </div>
             </div>
+        </div>
+        </div><!-- end #lobby-setup -->
+    </div><!-- end #lobby-overlay -->
+
+    <!-- BATTLE HUD : top-level layer, NOT inside lobby-overlay -->
+    <div id="battle-hud" style="display:none; opacity:0; position:fixed; inset:0; z-index:9999; pointer-events:none;">
+        <!-- Centered Live Timer -->
+        <div id="battle-timer" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
+            <div id="battle-time-display" class="pixel-text heavy-glow"
+                style="font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;">
+                25:00
+            </div>
+            <div id="battle-phase-label" class="pixel-text"
+                style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;">
+                FOCUS TIME
+            </div>
+        </div>
+        <!-- Left Squad HUD -->
+        <div id="squad-hud"
+            style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
         </div>
     </div>
 
@@ -958,6 +977,7 @@
             const val = input.value;
             if (val.length === 6 && val.includes('-')) {
                 userRole = 'guest';
+                localStorage.setItem('userRole', 'guest');
                 guestJoinedCode = val.toUpperCase(); // Save the code they typed
                 navigateTo('lobby-overlay');
                 syncLobbyData(); // Snap sync from localStorage
@@ -973,6 +993,7 @@
 
         function createLobby() {
             userRole = 'host';
+            localStorage.setItem('userRole', 'host');
             guestJoinedCode = ''; // ensure no leftover guest code
             navigateTo('lobby-overlay');
         }
@@ -1426,7 +1447,162 @@
             syncHubAvatar();
             setupJoinInput();
         });
+        console.log("Focus Fighter System Initialized");
+    </script>
+    <script>
+        // ─────────────────────────────────────────────
+        // BATTLE HUD & SQUAD HUD LOGIC (GAME_SIDEBAR)
+        // ─────────────────────────────────────────────
+        let battleTimerInterval = null;
+
+        function onStartFight() {
+            const currentRole = userRole || localStorage.getItem('userRole');
+            console.log("[BATTLE] Click detected. Role:", currentRole);
+            
+            if (currentRole !== 'host') {
+                console.warn("[BATTLE] NOT host, aborting.");
+                return;
+            }
+
+            // 1. Get durations
+            const fightMin = parseInt(document.getElementById('fight-min').innerText);
+            const fightSec = parseInt(document.getElementById('fight-sec').innerText);
+            const totalSeconds = (fightMin * 60) + fightSec;
+
+            // 2. DYNAMICALLY CREATE the battle HUD (nuclear approach)
+            let battleHud = document.getElementById('battle-hud');
+            if (battleHud) battleHud.remove(); // Remove old one if exists
+
+            battleHud = document.createElement('div');
+            battleHud.id = 'battle-hud';
+            battleHud.style.cssText = 'position:fixed; inset:0; z-index:9999; pointer-events:auto; display:block; opacity:1;';
+
+            // Timer
+            const timerWrap = document.createElement('div');
+            timerWrap.id = 'battle-timer';
+            timerWrap.style.cssText = 'position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;';
+
+            const timeDisplay = document.createElement('div');
+            timeDisplay.id = 'battle-time-display';
+            timeDisplay.className = 'pixel-text heavy-glow';
+            timeDisplay.style.cssText = 'font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;';
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            timeDisplay.innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s);
+
+            const phaseLabel = document.createElement('div');
+            phaseLabel.id = 'battle-phase-label';
+            phaseLabel.className = 'pixel-text';
+            phaseLabel.style.cssText = 'font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;';
+            phaseLabel.innerText = 'FOCUS TIME';
+
+            timerWrap.appendChild(timeDisplay);
+            timerWrap.appendChild(phaseLabel);
+
+            // Squad HUD — RIGHT SIDE with char avatar + HP bar
+            const squadHud = document.createElement('div');
+            squadHud.id = 'squad-hud';
+            squadHud.style.cssText = 'position:absolute; right:4%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:20px;';
+
+            // Get player data
+            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
+            const selectedChar = localStorage.getItem('selectedChar') || 'char1.png';
+            const charSrc = '/static/characters/' + (selectedChar.includes('.png') ? selectedChar : 'char' + selectedChar + '.png');
+
+            // Build player card
+            const block = document.createElement('div');
+            block.className = 'squad-block';
+            block.style.cssText = 'display:flex; align-items:center; gap:12px;';
+            block.innerHTML = 
+                '<div style="width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.7); box-shadow:0 0 12px rgba(255,255,255,0.4); overflow:hidden; background:rgba(0,0,0,0.3); flex-shrink:0;">' +
+                    '<img src="' + charSrc + '" style="width:100%; height:100%; object-fit:contain; padding:4px;">' +
+                '</div>' +
+                '<div style="display:flex; flex-direction:column; gap:6px;">' +
+                    '<div class="pixel-text heavy-glow" style="font-size:10px; color:white; white-space:nowrap;">' + hostName.toUpperCase() + '</div>' +
+                    '<div style="width:120px; height:6px; border:1px solid rgba(255,255,255,0.5); border-radius:3px; box-shadow:0 0 6px rgba(255,255,255,0.2);">' +
+                        '<div style="width:100%; height:100%; background:#39FF14; border-radius:2px; box-shadow:0 0 8px #39FF14;"></div>' +
+                    '</div>' +
+                '</div>';
+            squadHud.appendChild(block);
+
+            battleHud.appendChild(timerWrap);
+            battleHud.appendChild(squadHud);
+            document.body.appendChild(battleHud);
+            console.log("[BATTLE] HUD injected into document.body");
+
+            // 3. Hide lobby
+            const lobbyOverlay = document.getElementById('lobby-overlay');
+            if (lobbyOverlay) {
+                gsap.to(lobbyOverlay, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        lobbyOverlay.style.display = 'none';
+                        console.log("[BATTLE] Lobby hidden");
+                    }
+                });
+            }
+
+            // 4. Animate in
+            gsap.fromTo(timerWrap, { scale: 0.5 }, { scale: 1, duration: 0.8, ease: "back.out(1.5)", delay: 0.3 });
+            gsap.fromTo(squadHud, { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.2 });
+
+            // 5. Start countdown
+            startBattleTimer(totalSeconds);
+            console.log("[BATTLE] Complete. Timer running.");
+        }
+
+        function renderSquadHud() {
+            const squadContainer = document.getElementById('squad-hud');
+            squadContainer.innerHTML = '';
+
+            // Pull Actual Names (No placeholders)
+            // If user hasn't set their name, default to 'Sadhana' as indicated in the spec example
+            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
+            
+            // For now, we only show valid connected sessions.
+            // Host is always present. 
+            const participants = [{ name: hostName, role: 'host', hp: 100 }];
+            
+            // (In a real multi-player scenario, we'd loop through participant session data here)
+            // Constraint: No placeholders (only show real names from session).
+            
+            participants.forEach(p => {
+                const block = document.createElement('div');
+                block.className = 'squad-block';
+                block.innerHTML = `
+                    <div class="pixel-text squad-name heavy-glow">${p.name.toUpperCase()}</div>
+                    <div class="hp-bar-track">
+                        <div class="hp-bar-fill"></div>
+                    </div>
+                `;
+                squadContainer.appendChild(block);
+            });
+        }
+
+        function startBattleTimer(seconds) {
+            if (battleTimerInterval) clearInterval(battleTimerInterval);
+            let timeLeft = seconds;
+            const display = document.getElementById('battle-time-display');
+
+            function update() {
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+                gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
+            }
+
+            update();
+            battleTimerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(battleTimerInterval);
+                    return;
+                }
+                update();
+            }, 1000);
+        }
     </script>
 </body>
-
 </html>
