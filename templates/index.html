@@ -41,7 +41,7 @@
             z-index: 0;
             pointer-events: none;
             background-color: #222;
-            background-image: url('/static/campfire_bg.gif');
+            background-image: url('/static/bg_gif.gif?v=2');
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
@@ -296,24 +296,11 @@
         ======================== */
         .pixel-text {
             font-family: 'Press Start 2P', monospace;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         .heavy-glow {
-            /* Tighter glow: dark anchor + tight white halo — edges stay sharp */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 6px rgba(255, 255, 255, 1), 0 0 12px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Bottom vignette gradient overlay */
-        .bottom-vignette {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 22%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
-            z-index: 5;
-            pointer-events: none;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8), 0 0 45px rgba(255, 255, 255, 0.6);
         }
 
         /* =====================
@@ -403,19 +390,19 @@
             width: 80px;
             height: 80px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 0 18px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
         }
 
         .player-slot-card.filled {
-            border-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         .player-slot-card.filled img {
@@ -482,53 +469,6 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 1);
         }
 
-        /* =====================
-           JOIN LAYER STYLES
-        ======================== */
-        #join-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .join-input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-            color: white;
-            text-align: center;
-            letter-spacing: 15px;
-            text-indent: 15px;
-            /* Offset to center the letter spacing perfectly */
-            font-family: 'Press Start 2P', monospace;
-            font-size: 32px;
-            outline: none;
-            padding: 10px 0;
-            width: 300px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            caret-color: transparent;
-            /* Hide vertical blinking line */
-        }
-
-        .join-input::selection {
-            background: transparent;
-            /* Remove blue highlight */
-        }
-
-        .join-input:focus {
-            border-bottom: 4px solid rgba(255, 255, 255, 1);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
-        }
-
         .lobby-main-content {
             display: flex;
             flex-direction: column;
@@ -541,7 +481,8 @@
             z-index: 10;
             gap: 20px;
             padding-top: 8vh;
-            overflow: hidden;
+            overflow-y: auto;
+            /* Safety scroll */
         }
 
         .scanlines {
@@ -620,15 +561,361 @@
             animation: hostPulse 2s infinite ease-in-out;
             background-color: rgba(255, 255, 255, 0.15) !important;
         }
+
+        /* =====================
+           LAYER 300: MODE SELECTION OVERLAY
+        ======================== */
+        #mode-selection-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #mode-selection-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mode-select-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: white;
+            text-shadow: 0 0 15px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4);
+            letter-spacing: 4px;
+            margin-bottom: 48px;
+        }
+
+        .mode-cards-container {
+            display: flex;
+            gap: 40px;
+            align-items: stretch;
+        }
+
+        .mode-card {
+            width: 280px;
+            padding: 40px 32px;
+            background: rgba(10, 10, 20, 0.5);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.35s ease;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .mode-card:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(30, 30, 50, 0.65);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.25), 0 12px 48px rgba(0, 0, 0, 0.5);
+            transform: translateY(-6px) scale(1.03);
+        }
+
+        .mode-card-icon {
+            font-size: 48px;
+            color: white;
+            filter: drop-shadow(0 0 12px rgba(255,255,255,0.5));
+        }
+
+        .mode-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: white;
+            text-shadow: 0 0 8px rgba(255,255,255,0.6);
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .mode-card-desc {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .mode-back-btn {
+            margin-top: 40px;
+            background: rgba(20, 20, 20, 0.5);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-back-btn:hover {
+            border-color: white;
+            color: white;
+            background: rgba(60, 60, 60, 0.6);
+            box-shadow: 0 0 12px rgba(255,255,255,0.3);
+        }
+
+        /* =====================
+           LAYER 300: INDIVIDUAL MODE OVERLAY
+        ======================== */
+        #individual-mode-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #individual-mode-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .indiv-phase-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+            transition: color 0.5s ease;
+        }
+
+        .indiv-phase-label.focus { color: #ffffff; text-shadow: 0 0 12px rgba(255,255,255,0.8); }
+        .indiv-phase-label.short-break { color: #7ef5a0; text-shadow: 0 0 12px rgba(126,245,160,0.6); }
+        .indiv-phase-label.long-break { color: #7ec8f5; text-shadow: 0 0 12px rgba(126,200,245,0.6); }
+
+        .indiv-timer-ring {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin-bottom: 24px;
+        }
+
+        .indiv-timer-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .indiv-timer-ring .ring-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.08);
+            stroke-width: 6;
+        }
+
+        .indiv-timer-ring .ring-progress {
+            fill: none;
+            stroke: white;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+        }
+
+        .indiv-timer-ring .ring-progress.short-break { stroke: #7ef5a0; filter: drop-shadow(0 0 8px rgba(126,245,160,0.4)); }
+        .indiv-timer-ring .ring-progress.long-break { stroke: #7ec8f5; filter: drop-shadow(0 0 8px rgba(126,200,245,0.4)); }
+
+        .indiv-timer-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .indiv-timer-digits {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 40px;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.6);
+            letter-spacing: 4px;
+        }
+
+        .indiv-session-counter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
+
+        .indiv-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .indiv-ctrl-btn {
+            background: rgba(20, 20, 20, 0.5);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            padding: 14px 28px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .indiv-ctrl-btn:hover {
+            border-color: white;
+            background: rgba(60, 60, 60, 0.7);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .indiv-ctrl-btn.danger {
+            border-color: rgba(255, 100, 100, 0.5);
+            color: rgba(255, 150, 150, 1);
+        }
+
+        .indiv-ctrl-btn.danger:hover {
+            border-color: #ff6464;
+            box-shadow: 0 0 15px rgba(255,100,100,0.4);
+            color: #ff8888;
+        }
+
+        .indiv-pause-warning {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: rgba(255,180,80,0.9);
+            text-shadow: 0 0 8px rgba(255,180,80,0.4);
+            margin-top: 16px;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .indiv-pause-warning.visible { opacity: 1; }
+
+        .indiv-xp-indicator {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+
+        .indiv-xp-indicator .xp-value {
+            color: white;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .indiv-xp-indicator .xp-loss {
+            color: #ff6464;
+            text-shadow: 0 0 10px rgba(255,100,100,0.5);
+        }
+
+        /* =====================
+           SESSION SUMMARY MODAL
+        ======================== */
+        #session-summary-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #session-summary-modal.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .summary-card {
+            background: rgba(10, 10, 20, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 48px 56px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 12px 60px rgba(0,0,0,0.6);
+            min-width: 360px;
+        }
+
+        .summary-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: white;
+            text-shadow: 0 0 15px rgba(255,255,255,0.6);
+            letter-spacing: 3px;
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .summary-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .summary-stat-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+        }
+
+        .summary-stat-value {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: white;
+            text-shadow: 0 0 8px rgba(255,255,255,0.4);
+        }
+
+        .summary-stat-value.positive { color: #7ef5a0; text-shadow: 0 0 8px rgba(126,245,160,0.4); }
+        .summary-stat-value.negative { color: #ff6464; text-shadow: 0 0 8px rgba(255,100,100,0.4); }
     </style>
 </head>
 
 <body>
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
-
-    <!-- LAYER 5: Bottom vignette (behind footer buttons) -->
-    <div class="bottom-vignette"></div>
 
     <!-- LAYER 1000: Persistent Gear Nav (always on top) -->
     <nav
@@ -657,8 +944,8 @@
 
     <!-- LAYER 200: Main Menu -->
     <div id="main-menu">
-        <button class="cinematic-btn main-btn" onclick="createLobby()">Create Lobby</button>
-        <button class="cinematic-btn main-btn" onclick="navigateTo('join-layer')">Join Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="navigateTo('lobby-overlay')">Create Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="alert('Join Lobby coming soon!')">Join Lobby</button>
     </div>
 
     <!-- LAYER 300: Character Selection Overlay -->
@@ -698,36 +985,10 @@
         </div>
     </div>
 
-    <!-- LAYER 300: Join Layer -->
-    <div id="join-layer">
-        <div class="scanlines"></div>
-        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-            <h1 class="pixel-text heavy-glow" style="font-size: 24px; color: white; margin-bottom: 60px;">ENTER ROOM
-                CODE</h1>
-
-            <div id="join-input-wrapper" style="position: relative; margin-bottom: 80px;">
-                <input type="text" id="room-code-input" class="join-input" maxlength="6" autocomplete="off"
-                    spellcheck="false" placeholder="XXXX-X" />
-            </div>
-
-            <!-- Footer Actions -->
-            <div class="flex gap-6">
-                <button class="footer-btn" onclick="navigateTo('main-menu')">
-                    <span class="pixel-text">BACK</span>
-                </button>
-                <button class="footer-btn primary-glow" onclick="attemptJoinRoom()">
-                    <i class="ph-fill ph-play" style="font-size: 20px; margin-top: 2px;"></i>
-                    <span class="pixel-text">JOIN</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- LAYER 300: Lobby Overlay -->
     <div id="lobby-overlay">
         <div class="scanlines"></div>
 
-        <div id="lobby-setup">
         <div class="lobby-main-content py-4">
             <!-- Lottery Code Slots -->
             <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
@@ -740,7 +1001,7 @@
                     <div class="pixel-text"
                         style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1
                         / 4 PLAYERS JOINED</div>
-                    <div class="flex gap-4" style="position: relative;">
+                    <div class="flex gap-4">
                         <div class="player-slot-card filled" id="host-player-slot">
                             <img src="/static/characters/char1.png" id="host-avatar" alt="Player 1 Avatar">
                         </div>
@@ -832,31 +1093,90 @@
                     <button class="footer-btn" onclick="navigateTo('main-menu')">
                         <span class="pixel-text">LEAVE LOBBY</span>
                     </button>
-                    <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
-                        <i class="ph-fill ph-play" id="start-fight-icon" style="font-size: 20px; margin-top: 2px;"></i>
-                        <span class="pixel-text" id="start-fight-text">START FIGHT</span>
+                    <button class="footer-btn primary-glow">
+                        <i class="ph-fill ph-play" style="font-size: 20px; margin-top: 2px;"></i>
+                        <span class="pixel-text">START FIGHT</span>
                     </button>
+                </div>
             </div>
         </div>
-        </div><!-- end #lobby-setup -->
-    </div><!-- end #lobby-overlay -->
+    </div>
 
-    <!-- BATTLE HUD : top-level layer, NOT inside lobby-overlay -->
-    <div id="battle-hud" style="display:none; opacity:0; position:fixed; inset:0; z-index:9999; pointer-events:none;">
-        <!-- Centered Live Timer -->
-        <div id="battle-timer" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
-            <div id="battle-time-display" class="pixel-text heavy-glow"
-                style="font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;">
-                25:00
+    <!-- LAYER 300: Mode Selection Overlay -->
+    <div id="mode-selection-overlay">
+        <div class="scanlines"></div>
+        <div style="position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+            <div class="mode-select-title">SELECT MODE</div>
+            <div class="mode-cards-container">
+                <!-- Individual Mode Card -->
+                <div class="mode-card" id="mode-card-individual" onclick="selectMode('individual')">
+                    <i class="ph ph-user-focus mode-card-icon"></i>
+                    <div class="mode-card-title">INDIVIDUAL MODE</div>
+                    <div class="mode-card-desc">Solo focus session with<br>Pomodoro system</div>
+                </div>
+                <!-- Group Mode Card -->
+                <div class="mode-card" id="mode-card-group" onclick="selectMode('group')">
+                    <i class="ph ph-users-three mode-card-icon"></i>
+                    <div class="mode-card-title">GROUP MODE</div>
+                    <div class="mode-card-desc">Continue with team-based<br>focus battle</div>
+                </div>
             </div>
-            <div id="battle-phase-label" class="pixel-text"
-                style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;">
-                FOCUS TIME
-            </div>
+            <button class="mode-back-btn" onclick="navigateTo('main-menu')">
+                <i class="ph ph-arrow-left" style="font-size:16px;"></i> BACK
+            </button>
         </div>
-        <!-- Left Squad HUD -->
-        <div id="squad-hud"
-            style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
+    </div>
+
+    <!-- LAYER 300: Individual Mode Overlay -->
+    <div id="individual-mode-overlay">
+        <div class="scanlines"></div>
+        <div style="position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;">
+            <div class="indiv-phase-label focus" id="indiv-phase-label">FOCUS</div>
+            <div class="indiv-timer-ring">
+                <svg viewBox="0 0 260 260">
+                    <circle class="ring-bg" cx="130" cy="130" r="118"></circle>
+                    <circle class="ring-progress" id="indiv-ring-progress" cx="130" cy="130" r="118"
+                        stroke-dasharray="741.416" stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="indiv-timer-text">
+                    <div class="indiv-timer-digits" id="indiv-timer-digits">25:00</div>
+                    <div class="indiv-session-counter" id="indiv-session-counter">SESSION 1 OF 4</div>
+                </div>
+            </div>
+            <div class="indiv-xp-indicator" id="indiv-xp-indicator">XP: <span class="xp-value" id="indiv-xp-value">+0</span></div>
+            <div class="indiv-controls" id="indiv-controls">
+                <button class="indiv-ctrl-btn" id="indiv-pause-btn" onclick="toggleIndivPause()">
+                    <i class="ph ph-pause" id="indiv-pause-icon" style="font-size:18px;"></i> PAUSE
+                </button>
+                <button class="indiv-ctrl-btn danger" id="indiv-stop-btn" onclick="stopIndivSession()">
+                    <i class="ph ph-stop" style="font-size:18px;"></i> STOP
+                </button>
+            </div>
+            <div class="indiv-pause-warning" id="indiv-pause-warning">⚠ PAUSE LIMIT APPROACHING</div>
+        </div>
+    </div>
+
+    <!-- Session Summary Modal -->
+    <div id="session-summary-modal">
+        <div class="summary-card">
+            <div class="summary-title">SESSION COMPLETE</div>
+            <div class="summary-stats">
+                <div class="summary-stat-row">
+                    <span class="summary-stat-label">TOTAL FOCUS</span>
+                    <span class="summary-stat-value" id="summary-focus-time">0:00</span>
+                </div>
+                <div class="summary-stat-row">
+                    <span class="summary-stat-label">SESSIONS</span>
+                    <span class="summary-stat-value" id="summary-sessions">0 / 4</span>
+                </div>
+                <div class="summary-stat-row">
+                    <span class="summary-stat-label">XP EARNED</span>
+                    <span class="summary-stat-value positive" id="summary-xp">+0</span>
+                </div>
+            </div>
+            <button class="indiv-ctrl-btn" onclick="closeSummaryModal()" style="margin-top:12px;">
+                <i class="ph ph-house" style="font-size:16px;"></i> RETURN HOME
+            </button>
         </div>
     </div>
 
@@ -865,9 +1185,8 @@
         // ─────────────────────────────────────────────
         // STATE MACHINE
         // ─────────────────────────────────────────────
-        const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay', 'join-layer'];
+        const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay', 'mode-selection-overlay', 'individual-mode-overlay'];
         let previousScreen = null; // tracks where "close profile" returns to
-        let userRole = 'spectator'; // 'host' | 'guest' | 'spectator'
 
         let isBrightMode = false;
         function toggleBrightMode() {
@@ -885,6 +1204,17 @@
         }
 
         function navigateTo(targetId) {
+            // MODE SELECTION INTERCEPT: redirect lobby to mode selection when mode is null
+            if (targetId === 'lobby-overlay' && currentMode === null) {
+                targetId = 'mode-selection-overlay';
+            }
+
+            // Reset mode when returning to main menu (leave lobby)
+            if (targetId === 'main-menu') {
+                currentMode = null;
+                cleanupIndivSession();
+            }
+
             // 1. Reset all screens
             SCREENS.forEach(id => {
                 const el = document.getElementById(id);
@@ -922,80 +1252,39 @@
                     initCharacterSync();
                     gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 }
-                if (targetId === 'profile-overlay' || targetId === 'join-layer') {
-                    // Hide gear to prevent overlap
+                if (targetId === 'mode-selection-overlay') {
+                    gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
+                    // Animate mode cards
+                    gsap.fromTo('.mode-card',
+                        { y: 30, opacity: 0, scale: 0.95 },
+                        { y: 0, opacity: 1, scale: 1, stagger: 0.12, duration: 0.6, delay: 0.15, ease: 'back.out(1.4)' }
+                    );
+                    gsap.fromTo('.mode-select-title',
+                        { y: -20, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+                    );
+                    gsap.fromTo('.mode-back-btn',
+                        { y: 20, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.4, delay: 0.4, ease: 'power2.out' }
+                    );
+                }
+                if (targetId === 'individual-mode-overlay') {
+                    gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
+                    startIndivSession();
+                }
+                if (targetId === 'profile-overlay') {
+                    // Hide gear to prevent overlap with X button
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
 
-                    if (targetId === 'profile-overlay') {
-                        setTimeout(() => {
-                            gsap.killTweensOf('.char-card');
-                            gsap.fromTo('.char-card',
-                                { y: 40, opacity: 0 },
-                                { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'back.out(1.5)' }
-                            );
-                        }, 50);
-                    } else if (targetId === 'join-layer') {
-                        // clear input on open
-                        const input = document.getElementById('room-code-input');
-                        if (input) {
-                            input.value = '';
-                            setTimeout(() => input.focus(), 100);
-                        }
-                    }
+                    setTimeout(() => {
+                        gsap.killTweensOf('.char-card');
+                        gsap.fromTo('.char-card',
+                            { y: 40, opacity: 0 },
+                            { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'back.out(1.5)' }
+                        );
+                    }, 50);
                 }
             }
-        }
-
-        // ─────────────────────────────────────────────
-        // JOIN LOBBY LOGIC
-        // ─────────────────────────────────────────────
-        function setupJoinInput() {
-            const input = document.getElementById('room-code-input');
-            const wrapper = document.getElementById('join-input-wrapper');
-            if (!input) return;
-
-            input.addEventListener('input', (e) => {
-                let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                if (val.length > 4) {
-                    val = val.slice(0, 4) + '-' + val.slice(4, 5);
-                }
-                e.target.value = val;
-
-                // Subtle jump effect on typing
-                gsap.killTweensOf(wrapper);
-                gsap.fromTo(wrapper,
-                    { y: -5, scale: 1.02 },
-                    { y: 0, scale: 1, duration: 0.3, ease: 'bounce.out' }
-                );
-            });
-        }
-
-        let guestJoinedCode = ''; // Stores the code typed by the Guest
-
-        function attemptJoinRoom() {
-            const input = document.getElementById('room-code-input');
-            const val = input.value;
-            if (val.length === 6 && val.includes('-')) {
-                userRole = 'guest';
-                localStorage.setItem('userRole', 'guest');
-                guestJoinedCode = val.toUpperCase(); // Save the code they typed
-                navigateTo('lobby-overlay');
-                syncLobbyData(); // Snap sync from localStorage
-            } else {
-                gsap.timeline()
-                    .to(input, { x: -10, duration: 0.05 })
-                    .to(input, { x: 10, duration: 0.05 })
-                    .to(input, { x: -10, duration: 0.05 })
-                    .to(input, { x: 10, duration: 0.05 })
-                    .to(input, { x: 0, duration: 0.05 });
-            }
-        }
-
-        function createLobby() {
-            userRole = 'host';
-            localStorage.setItem('userRole', 'host');
-            guestJoinedCode = ''; // ensure no leftover guest code
-            navigateTo('lobby-overlay');
         }
 
         // ─────────────────────────────────────────────
@@ -1156,27 +1445,22 @@
         let currentRoomCode = "";
         const rollChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        // fixedCode: if provided (guest), use it instead of generating random
-        function generateRoomCode(fixedCode = null) {
+        function generateRoomCode() {
+            // 1. Generate random 5-char string (format: ABCD-1)
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const nums = "0123456789";
+            let code = "";
+            for (let i = 0; i < 4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            code += "-";
+            code += nums.charAt(Math.floor(Math.random() * nums.length));
 
-            if (fixedCode) {
-                currentRoomCode = fixedCode.toUpperCase();
-            } else {
-                let code = "";
-                for (let i = 0; i < 4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
-                code += "-";
-                code += nums.charAt(Math.floor(Math.random() * nums.length));
-                currentRoomCode = code;
-            }
+            currentRoomCode = code;
 
-            // Build DOM — identical for both host and guest
+            // 2. Build DOM
             const container = document.getElementById('fs-code-slots');
             container.innerHTML = '';
 
-            let slotIdx = 0; // ignores the dash character
-            currentRoomCode.split('').forEach((char) => {
+            currentRoomCode.split('').forEach((char, index) => {
                 if (char === '-') {
                     const dash = document.createElement('div');
                     dash.className = 'dash-char';
@@ -1190,17 +1474,17 @@
                 const inner = document.createElement('div');
                 inner.className = 'slot-inner';
 
-                // Spin chars
-                const spinCount = 15 + (slotIdx * 5);
+                // Add deco chars
+                const spinCount = 15 + (index * 5);
                 for (let i = 0; i < spinCount; i++) {
                     const rChar = document.createElement('div');
                     rChar.className = 'char';
-                    rChar.style.color = 'rgba(255,255,255,0.35)';
+                    rChar.style.color = 'rgba(255,255,255,0.35)'; // More visible during spin
                     rChar.textContent = rollChars.charAt(Math.floor(Math.random() * rollChars.length));
                     inner.appendChild(rChar);
                 }
 
-                // Final char (random for host, typed code for guest)
+                // Final char
                 const finalChar = document.createElement('div');
                 finalChar.className = 'char final-char';
                 finalChar.textContent = char;
@@ -1208,13 +1492,11 @@
 
                 slot.appendChild(inner);
                 container.appendChild(slot);
-                slotIdx++;
             });
 
-            // GSAP slot-spin — same for host and guest
             const inners = container.querySelectorAll('.slot-inner');
             inners.forEach((inner, idx) => {
-                const dist = -((inner.children.length - 1) * 71);
+                const dist = -((inner.children.length - 1) * 71); // 71 matches inner height
                 gsap.fromTo(inner,
                     { y: 0 },
                     {
@@ -1233,99 +1515,11 @@
         }
 
         function showLobbyAnimations() {
-            // Host gets a fresh random code; Guest gets their typed code — same animation either way
-            generateRoomCode(guestJoinedCode || null);
-            guestJoinedCode = ''; // reset after use
-            applyPermissionLock();
+            generateRoomCode();
             gsap.fromTo('.pomodoro-panel', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.4, ease: "power2.out" });
             gsap.fromTo('.footer-btn', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.7 });
             gsap.fromTo('.player-slot-card', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.5, ease: "back.out(1.5)" });
         }
-
-        // ─────────────────────────────────────────────
-        // PERMISSION LOCK LOGIC (HOST VS GUEST)
-        // ─────────────────────────────────────────────
-        function applyPermissionLock() {
-            const timerCtrls = document.querySelectorAll('.timer-ctrl');
-            const breaksToggle = document.getElementById('breaks-toggle');
-            const startBtn = document.getElementById('start-fight-btn');
-            const startIcon = document.getElementById('start-fight-icon');
-            const startText = document.getElementById('start-fight-text');
-
-            if (userRole === 'guest') {
-                // Lock all timer +/- controls for Guest
-                timerCtrls.forEach(ctrl => {
-                    ctrl.style.pointerEvents = 'none';
-                    ctrl.style.opacity = '0.3';
-                });
-                if (breaksToggle) { breaksToggle.style.pointerEvents = 'none'; breaksToggle.style.opacity = '0.4'; }
-                if (startBtn) {
-                    startBtn.classList.remove('primary-glow');
-                    startBtn.style.pointerEvents = 'none';
-                    startBtn.style.opacity = '0.45';
-                    startBtn.style.boxShadow = 'none';
-                }
-                if (startIcon) { startIcon.className = 'ph ph-hourglass-high'; startIcon.style.fontSize = '16px'; }
-                if (startText) { startText.innerText = 'WAITING FOR HOST...'; startText.style.fontSize = '9px'; }
-            } else {
-                // Full controls for Host
-                timerCtrls.forEach(ctrl => {
-                    ctrl.style.pointerEvents = 'auto';
-                    ctrl.style.opacity = '1';
-                });
-                if (breaksToggle) { breaksToggle.style.pointerEvents = 'auto'; breaksToggle.style.opacity = '1'; }
-                if (startBtn) {
-                    startBtn.classList.add('primary-glow');
-                    startBtn.style.pointerEvents = 'auto';
-                    startBtn.style.opacity = '1';
-                    startBtn.style.boxShadow = '';
-                }
-                if (startIcon) { startIcon.className = 'ph-fill ph-play'; startIcon.style.fontSize = '20px'; }
-                if (startText) { startText.innerText = 'START FIGHT'; startText.style.fontSize = ''; }
-            }
-        }
-
-        // ─────────────────────────────────────────────
-        // SHARED WHITEBOARD (localStorage State Sync)
-        // ─────────────────────────────────────────────
-        function getCurrentLobbyState() {
-            return {
-                fightMin: document.getElementById('fight-min')?.innerText || '25',
-                fightSec: document.getElementById('fight-sec')?.innerText || '00',
-                breakMin: document.getElementById('break-min')?.innerText || '05',
-                breakSec: document.getElementById('break-sec')?.innerText || '00',
-                includeBreaks: document.getElementById('breaks-toggle')?.classList.contains('active') || true,
-            };
-        }
-
-        function broadcastLobbyState() {
-            if (userRole !== 'host') return; // Only host can broadcast
-            localStorage.setItem('lobby_state', JSON.stringify(getCurrentLobbyState()));
-        }
-
-        function syncLobbyData() {
-            // Read Host's state from shared whiteboard
-            const raw = localStorage.getItem('lobby_state');
-            if (!raw) return; // No state yet — use defaults
-            try {
-                const state = JSON.parse(raw);
-                const fightMin = document.getElementById('fight-min');
-                const fightSec = document.getElementById('fight-sec');
-                const breakMin = document.getElementById('break-min');
-                const breakSec = document.getElementById('break-sec');
-                if (fightMin) fightMin.innerText = state.fightMin;
-                if (fightSec) fightSec.innerText = state.fightSec;
-                if (breakMin) breakMin.innerText = state.breakMin;
-                if (breakSec) breakSec.innerText = state.breakSec;
-            } catch(e) { console.warn('Sync failed', e); }
-        }
-
-        // Real-time cross-tab listener (Guest Auto-Update)
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'lobby_state' && userRole === 'guest') {
-                syncLobbyData();
-            }
-        });
 
         function copyRoomCode() {
             navigator.clipboard.writeText(currentRoomCode).catch(() => {
@@ -1366,7 +1560,6 @@
             if (v < 5) v = 5;
             if (v > 60) v = 60;
             el.textContent = v < 10 ? '0' + v : v;
-            broadcastLobbyState(); // Broadcast every time Host changes a value
         }
 
         function adjustSeconds(minId, secId, amount) {
@@ -1383,7 +1576,6 @@
             }
             secEl.textContent = sec === 0 ? '00' : (sec < 10 ? '0' + sec : sec);
             gsap.fromTo(secEl, { scale: 1.2 }, { scale: 1, duration: 0.2, ease: "bounce.out" });
-            broadcastLobbyState(); // Broadcast every time Host changes seconds
         }
 
 
@@ -1440,169 +1632,302 @@
             if (hostSlot) { hostSlot.style.filter = "drop-shadow(0 0 12px white)"; hostSlot.classList.add('host-glow'); }
         }
 
+        // ─────────────────────────────────────────────
+        // MODE SELECTION & INDIVIDUAL MODE
+        // ─────────────────────────────────────────────
+        let currentMode = null; // null | "individual" | "group"
+
+        function selectMode(mode) {
+            currentMode = mode;
+            if (mode === 'group') {
+                navigateTo('lobby-overlay');
+            } else if (mode === 'individual') {
+                navigateTo('individual-mode-overlay');
+            }
+        }
+
+        // ── INDIVIDUAL MODE ENGINE ──
+        const INDIV_FOCUS_DURATION = 25 * 60;      // 25 min
+        const INDIV_SHORT_BREAK = 5 * 60;           // 5 min
+        const INDIV_LONG_BREAK = 15 * 60;           // 15 min
+        const INDIV_MAX_PAUSE = 10 * 60;            // 10 min total pause
+        const INDIV_SESSIONS_BEFORE_LONG = 4;
+        const INDIV_XP_PER_SESSION = 100;
+        const INDIV_XP_PAUSE_PENALTY = 25;
+
+        let indivTimerInterval = null;
+        let indivTimeRemaining = INDIV_FOCUS_DURATION;
+        let indivTotalDuration = INDIV_FOCUS_DURATION;
+        let indivCurrentSession = 1;
+        let indivPhase = 'focus'; // 'focus' | 'short-break' | 'long-break'
+        let indivIsPaused = false;
+        let indivTotalPauseTime = 0;
+        let indivPauseStart = null;
+        let indivXP = 0;
+        let indivTotalFocusTime = 0;
+        let indivCompletedSessions = 0;
+        let indivPausePenaltyApplied = false;
+        const RING_CIRCUMFERENCE = 2 * Math.PI * 118; // ~741.416
+
+        function startIndivSession() {
+            // Reset all state
+            indivCurrentSession = 1;
+            indivPhase = 'focus';
+            indivIsPaused = false;
+            indivTotalPauseTime = 0;
+            indivPauseStart = null;
+            indivXP = 0;
+            indivTotalFocusTime = 0;
+            indivCompletedSessions = 0;
+            indivPausePenaltyApplied = false;
+            indivTimeRemaining = INDIV_FOCUS_DURATION;
+            indivTotalDuration = INDIV_FOCUS_DURATION;
+
+            updateIndivUI();
+            startIndivTimer();
+
+            // Entry animations
+            gsap.fromTo('#indiv-phase-label', { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 });
+            gsap.fromTo('.indiv-timer-ring', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, delay: 0.1, ease: 'back.out(1.4)' });
+            gsap.fromTo('#indiv-controls', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.3 });
+            gsap.fromTo('#indiv-xp-indicator', { opacity: 0 }, { opacity: 1, duration: 0.4, delay: 0.4 });
+        }
+
+        function startIndivTimer() {
+            if (indivTimerInterval) clearInterval(indivTimerInterval);
+            indivTimerInterval = setInterval(() => {
+                if (indivIsPaused) return;
+
+                indivTimeRemaining--;
+
+                if (indivPhase === 'focus') {
+                    indivTotalFocusTime++;
+                }
+
+                updateIndivUI();
+
+                if (indivTimeRemaining <= 0) {
+                    onIndivPhaseComplete();
+                }
+            }, 1000);
+        }
+
+        function onIndivPhaseComplete() {
+            if (indivPhase === 'focus') {
+                indivCompletedSessions++;
+                indivXP += INDIV_XP_PER_SESSION;
+
+                // Flash XP gain
+                const xpEl = document.getElementById('indiv-xp-value');
+                xpEl.classList.remove('xp-loss');
+                xpEl.classList.add('xp-value');
+                gsap.fromTo(xpEl, { scale: 1.4 }, { scale: 1, duration: 0.4, ease: 'bounce.out' });
+
+                if (indivCompletedSessions >= INDIV_SESSIONS_BEFORE_LONG) {
+                    // All 4 sessions done → long break
+                    indivPhase = 'long-break';
+                    indivTimeRemaining = INDIV_LONG_BREAK;
+                    indivTotalDuration = INDIV_LONG_BREAK;
+                } else {
+                    indivPhase = 'short-break';
+                    indivTimeRemaining = INDIV_SHORT_BREAK;
+                    indivTotalDuration = INDIV_SHORT_BREAK;
+                }
+            } else if (indivPhase === 'short-break') {
+                indivCurrentSession++;
+                indivPhase = 'focus';
+                indivTimeRemaining = INDIV_FOCUS_DURATION;
+                indivTotalDuration = INDIV_FOCUS_DURATION;
+            } else if (indivPhase === 'long-break') {
+                // Full cycle complete — show summary
+                showIndivSummary();
+                return;
+            }
+
+            updateIndivUI();
+
+            // Animate phase transition
+            gsap.fromTo('#indiv-phase-label', { scale: 1.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.5)' });
+            gsap.fromTo('.indiv-timer-ring', { scale: 0.95 }, { scale: 1, duration: 0.4, ease: 'elastic.out(1,0.6)' });
+        }
+
+        function toggleIndivPause() {
+            const btn = document.getElementById('indiv-pause-btn');
+            const icon = document.getElementById('indiv-pause-icon');
+
+            if (indivIsPaused) {
+                // Resume
+                indivIsPaused = false;
+                if (indivPauseStart) {
+                    indivTotalPauseTime += (Date.now() - indivPauseStart) / 1000;
+                    indivPauseStart = null;
+                }
+                icon.className = 'ph ph-pause';
+                btn.innerHTML = '<i class="ph ph-pause" id="indiv-pause-icon" style="font-size:18px;"></i> PAUSE';
+                gsap.to('.indiv-timer-ring', { opacity: 1, duration: 0.3 });
+            } else {
+                // Pause
+                indivIsPaused = true;
+                indivPauseStart = Date.now();
+                btn.innerHTML = '<i class="ph ph-play" id="indiv-pause-icon" style="font-size:18px;"></i> RESUME';
+                gsap.to('.indiv-timer-ring', { opacity: 0.5, duration: 0.3 });
+            }
+
+            checkPauseWarning();
+        }
+
+        function checkPauseWarning() {
+            let totalPause = indivTotalPauseTime;
+            if (indivPauseStart) {
+                totalPause += (Date.now() - indivPauseStart) / 1000;
+            }
+
+            const warningEl = document.getElementById('indiv-pause-warning');
+
+            if (totalPause >= INDIV_MAX_PAUSE) {
+                warningEl.textContent = '⚠ PAUSE LIMIT EXCEEDED — XP LOSS!';
+                warningEl.classList.add('visible');
+                warningEl.style.color = 'rgba(255,100,100,0.9)';
+
+                if (!indivPausePenaltyApplied) {
+                    indivPausePenaltyApplied = true;
+                    indivXP -= INDIV_XP_PAUSE_PENALTY;
+                    updateIndivUI();
+                    // Flash warning
+                    gsap.fromTo(warningEl, { scale: 1.2 }, { scale: 1, duration: 0.4, ease: 'bounce.out' });
+                }
+            } else if (totalPause >= INDIV_MAX_PAUSE * 0.7) {
+                warningEl.textContent = '⚠ PAUSE LIMIT APPROACHING';
+                warningEl.classList.add('visible');
+                warningEl.style.color = 'rgba(255,180,80,0.9)';
+            } else {
+                warningEl.classList.remove('visible');
+            }
+        }
+
+        function updateIndivUI() {
+            // Timer digits
+            const mins = Math.floor(indivTimeRemaining / 60);
+            const secs = indivTimeRemaining % 60;
+            document.getElementById('indiv-timer-digits').textContent =
+                `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+            // Session counter
+            document.getElementById('indiv-session-counter').textContent =
+                `SESSION ${indivCurrentSession} OF ${INDIV_SESSIONS_BEFORE_LONG}`;
+
+            // Ring progress
+            const progress = indivTimeRemaining / indivTotalDuration;
+            const offset = RING_CIRCUMFERENCE * (1 - progress);
+            const ring = document.getElementById('indiv-ring-progress');
+            ring.style.strokeDashoffset = offset;
+
+            // Phase styling
+            const label = document.getElementById('indiv-phase-label');
+            label.className = 'indiv-phase-label';
+            ring.className = 'ring-progress';
+
+            if (indivPhase === 'focus') {
+                label.textContent = 'FOCUS';
+                label.classList.add('focus');
+            } else if (indivPhase === 'short-break') {
+                label.textContent = 'SHORT BREAK';
+                label.classList.add('short-break');
+                ring.classList.add('short-break');
+            } else if (indivPhase === 'long-break') {
+                label.textContent = 'LONG BREAK';
+                label.classList.add('long-break');
+                ring.classList.add('long-break');
+            }
+
+            // XP
+            const xpEl = document.getElementById('indiv-xp-value');
+            if (indivXP >= 0) {
+                xpEl.textContent = `+${indivXP}`;
+                xpEl.className = 'xp-value';
+            } else {
+                xpEl.textContent = `${indivXP}`;
+                xpEl.className = 'xp-value xp-loss';
+            }
+
+            // Update pause warning continuously
+            if (indivIsPaused) checkPauseWarning();
+        }
+
+        function stopIndivSession() {
+            showIndivSummary();
+        }
+
+        function showIndivSummary() {
+            if (indivTimerInterval) clearInterval(indivTimerInterval);
+            indivTimerInterval = null;
+
+            // Calculate summary
+            const focusMins = Math.floor(indivTotalFocusTime / 60);
+            const focusSecs = indivTotalFocusTime % 60;
+
+            document.getElementById('summary-focus-time').textContent =
+                `${focusMins}:${focusSecs < 10 ? '0' : ''}${focusSecs}`;
+            document.getElementById('summary-sessions').textContent =
+                `${indivCompletedSessions} / ${INDIV_SESSIONS_BEFORE_LONG}`;
+
+            const xpEl = document.getElementById('summary-xp');
+            if (indivXP >= 0) {
+                xpEl.textContent = `+${indivXP}`;
+                xpEl.className = 'summary-stat-value positive';
+            } else {
+                xpEl.textContent = `${indivXP}`;
+                xpEl.className = 'summary-stat-value negative';
+            }
+
+            // Show modal
+            const modal = document.getElementById('session-summary-modal');
+            modal.style.display = 'flex';
+            gsap.to(modal, { opacity: 1, duration: 0.4 });
+            modal.style.pointerEvents = 'auto';
+
+            gsap.fromTo('.summary-card',
+                { scale: 0.85, y: 20, opacity: 0 },
+                { scale: 1, y: 0, opacity: 1, duration: 0.5, delay: 0.1, ease: 'back.out(1.5)' }
+            );
+        }
+
+        function closeSummaryModal() {
+            const modal = document.getElementById('session-summary-modal');
+            gsap.to(modal, {
+                opacity: 0, duration: 0.3,
+                onComplete: () => {
+                    modal.style.display = 'none';
+                    modal.style.pointerEvents = 'none';
+                    modal.style.opacity = '0';
+                    currentMode = null;
+                    navigateTo('main-menu');
+                }
+            });
+        }
+
+        function cleanupIndivSession() {
+            if (indivTimerInterval) {
+                clearInterval(indivTimerInterval);
+                indivTimerInterval = null;
+            }
+            indivIsPaused = false;
+            // Hide summary modal if open
+            const modal = document.getElementById('session-summary-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.style.pointerEvents = 'none';
+                modal.style.opacity = '0';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Start with main menu visible
             navigateTo('main-menu');
             initCharacterSync();
             syncHubAvatar();
-            setupJoinInput();
         });
-        console.log("Focus Fighter System Initialized");
-    </script>
-    <script>
-        // ─────────────────────────────────────────────
-        // BATTLE HUD & SQUAD HUD LOGIC (GAME_SIDEBAR)
-        // ─────────────────────────────────────────────
-        let battleTimerInterval = null;
-
-        function onStartFight() {
-            const currentRole = userRole || localStorage.getItem('userRole');
-            console.log("[BATTLE] Click detected. Role:", currentRole);
-            
-            if (currentRole !== 'host') {
-                console.warn("[BATTLE] NOT host, aborting.");
-                return;
-            }
-
-            // 1. Get durations
-            const fightMin = parseInt(document.getElementById('fight-min').innerText);
-            const fightSec = parseInt(document.getElementById('fight-sec').innerText);
-            const totalSeconds = (fightMin * 60) + fightSec;
-
-            // 2. DYNAMICALLY CREATE the battle HUD (nuclear approach)
-            let battleHud = document.getElementById('battle-hud');
-            if (battleHud) battleHud.remove(); // Remove old one if exists
-
-            battleHud = document.createElement('div');
-            battleHud.id = 'battle-hud';
-            battleHud.style.cssText = 'position:fixed; inset:0; z-index:9999; pointer-events:auto; display:block; opacity:1;';
-
-            // Timer
-            const timerWrap = document.createElement('div');
-            timerWrap.id = 'battle-timer';
-            timerWrap.style.cssText = 'position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;';
-
-            const timeDisplay = document.createElement('div');
-            timeDisplay.id = 'battle-time-display';
-            timeDisplay.className = 'pixel-text heavy-glow';
-            timeDisplay.style.cssText = 'font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;';
-            const m = Math.floor(totalSeconds / 60);
-            const s = totalSeconds % 60;
-            timeDisplay.innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s);
-
-            const phaseLabel = document.createElement('div');
-            phaseLabel.id = 'battle-phase-label';
-            phaseLabel.className = 'pixel-text';
-            phaseLabel.style.cssText = 'font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;';
-            phaseLabel.innerText = 'FOCUS TIME';
-
-            timerWrap.appendChild(timeDisplay);
-            timerWrap.appendChild(phaseLabel);
-
-            // Squad HUD — RIGHT SIDE with char avatar + HP bar
-            const squadHud = document.createElement('div');
-            squadHud.id = 'squad-hud';
-            squadHud.style.cssText = 'position:absolute; right:4%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:20px;';
-
-            // Get player data
-            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
-            const selectedChar = localStorage.getItem('selectedChar') || 'char1.png';
-            const charSrc = '/static/characters/' + (selectedChar.includes('.png') ? selectedChar : 'char' + selectedChar + '.png');
-
-            // Build player card
-            const block = document.createElement('div');
-            block.className = 'squad-block';
-            block.style.cssText = 'display:flex; align-items:center; gap:12px;';
-            block.innerHTML = 
-                '<div style="width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.7); box-shadow:0 0 12px rgba(255,255,255,0.4); overflow:hidden; background:rgba(0,0,0,0.3); flex-shrink:0;">' +
-                    '<img src="' + charSrc + '" style="width:100%; height:100%; object-fit:contain; padding:4px;">' +
-                '</div>' +
-                '<div style="display:flex; flex-direction:column; gap:6px;">' +
-                    '<div class="pixel-text heavy-glow" style="font-size:10px; color:white; white-space:nowrap;">' + hostName.toUpperCase() + '</div>' +
-                    '<div style="width:120px; height:6px; border:1px solid rgba(255,255,255,0.5); border-radius:3px; box-shadow:0 0 6px rgba(255,255,255,0.2);">' +
-                        '<div style="width:100%; height:100%; background:#39FF14; border-radius:2px; box-shadow:0 0 8px #39FF14;"></div>' +
-                    '</div>' +
-                '</div>';
-            squadHud.appendChild(block);
-
-            battleHud.appendChild(timerWrap);
-            battleHud.appendChild(squadHud);
-            document.body.appendChild(battleHud);
-            console.log("[BATTLE] HUD injected into document.body");
-
-            // 3. Hide lobby
-            const lobbyOverlay = document.getElementById('lobby-overlay');
-            if (lobbyOverlay) {
-                gsap.to(lobbyOverlay, {
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.inOut",
-                    onComplete: () => {
-                        lobbyOverlay.style.display = 'none';
-                        console.log("[BATTLE] Lobby hidden");
-                    }
-                });
-            }
-
-            // 4. Animate in
-            gsap.fromTo(timerWrap, { scale: 0.5 }, { scale: 1, duration: 0.8, ease: "back.out(1.5)", delay: 0.3 });
-            gsap.fromTo(squadHud, { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.2 });
-
-            // 5. Start countdown
-            startBattleTimer(totalSeconds);
-            console.log("[BATTLE] Complete. Timer running.");
-        }
-
-        function renderSquadHud() {
-            const squadContainer = document.getElementById('squad-hud');
-            squadContainer.innerHTML = '';
-
-            // Pull Actual Names (No placeholders)
-            // If user hasn't set their name, default to 'Sadhana' as indicated in the spec example
-            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
-            
-            // For now, we only show valid connected sessions.
-            // Host is always present. 
-            const participants = [{ name: hostName, role: 'host', hp: 100 }];
-            
-            // (In a real multi-player scenario, we'd loop through participant session data here)
-            // Constraint: No placeholders (only show real names from session).
-            
-            participants.forEach(p => {
-                const block = document.createElement('div');
-                block.className = 'squad-block';
-                block.innerHTML = `
-                    <div class="pixel-text squad-name heavy-glow">${p.name.toUpperCase()}</div>
-                    <div class="hp-bar-track">
-                        <div class="hp-bar-fill"></div>
-                    </div>
-                `;
-                squadContainer.appendChild(block);
-            });
-        }
-
-        function startBattleTimer(seconds) {
-            if (battleTimerInterval) clearInterval(battleTimerInterval);
-            let timeLeft = seconds;
-            const display = document.getElementById('battle-time-display');
-
-            function update() {
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
-                display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-                gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
-            }
-
-            update();
-            battleTimerInterval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft < 0) {
-                    clearInterval(battleTimerInterval);
-                    return;
-                }
-                update();
-            }, 1000);
-        }
     </script>
 </body>
+
 </html>
