@@ -175,6 +175,56 @@
         }
 
         /* =====================
+           GLOBAL NAVIGATION (Arsenal/Ranking)
+        ======================== */
+        #global-nav-left {
+            position: fixed;
+            top: 100px;
+            left: 24px;
+            z-index: 210;
+            display: flex;
+            gap: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-icon-btn {
+            background: rgba(10, 10, 15, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 80px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-icon-btn i {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00f2ff;
+            color: #fff;
+            transform: scale(1.1) translateY(-2px);
+            text-shadow: 0 0 8px #00f2ff;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        /* =====================
            LAYER 200: MAIN MENU
         ======================== */
         #main-menu {
@@ -251,6 +301,7 @@
             inset: 0;
             backdrop-filter: blur(12px) brightness(0.4);
             -webkit-backdrop-filter: blur(12px) brightness(0.4);
+            pointer-events: none;
         }
 
         #profile-overlay.visible {
@@ -627,6 +678,18 @@
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
 
+    <!-- GLOBAL NAV (Quick Access) -->
+    <nav id="global-nav-left">
+        <a href="/arsenal" class="nav-icon-btn">
+            <i class="ph ph-sword"></i>
+            <span class="nav-label">Arsenal</span>
+        </a>
+        <a href="/leaderboard" class="nav-icon-btn">
+            <i class="ph ph-trophy"></i>
+            <span class="nav-label">Ranking</span>
+        </a>
+    </nav>
+
     <!-- LAYER 5: Bottom vignette (behind footer buttons) -->
     <div class="bottom-vignette"></div>
 
@@ -639,6 +702,37 @@
         <i class="ph ph-gear-six" id="settings-gear" style="position: relative; top: 0; right: 0;"
             onclick="event.stopPropagation(); toggleSettingsHub()"></i>
     </nav>
+
+    <!-- LAYER 1000: Persistent Nav -->
+    <nav
+        style="position: fixed; top: 20px; right: 24px; z-index: 1000; display: flex; gap: 14px; align-items: center; pointer-events: none;">
+        <!-- Group Points Toggle -->
+        <i class="ph ph-shield-star" id="gp-nav-icon" style="pointer-events:auto; cursor:pointer; font-size:34px; color:#d4af37;
+                  filter: drop-shadow(0 0 8px #d4af37); transition: transform 0.3s;"
+            onclick="event.stopPropagation(); toggleGroupPanel()" title="Realm Standings"></i>
+        <!-- Gear -->
+        <i class="ph ph-gear-six" id="settings-gear" style="pointer-events:auto;"
+            onclick="event.stopPropagation(); toggleSettingsHub()"></i>
+    </nav>
+
+    <!-- LAYER 800: Group Points Sidebar -->
+    <div id="group-points-panel">
+        <div class="gp-title">⚔️ REALM STANDINGS</div>
+        <div id="gp-teams-list">
+            <div
+                style="font-family:'Press Start 2P',monospace;font-size:7px;color:rgba(255,255,255,0.3);text-align:center;padding:20px 0;">
+                Summoning data...</div>
+        </div>
+        <div class="gp-log" id="gp-log"></div>
+    </div>
+
+    <!-- LAYER 850: Battle Victory Overlay -->
+    <div id="battle-overlay">
+        <div class="b-flash" id="b-flash"></div>
+        <div class="b-banner" id="b-banner">
+            <div class="b-banner-text" id="b-banner-text"></div>
+        </div>
+    </div>
 
     <!-- LAYER 900: Settings Hub (Glassmorphic Popover) -->
     <div id="settings-hub">
@@ -667,7 +761,7 @@
 
         <!-- Header Controls (above the blur) -->
         <div class="absolute top-0 w-full flex justify-between p-8 z-20 items-center"
-            style="position: relative; z-index: 10;">
+            style="position: relative; z-index: 50; pointer-events: none;">
             <input type="text" id="gamer-tag-input" placeholder="GAMER TAG"
                 class="bg-transparent border-b-2 border-white text-white outline-none px-2 py-1 w-64"
                 style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFF; text-shadow: 0 0 5px white; pointer-events: auto;"
@@ -692,7 +786,7 @@
 
             <!-- Carousel -->
             <div id="character-carousel" class="carousel-wrapper"
-                style="display: flex; gap: 64px; overflow-x: auto; width: 100%; align-items: center; padding: 16px 30vw; scroll-snap-type: x mandatory; pointer-events: auto;">
+                style="display: flex; gap: 64px; overflow-x: auto; width: 100%; align-items: center; padding: 16px 30vw; scroll-snap-type: x mandatory; pointer-events: auto; position: relative; z-index: 50;">
                 <!-- Cards injected by JS -->
             </div>
         </div>
@@ -946,6 +1040,8 @@
                 if (id === 'main-menu') {
                     el.style.opacity = (targetId === 'main-menu') ? '1' : '0';
                     el.style.display = (targetId === 'main-menu') ? 'flex' : 'none';
+                    // Show global nav when on main menu
+                    gsap.to('#global-nav-left', { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 } else {
                     el.style.opacity = '0';
                     el.style.display = 'none';
@@ -963,18 +1059,23 @@
             gsap.to(target, { opacity: 1, duration: 0.4 });
 
             // 3. Logic specific to target
+            const globalNav = document.getElementById('global-nav-left');
+            
             if (targetId === 'main-menu') {
                 target.style.pointerEvents = 'none'; // Allow clicking gear icon through background
                 gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
+                if (globalNav) gsap.to(globalNav, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
             } else {
                 if (targetId === 'lobby-overlay') {
                     showLobbyAnimations();
                     initCharacterSync();
                     gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
+                    if (globalNav) gsap.to(globalNav, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 }
                 if (targetId === 'profile-overlay' || targetId === 'join-layer') {
-                    // Hide gear to prevent overlap
+                    // Hide gear and nav to prevent overlap
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
+                    if (globalNav) gsap.to(globalNav, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
 
                     if (targetId === 'profile-overlay') {
                         setTimeout(() => {
@@ -1090,6 +1191,14 @@
         // Deep-link from Settings Hub → Profile Page
         function openFromHub(screenId) {
             previousScreen = 'settings-hub'; // so close returns here
+            
+            if (screenId === 'profile-overlay') {
+                const nameInput = document.getElementById('gamer-tag-input');
+                if (nameInput) {
+                    nameInput.value = localStorage.getItem('playerName') || '';
+                }
+            }
+
             // Close hub first
             gsap.to(settingsHub, {
                 opacity: 0, y: -12, duration: 0.2, ease: 'power2.in',
