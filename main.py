@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, Response, jsonify, request
+from flask import Flask, render_template, Response, jsonify, request
 import os
 import sqlite3
 import json
@@ -23,6 +23,10 @@ class Player(db.Model):
     attack = db.Column(db.Integer, default=10)
     defense = db.Column(db.Integer, default=10)
     speed = db.Column(db.Integer, default=10)
+    intellect = db.Column(db.Integer, default=10)
+    stamina = db.Column(db.Integer, default=10)
+    focus = db.Column(db.Integer, default=10)
+    creativity = db.Column(db.Integer, default=10)
 
     def to_dict(self):
         return {
@@ -34,7 +38,11 @@ class Player(db.Model):
                 "health": self.health,
                 "attack": self.attack,
                 "defense": self.defense,
-                "speed": self.speed
+                "speed": self.speed,
+                "intellect": self.intellect,
+                "stamina": self.stamina,
+                "focus": self.focus,
+                "creativity": self.creativity
             }
         }
 
@@ -67,11 +75,13 @@ def arsenal():
     players = conn.execute('SELECT * FROM player').fetchall()
     
     characters = []
-    for p in players:
+    for p_row in players:
+        p = dict(p_row)
         # Fetch inventory for this player
         items_db = conn.execute('SELECT * FROM inventory WHERE player_id = ?', (p['id'],)).fetchall()
         inventory = []
-        for item in items_db:
+        for item_row in items_db:
+            item = dict(item_row)
             effects = json.loads(item['effects_json']) if item['effects_json'] else {}
             inventory.append(Item(
                 name=item['name'],
@@ -86,13 +96,13 @@ def arsenal():
         characters.append(Character(
             name=p['username'],
             level=p['level'],
-            role="Sovereign" if p['level'] > 10 else "Acolyte",
+            role="Sovereign" if int(str(p.get('level') or 1)) > 10 else "Acolyte",
             avatar_img=p['selected_char'] or 'char1.png',
             stats={
-                "intellect": p['intellect'] if 'intellect' in p.keys() else 10,
-                "stamina": p['stamina'] if 'stamina' in p.keys() else 10,
-                "focus": p['focus'] if 'focus' in p.keys() else 10,
-                "creativity": p['creativity'] if 'creativity' in p.keys() else 10
+                "intellect": p.get('intellect', 10),
+                "stamina": p.get('stamina', 10),
+                "focus": p.get('focus', 10),
+                "creativity": p.get('creativity', 10)
             },
             inventory=inventory
         ))
@@ -108,7 +118,8 @@ def leaderboard():
     players_db = conn.execute('SELECT * FROM player ORDER BY xp DESC').fetchall()
     
     players_list = []
-    for p in players_db:
+    for p_row in players_db:
+        p = dict(p_row)
         players_list.append({
             "id": p['id'],
             "username": p['username'],
@@ -116,10 +127,10 @@ def leaderboard():
             "xp": p['xp'],
             "level": p['level'],
             "stats": {
-                "intellect": p['intellect'] if 'intellect' in p.keys() else 10,
-                "stamina": p['stamina'] if 'stamina' in p.keys() else 10,
-                "focus": p['focus'] if 'focus' in p.keys() else 10,
-                "creativity": p['creativity'] if 'creativity' in p.keys() else 10
+                "intellect": p.get('intellect', 10),
+                "stamina": p.get('stamina', 10),
+                "focus": p.get('focus', 10),
+                "creativity": p.get('creativity', 10)
             }
         })
     conn.close()
@@ -193,6 +204,10 @@ def update_player():
     player.attack = stats.get('attack', player.attack)
     player.defense = stats.get('defense', player.defense)
     player.speed = stats.get('speed', player.speed)
+    player.intellect = stats.get('intellect', player.intellect)
+    player.stamina = stats.get('stamina', player.stamina)
+    player.focus = stats.get('focus', player.focus)
+    player.creativity = stats.get('creativity', player.creativity)
     
     db.session.commit()
     return jsonify(player.to_dict())
@@ -205,12 +220,30 @@ def get_player(username):
     return jsonify(player.to_dict())
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        
     # Ensure instance directory exists
     if not os.path.exists('instance'):
         os.makedirs('instance')
+        
+    with app.app_context():
+        db.create_all()
+        
+        conn = get_db_connection()
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS inventory (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id INTEGER NOT NULL,
+                name VARCHAR(120) NOT NULL,
+                icon VARCHAR(80) NOT NULL,
+                type VARCHAR(50) NOT NULL,
+                stat VARCHAR(50) NOT NULL,
+                value INTEGER NOT NULL,
+                rarity VARCHAR(20) NOT NULL,
+                effects_json TEXT,
+                FOREIGN KEY (player_id) REFERENCES player(id)
+            );
+        """)
+        conn.commit()
+        conn.close()
         
     # Ensure static directory exists
     if not os.path.exists('static'):
@@ -228,12 +261,12 @@ if __name__ == '__main__':
     hostname = socket.gethostname()
     try:
         local_ip = socket.gethostbyname(hostname)
-    except:
+    except Exception:
         local_ip = "127.0.0.1"
     
     print("="*50)
     print("Starting Focus Fighter Web App with Database...")
-    print(f"Open this link in your browser: http://127.0.0.1:5000")
+    print("Open this link in your browser: http://127.0.0.1:5000")
     print(f"Or on your local network: http://{local_ip}:5000")
     print("="*50)
     
