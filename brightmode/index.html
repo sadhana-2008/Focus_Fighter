@@ -19,8 +19,7 @@
         /* =====================
            BASE RESET
         ======================== */
-        body,
-        html {
+        body, html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -41,7 +40,7 @@
             z-index: 0;
             pointer-events: none;
             background-color: #222;
-            background-image: url('/static/campfire_bg.gif');
+            background-image: url('/static/bg_gif.gif?v=2');
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
@@ -50,7 +49,7 @@
         }
 
         .bright-mode {
-            background-image: url("/static/minimoss.gif") !important;
+            background-image: url("/assets/bright-forest.gif") !important;
             background-size: cover !important;
             background-position: center !important;
             background-repeat: no-repeat !important;
@@ -74,12 +73,10 @@
             transition: transform 0.4s ease, filter 0.3s ease;
             pointer-events: auto;
         }
-
         #settings-gear:hover {
             transform: rotate(45deg) scale(1.1);
             filter: drop-shadow(0 0 16px white);
         }
-
         #settings-gear.open {
             transform: rotate(90deg);
         }
@@ -106,9 +103,8 @@
             opacity: 0;
             pointer-events: none;
             transform: translateY(-12px);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
-
         #settings-hub.visible {
             opacity: 1;
             pointer-events: auto;
@@ -119,15 +115,14 @@
             width: 72px;
             height: 72px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255,255,255,0.7);
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
         }
-
         .hub-avatar-ring img {
             width: 100%;
             height: 100%;
@@ -147,15 +142,15 @@
         .hub-divider {
             width: 100%;
             height: 1px;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
         }
 
         .hub-btn {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
             color: white;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.35);
             border-radius: 8px;
             padding: 12px 18px;
             cursor: pointer;
@@ -166,62 +161,11 @@
             transition: all 0.25s ease;
             backdrop-filter: blur(4px);
         }
-
         .hub-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255,255,255,0.18);
             border-color: white;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
             transform: scale(1.03);
-        }
-
-        /* =====================
-           GLOBAL NAVIGATION (Arsenal/Ranking)
-        ======================== */
-        #global-nav-left {
-            position: fixed;
-            top: 100px;
-            left: 24px;
-            z-index: 210;
-            display: flex;
-            gap: 16px;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-icon-btn {
-            background: rgba(10, 10, 15, 0.4);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            min-width: 80px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-icon-btn i {
-            font-size: 24px;
-        }
-
-        .nav-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .nav-icon-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #00f2ff;
-            color: #fff;
-            transform: scale(1.1) translateY(-2px);
-            text-shadow: 0 0 8px #00f2ff;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
         }
 
         /* =====================
@@ -260,7 +204,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             pointer-events: auto;
         }
-
         .cinematic-btn:hover {
             background-color: rgba(60, 60, 60, 0.8);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
@@ -268,10 +211,7 @@
             border-color: #ffffff;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
-
-        .cinematic-btn:active {
-            transform: scale(0.98);
-        }
+        .cinematic-btn:active { transform: scale(0.98); }
 
         .main-btn {
             padding: 16px 32px;
@@ -294,7 +234,6 @@
             background: url('/static/staticpurple_bg.jpg') no-repeat center center;
             background-size: cover;
         }
-
         #profile-overlay::before {
             content: '';
             position: absolute;
@@ -302,7 +241,6 @@
             backdrop-filter: blur(12px) brightness(0.4);
             -webkit-backdrop-filter: blur(12px) brightness(0.4);
         }
-
         #profile-overlay.visible {
             opacity: 1;
             pointer-events: auto;
@@ -323,7 +261,6 @@
             pointer-events: none;
             transition: opacity 0.4s ease;
         }
-
         #lobby-overlay.visible {
             opacity: 1;
             pointer-events: auto;
@@ -336,34 +273,17 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        .carousel-wrapper::-webkit-scrollbar {
-            display: none;
-        }
+        .carousel-wrapper::-webkit-scrollbar { display: none; }
 
         /* =====================
            PIXEL FONT
         ======================== */
         .pixel-text {
             font-family: 'Press Start 2P', monospace;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.4);
         }
-
         .heavy-glow {
-            /* Tighter glow: dark anchor + tight white halo — edges stay sharp */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 6px rgba(255, 255, 255, 1), 0 0 12px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Bottom vignette gradient overlay */
-        .bottom-vignette {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 22%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
-            z-index: 5;
-            pointer-events: none;
+            text-shadow: 0 0 15px rgba(255,255,255,1), 0 0 30px rgba(255,255,255,0.8), 0 0 45px rgba(255,255,255,0.6);
         }
 
         /* =====================
@@ -376,7 +296,6 @@
             margin-bottom: 24px;
             transform: scale(0.85);
         }
-
         .lobby-box-content {
             background-color: transparent;
             backdrop-filter: none;
@@ -385,7 +304,6 @@
             flex-direction: column;
             align-items: center;
         }
-
         .slot-container {
             display: flex;
             gap: 12px;
@@ -394,7 +312,6 @@
             height: 90px;
             overflow: visible;
         }
-
         .slot {
             width: 55px;
             height: 75px;
@@ -403,41 +320,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.4);
             border-radius: 8px;
             overflow: hidden;
             position: relative;
             font-family: 'Press Start 2P', monospace;
             backdrop-filter: blur(8px);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             box-sizing: border-box;
         }
-
         .slot::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(10, 25, 47, 0.9) 0%, transparent 20%, transparent 80%, rgba(10, 25, 47, 0.9) 100%);
+            background: linear-gradient(to bottom, rgba(10,25,47,0.9) 0%, transparent 20%, transparent 80%, rgba(10,25,47,0.9) 100%);
             pointer-events: none;
         }
-
         .slot-inner {
             display: flex;
             flex-direction: column;
             width: 100%;
         }
-
         .char {
-            height: 71px;
-            /* 75 minus borders */
+            height: 71px; /* 75 minus borders */
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            text-shadow: 0 0 10px rgba(255,255,255,0.6);
         }
-
         .dash-char {
             font-size: 32px;
             color: #fff;
@@ -448,31 +360,28 @@
             margin: 0 8px;
             text-shadow: 0 0 20px white;
         }
-
         .player-slot-card {
             width: 80px;
             height: 80px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.2);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 0 18px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
         }
-
-        .player-slot-card.filled {
-            border-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 10px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        .player-slot-card.filled { 
+            border-color: rgba(255,255,255,0.8); 
+            box-shadow: 0 0 20px rgba(255,255,255,0.2), inset 0 0 10px rgba(255,255,255,0.1); 
         }
-
-        .player-slot-card.filled img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 10px;
+        .player-slot-card.filled img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            padding: 10px; 
             transform: scale(1.1);
         }
 
@@ -489,10 +398,9 @@
             position: relative;
             z-index: 10;
         }
-
         .pomo-btn {
             background: transparent;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255,255,255,0.6);
             border: none;
             border-radius: 4px;
             width: 30px;
@@ -503,107 +411,39 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
         .pomo-btn:hover {
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.1);
             transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255,255,255,0.5), inset 0 0 5px rgba(255,255,255,0.3);
         }
-
-        .pixel-toggle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: transparent;
-        }
-
-        .pixel-toggle i {
-            font-size: 32px;
-            color: rgba(255, 255, 255, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .pixel-toggle.active i {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 1);
-        }
-
-        /* =====================
-           JOIN LAYER STYLES
-        ======================== */
-        #join-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .join-input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-            color: white;
-            text-align: center;
-            letter-spacing: 15px;
-            text-indent: 15px;
-            /* Offset to center the letter spacing perfectly */
-            font-family: 'Press Start 2P', monospace;
-            font-size: 32px;
-            outline: none;
-            padding: 10px 0;
-            width: 300px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            caret-color: transparent;
-            /* Hide vertical blinking line */
-        }
-
-        .join-input::selection {
-            background: transparent;
-            /* Remove blue highlight */
-        }
-
-        .join-input:focus {
-            border-bottom: 4px solid rgba(255, 255, 255, 1);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
-        }
+        .pixel-toggle { display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; background: transparent; }
+        .pixel-toggle i { font-size: 32px; color: rgba(255,255,255,0.5); transition: all 0.3s ease; }
+        .pixel-toggle.active i { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,1); }
 
         .lobby-main-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            /* Prevent pushing items off top */
+            justify-content: flex-start; /* Prevent pushing items off top */
             height: 100vh;
             width: 100%;
             position: relative;
             z-index: 10;
             gap: 20px;
             padding-top: 8vh;
-            overflow: hidden;
+            overflow-y: auto; /* Safety scroll */
         }
-
         .scanlines {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1));
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
             background-size: 100% 4px;
             pointer-events: none;
             z-index: 5;
             opacity: 0.05;
         }
-
         .footer-action-container {
             width: 800px;
             display: flex;
@@ -613,11 +453,10 @@
             position: relative;
             z-index: 10;
         }
-
         .footer-btn {
-            background: rgba(20, 20, 20, 0.6);
+            background: rgba(20,20,20,0.6);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255,255,255,0.4);
             padding: 0 24px;
             border-radius: 8px;
             cursor: pointer;
@@ -631,45 +470,15 @@
             transition: all 0.3s;
             backdrop-filter: blur(4px);
         }
-
-        .footer-btn:hover {
-            border-color: #fff;
-            background: rgba(60, 60, 60, 0.8);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-            transform: scale(1.05);
-        }
-
-        .footer-btn.primary-glow {
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-        }
-
-        .footer-btn.primary-glow:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
-            transform: scale(1.05);
-        }
+        .footer-btn:hover { border-color: #fff; background: rgba(60,60,60,0.8); box-shadow: 0 0 15px rgba(255,255,255,0.4); transform: scale(1.05); }
+        .footer-btn.primary-glow { border-color: #fff; background: rgba(255,255,255,0.1); box-shadow: 0 0 20px rgba(255,255,255,0.3); text-shadow: 0 0 8px rgba(255,255,255,0.8); }
+        .footer-btn.primary-glow:hover { background: rgba(255,255,255,0.2); box-shadow: 0 0 30px rgba(255,255,255,0.6); transform: scale(1.05); }
 
         @keyframes hostPulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-                border-color: rgba(255, 255, 255, 0.6);
-            }
-
-            50% {
-                box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-                border-color: rgba(255, 255, 255, 1);
-            }
+            0%, 100% { box-shadow: 0 0 15px rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.6); }
+            50% { box-shadow: 0 0 30px rgba(255,255,255,0.8); border-color: rgba(255,255,255,1); }
         }
-
-        .host-glow {
-            animation: hostPulse 2s infinite ease-in-out;
-            background-color: rgba(255, 255, 255, 0.15) !important;
-        }
+        .host-glow { animation: hostPulse 2s infinite ease-in-out; background-color: rgba(255,255,255,0.15) !important; }
     </style>
 </head>
 
@@ -677,61 +486,10 @@
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
 
-    <!-- GLOBAL NAV (Quick Access) -->
-    <nav id="global-nav-left">
-        <a href="/arsenal" class="nav-icon-btn">
-            <i class="ph ph-sword"></i>
-            <span class="nav-label">Arsenal</span>
-        </a>
-        <a href="/leaderboard" class="nav-icon-btn">
-            <i class="ph ph-trophy"></i>
-            <span class="nav-label">Ranking</span>
-        </a>
-    </nav>
-
-    <!-- LAYER 5: Bottom vignette (behind footer buttons) -->
-    <div class="bottom-vignette"></div>
-
     <!-- LAYER 1000: Persistent Gear Nav (always on top) -->
-    <nav
-        style="position: fixed; top: 20px; right: 24px; pointer-events: none; z-index: 1000; display: flex; gap: 16px; align-items: center;">
-        <i class="ph ph-sun" id="bright-mode-icon"
-            style="pointer-events: auto; cursor: pointer; font-size: 36px; color: white; filter: drop-shadow(0 0 8px white); transition: transform 0.4s ease, filter 0.3s ease;"
-            onclick="event.stopPropagation(); toggleBrightMode()"></i>
-        <i class="ph ph-gear-six" id="settings-gear" style="position: relative; top: 0; right: 0;"
-            onclick="event.stopPropagation(); toggleSettingsHub()"></i>
+    <nav style="position: fixed; inset: 0; pointer-events: none; z-index: 1000;">
+        <i class="ph ph-gear-six" id="settings-gear" onclick="event.stopPropagation(); toggleSettingsHub()"></i>
     </nav>
-
-    <!-- LAYER 1000: Persistent Nav -->
-    <nav
-        style="position: fixed; top: 20px; right: 24px; z-index: 1000; display: flex; gap: 14px; align-items: center; pointer-events: none;">
-        <!-- Group Points Toggle -->
-        <i class="ph ph-shield-star" id="gp-nav-icon" style="pointer-events:auto; cursor:pointer; font-size:34px; color:#d4af37;
-                  filter: drop-shadow(0 0 8px #d4af37); transition: transform 0.3s;"
-            onclick="event.stopPropagation(); toggleGroupPanel()" title="Realm Standings"></i>
-        <!-- Gear -->
-        <i class="ph ph-gear-six" id="settings-gear" style="pointer-events:auto;"
-            onclick="event.stopPropagation(); toggleSettingsHub()"></i>
-    </nav>
-
-    <!-- LAYER 800: Group Points Sidebar -->
-    <div id="group-points-panel">
-        <div class="gp-title">⚔️ REALM STANDINGS</div>
-        <div id="gp-teams-list">
-            <div
-                style="font-family:'Press Start 2P',monospace;font-size:7px;color:rgba(255,255,255,0.3);text-align:center;padding:20px 0;">
-                Summoning data...</div>
-        </div>
-        <div class="gp-log" id="gp-log"></div>
-    </div>
-
-    <!-- LAYER 850: Battle Victory Overlay -->
-    <div id="battle-overlay">
-        <div class="b-flash" id="b-flash"></div>
-        <div class="b-banner" id="b-banner">
-            <div class="b-banner-text" id="b-banner-text"></div>
-        </div>
-    </div>
 
     <!-- LAYER 900: Settings Hub (Glassmorphic Popover) -->
     <div id="settings-hub">
@@ -750,8 +508,8 @@
 
     <!-- LAYER 200: Main Menu -->
     <div id="main-menu">
-        <button class="cinematic-btn main-btn" onclick="createLobby()">Create Lobby</button>
-        <button class="cinematic-btn main-btn" onclick="navigateTo('join-layer')">Join Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="navigateTo('lobby-overlay')">Create Lobby</button>
+        <button class="cinematic-btn main-btn" onclick="alert('Join Lobby coming soon!')">Join Lobby</button>
     </div>
 
     <!-- LAYER 300: Character Selection Overlay -->
@@ -759,8 +517,7 @@
         <!-- The purple cloud background is applied via CSS (background + ::before blur) -->
 
         <!-- Header Controls (above the blur) -->
-        <div class="absolute top-0 w-full flex justify-between p-8 z-20 items-center"
-            style="position: relative; z-index: 10;">
+        <div class="absolute top-0 w-full flex justify-between p-8 z-20 items-center" style="position: relative; z-index: 10;">
             <input type="text" id="gamer-tag-input" placeholder="GAMER TAG"
                 class="bg-transparent border-b-2 border-white text-white outline-none px-2 py-1 w-64"
                 style="font-family: 'Press Start 2P', monospace; font-size: 10px; color: #FFF; text-shadow: 0 0 5px white; pointer-events: auto;"
@@ -777,11 +534,8 @@
         </div>
 
         <!-- Content (above the blur) -->
-        <div
-            style="position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: -40px;">
-            <h1
-                style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: white; text-shadow: 0 0 15px white, 0 0 30px white; letter-spacing: 4px; margin-bottom: 28px;">
-                CUSTOMIZE AVATAR</h1>
+        <div style="position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: -40px;">
+            <h1 style="font-family: 'Press Start 2P', monospace; font-size: 20px; color: white; text-shadow: 0 0 15px white, 0 0 30px white; letter-spacing: 4px; margin-bottom: 28px;">CUSTOMIZE AVATAR</h1>
 
             <!-- Carousel -->
             <div id="character-carousel" class="carousel-wrapper"
@@ -791,36 +545,10 @@
         </div>
     </div>
 
-    <!-- LAYER 300: Join Layer -->
-    <div id="join-layer">
-        <div class="scanlines"></div>
-        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-            <h1 class="pixel-text heavy-glow" style="font-size: 24px; color: white; margin-bottom: 60px;">ENTER ROOM
-                CODE</h1>
-
-            <div id="join-input-wrapper" style="position: relative; margin-bottom: 80px;">
-                <input type="text" id="room-code-input" class="join-input" maxlength="6" autocomplete="off"
-                    spellcheck="false" placeholder="XXXX-X" />
-            </div>
-
-            <!-- Footer Actions -->
-            <div class="flex gap-6">
-                <button class="footer-btn" onclick="navigateTo('main-menu')">
-                    <span class="pixel-text">BACK</span>
-                </button>
-                <button class="footer-btn primary-glow" onclick="attemptJoinRoom()">
-                    <i class="ph-fill ph-play" style="font-size: 20px; margin-top: 2px;"></i>
-                    <span class="pixel-text">JOIN</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- LAYER 300: Lobby Overlay -->
     <div id="lobby-overlay">
         <div class="scanlines"></div>
 
-        <div id="lobby-setup">
         <div class="lobby-main-content py-4">
             <!-- Lottery Code Slots -->
             <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
@@ -830,19 +558,14 @@
 
                 <!-- Player Slots -->
                 <div class="flex flex-col items-center mb-8">
-                    <div class="pixel-text"
-                        style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1
-                        / 4 PLAYERS JOINED</div>
-                    <div class="flex gap-4" style="position: relative;">
+                    <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1 / 4 PLAYERS JOINED</div>
+                    <div class="flex gap-4">
                         <div class="player-slot-card filled" id="host-player-slot">
                             <img src="/static/characters/char1.png" id="host-avatar" alt="Player 1 Avatar">
                         </div>
-                        <div class="player-slot-card"><i class="ph ph-user"
-                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
-                        <div class="player-slot-card"><i class="ph ph-user"
-                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
-                        <div class="player-slot-card"><i class="ph ph-user"
-                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                        <div class="player-slot-card"><i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                        <div class="player-slot-card"><i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                        <div class="player-slot-card"><i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
                     </div>
                 </div>
 
@@ -850,65 +573,43 @@
                 <div class="flex flex-col items-center gap-4" style="width: 800px;">
                     <!-- Fight Duration -->
                     <div class="pomodoro-panel">
-                        <div class="pixel-text"
-                            style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">FIGHT DURATION
-                        </div>
+                        <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">FIGHT DURATION</div>
                         <div class="flex items-center gap-8 justify-center">
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i
-                                        class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="fight-min"
-                                    style="font-size: 36px; color: white;">25</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i
-                                        class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="fight-min" style="font-size: 36px; color: white;">25</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
                             </div>
                             <div class="pixel-text" style="font-size: 36px; color: white; opacity: 0.5;">:</div>
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('fight-min','fight-sec',-15)"><i class="ph ph-minus"
-                                        style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="fight-sec"
-                                    style="font-size: 36px; color: white;">00</div>
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('fight-min','fight-sec',15)"><i class="ph ph-plus"
-                                        style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('fight-min','fight-sec',-15)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="fight-sec" style="font-size: 36px; color: white;">00</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('fight-min','fight-sec',15)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
                             </div>
                         </div>
                     </div>
                     <!-- Include Breaks Toggle (Ultra Compact) -->
                     <div class="flex items-center gap-4" style="margin: -5px 0 5px 0;">
-                        <div class="pixel-text"
-                            style="font-size: 8px; color: white; opacity: 0.8; white-space: nowrap; letter-spacing: 1px;">
-                            INCLUDE BREAKS</div>
+                        <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; white-space: nowrap; letter-spacing: 1px;">INCLUDE BREAKS</div>
                         <div class="pixel-toggle active" id="breaks-toggle" onclick="toggleBreaks()">
                             <i class="ph ph-check-circle" id="breaks-icon"></i>
                         </div>
                     </div>
 
                     <!-- Break Time Row (Compact) -->
-                    <div class="pomodoro-panel overflow-hidden" id="break-timer-panel"
-                        style="padding: 4px 32px; margin-bottom: 0;">
-                        <div class="pixel-text"
-                            style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">BREAK TIME</div>
+                    <div class="pomodoro-panel overflow-hidden" id="break-timer-panel" style="padding: 4px 32px; margin-bottom: 0;">
+                        <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">BREAK TIME</div>
                         <div class="flex items-center gap-8 justify-center">
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i
-                                        class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="break-min"
-                                    style="font-size: 32px; color: white;">05</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i
-                                        class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="break-min" style="font-size: 32px; color: white;">05</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
                             </div>
                             <div class="pixel-text" style="font-size: 32px; color: white; opacity: 0.5;">:</div>
                             <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('break-min','break-sec',-15)"><i class="ph ph-minus"
-                                        style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="break-sec"
-                                    style="font-size: 32px; color: white;">00</div>
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('break-min','break-sec',15)"><i class="ph ph-plus"
-                                        style="font-size: 18px;"></i></button>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('break-min','break-sec',-15)"><i class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                <div class="heavy-glow pixel-text pomo-num" id="break-sec" style="font-size: 32px; color: white;">00</div>
+                                <button class="pomo-btn timer-ctrl" onclick="adjustSeconds('break-min','break-sec',15)"><i class="ph ph-plus" style="font-size: 18px;"></i></button>
                             </div>
                         </div>
                     </div>
@@ -922,34 +623,19 @@
                     <span class="pixel-text" id="copy-text">COPY ID</span>
                 </button>
                 <div class="flex gap-4">
+                    <button class="footer-btn" onclick="toggleBrightMode()" id="bright-mode-btn">
+                        <i class="ph ph-sun" id="bright-mode-icon" style="font-size: 18px;"></i>
+                        <span class="pixel-text">BRIGHT MODE</span>
+                    </button>
                     <button class="footer-btn" onclick="navigateTo('main-menu')">
                         <span class="pixel-text">LEAVE LOBBY</span>
                     </button>
-                    <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
-                        <i class="ph-fill ph-play" id="start-fight-icon" style="font-size: 20px; margin-top: 2px;"></i>
-                        <span class="pixel-text" id="start-fight-text">START FIGHT</span>
+                    <button class="footer-btn primary-glow">
+                        <i class="ph-fill ph-play" style="font-size: 20px; margin-top: 2px;"></i>
+                        <span class="pixel-text">START FIGHT</span>
                     </button>
+                </div>
             </div>
-        </div>
-        </div><!-- end #lobby-setup -->
-    </div><!-- end #lobby-overlay -->
-
-    <!-- BATTLE HUD : top-level layer, NOT inside lobby-overlay -->
-    <div id="battle-hud" style="display:none; opacity:0; position:fixed; inset:0; z-index:9999; pointer-events:none;">
-        <!-- Centered Live Timer -->
-        <div id="battle-timer" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
-            <div id="battle-time-display" class="pixel-text heavy-glow"
-                style="font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;">
-                25:00
-            </div>
-            <div id="battle-phase-label" class="pixel-text"
-                style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;">
-                FOCUS TIME
-            </div>
-        </div>
-        <!-- Left Squad HUD -->
-        <div id="squad-hud"
-            style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
         </div>
     </div>
 
@@ -958,16 +644,15 @@
         // ─────────────────────────────────────────────
         // STATE MACHINE
         // ─────────────────────────────────────────────
-        const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay', 'join-layer'];
+        const SCREENS = ['main-menu', 'profile-overlay', 'lobby-overlay'];
         let previousScreen = null; // tracks where "close profile" returns to
-        let userRole = 'spectator'; // 'host' | 'guest' | 'spectator'
 
         let isBrightMode = false;
         function toggleBrightMode() {
             isBrightMode = !isBrightMode;
             const bgElement = document.querySelector('.bg-gif');
             const btnIcon = document.getElementById('bright-mode-icon');
-
+            
             if (isBrightMode) {
                 bgElement.classList.add('bright-mode');
                 if (btnIcon) btnIcon.classList.replace('ph-sun', 'ph-moon');
@@ -982,15 +667,13 @@
             SCREENS.forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
-
+                
                 el.classList.remove('visible');
                 el.style.pointerEvents = 'none';
-
+                
                 if (id === 'main-menu') {
                     el.style.opacity = (targetId === 'main-menu') ? '1' : '0';
                     el.style.display = (targetId === 'main-menu') ? 'flex' : 'none';
-                    // Show global nav when on main menu
-                    gsap.to('#global-nav-left', { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 } else {
                     el.style.opacity = '0';
                     el.style.display = 'none';
@@ -1003,99 +686,33 @@
 
             target.style.display = 'flex';
             target.style.pointerEvents = 'auto';
-
+            
             // Trigger GSAP for smooth entry
             gsap.to(target, { opacity: 1, duration: 0.4 });
 
             // 3. Logic specific to target
-            const globalNav = document.getElementById('global-nav-left');
-            
             if (targetId === 'main-menu') {
                 target.style.pointerEvents = 'none'; // Allow clicking gear icon through background
                 gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
-                if (globalNav) gsap.to(globalNav, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
             } else {
                 if (targetId === 'lobby-overlay') {
                     showLobbyAnimations();
                     initCharacterSync();
                     gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
-                    if (globalNav) gsap.to(globalNav, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 }
-                if (targetId === 'profile-overlay' || targetId === 'join-layer') {
-                    // Hide gear and nav to prevent overlap
+                if (targetId === 'profile-overlay') {
+                    // Hide gear to prevent overlap with X button
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
-                    if (globalNav) gsap.to(globalNav, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
-
-                    if (targetId === 'profile-overlay') {
-                        setTimeout(() => {
-                            gsap.killTweensOf('.char-card');
-                            gsap.fromTo('.char-card',
-                                { y: 40, opacity: 0 },
-                                { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'back.out(1.5)' }
-                            );
-                        }, 50);
-                    } else if (targetId === 'join-layer') {
-                        // clear input on open
-                        const input = document.getElementById('room-code-input');
-                        if (input) {
-                            input.value = '';
-                            setTimeout(() => input.focus(), 100);
-                        }
-                    }
+                    
+                    setTimeout(() => {
+                        gsap.killTweensOf('.char-card');
+                        gsap.fromTo('.char-card',
+                            { y: 40, opacity: 0 },
+                            { y: 0, opacity: 1, stagger: 0.08, duration: 0.7, ease: 'back.out(1.5)' }
+                        );
+                    }, 50);
                 }
             }
-        }
-
-        // ─────────────────────────────────────────────
-        // JOIN LOBBY LOGIC
-        // ─────────────────────────────────────────────
-        function setupJoinInput() {
-            const input = document.getElementById('room-code-input');
-            const wrapper = document.getElementById('join-input-wrapper');
-            if (!input) return;
-
-            input.addEventListener('input', (e) => {
-                let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                if (val.length > 4) {
-                    val = val.slice(0, 4) + '-' + val.slice(4, 5);
-                }
-                e.target.value = val;
-
-                // Subtle jump effect on typing
-                gsap.killTweensOf(wrapper);
-                gsap.fromTo(wrapper,
-                    { y: -5, scale: 1.02 },
-                    { y: 0, scale: 1, duration: 0.3, ease: 'bounce.out' }
-                );
-            });
-        }
-
-        let guestJoinedCode = ''; // Stores the code typed by the Guest
-
-        function attemptJoinRoom() {
-            const input = document.getElementById('room-code-input');
-            const val = input.value;
-            if (val.length === 6 && val.includes('-')) {
-                userRole = 'guest';
-                localStorage.setItem('userRole', 'guest');
-                guestJoinedCode = val.toUpperCase(); // Save the code they typed
-                navigateTo('lobby-overlay');
-                syncLobbyData(); // Snap sync from localStorage
-            } else {
-                gsap.timeline()
-                    .to(input, { x: -10, duration: 0.05 })
-                    .to(input, { x: 10, duration: 0.05 })
-                    .to(input, { x: -10, duration: 0.05 })
-                    .to(input, { x: 10, duration: 0.05 })
-                    .to(input, { x: 0, duration: 0.05 });
-            }
-        }
-
-        function createLobby() {
-            userRole = 'host';
-            localStorage.setItem('userRole', 'host');
-            guestJoinedCode = ''; // ensure no leftover guest code
-            navigateTo('lobby-overlay');
         }
 
         // ─────────────────────────────────────────────
@@ -1256,27 +873,22 @@
         let currentRoomCode = "";
         const rollChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        // fixedCode: if provided (guest), use it instead of generating random
-        function generateRoomCode(fixedCode = null) {
+        function generateRoomCode() {
+            // 1. Generate random 5-char string (format: ABCD-1)
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const nums = "0123456789";
+            let code = "";
+            for(let i=0; i<4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            code += "-";
+            code += nums.charAt(Math.floor(Math.random() * nums.length));
+            
+            currentRoomCode = code;
 
-            if (fixedCode) {
-                currentRoomCode = fixedCode.toUpperCase();
-            } else {
-                let code = "";
-                for (let i = 0; i < 4; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
-                code += "-";
-                code += nums.charAt(Math.floor(Math.random() * nums.length));
-                currentRoomCode = code;
-            }
-
-            // Build DOM — identical for both host and guest
+            // 2. Build DOM
             const container = document.getElementById('fs-code-slots');
             container.innerHTML = '';
-
-            let slotIdx = 0; // ignores the dash character
-            currentRoomCode.split('').forEach((char) => {
+            
+            currentRoomCode.split('').forEach((char, index) => {
                 if (char === '-') {
                     const dash = document.createElement('div');
                     dash.className = 'dash-char';
@@ -1289,37 +901,35 @@
                 slot.className = 'slot';
                 const inner = document.createElement('div');
                 inner.className = 'slot-inner';
-
-                // Spin chars
-                const spinCount = 15 + (slotIdx * 5);
+                
+                // Add deco chars
+                const spinCount = 15 + (index * 5);
                 for (let i = 0; i < spinCount; i++) {
                     const rChar = document.createElement('div');
                     rChar.className = 'char';
-                    rChar.style.color = 'rgba(255,255,255,0.35)';
+                    rChar.style.color = 'rgba(255,255,255,0.35)'; // More visible during spin
                     rChar.textContent = rollChars.charAt(Math.floor(Math.random() * rollChars.length));
                     inner.appendChild(rChar);
                 }
-
-                // Final char (random for host, typed code for guest)
+                
+                // Final char
                 const finalChar = document.createElement('div');
                 finalChar.className = 'char final-char';
                 finalChar.textContent = char;
                 inner.appendChild(finalChar);
-
+                
                 slot.appendChild(inner);
                 container.appendChild(slot);
-                slotIdx++;
             });
 
-            // GSAP slot-spin — same for host and guest
-            const inners = container.querySelectorAll('.slot-inner');
+                const inners = container.querySelectorAll('.slot-inner');
             inners.forEach((inner, idx) => {
-                const dist = -((inner.children.length - 1) * 71);
-                gsap.fromTo(inner,
+                const dist = -((inner.children.length - 1) * 71); // 71 matches inner height
+                gsap.fromTo(inner, 
                     { y: 0 },
-                    {
-                        y: dist,
-                        duration: 1.8 + (idx * 0.3),
+                    { 
+                        y: dist, 
+                        duration: 1.8 + (idx * 0.3), 
                         ease: "power4.inOut",
                         delay: 0.1,
                         onComplete: () => {
@@ -1333,99 +943,11 @@
         }
 
         function showLobbyAnimations() {
-            // Host gets a fresh random code; Guest gets their typed code — same animation either way
-            generateRoomCode(guestJoinedCode || null);
-            guestJoinedCode = ''; // reset after use
-            applyPermissionLock();
+            generateRoomCode();
             gsap.fromTo('.pomodoro-panel', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.4, ease: "power2.out" });
-            gsap.fromTo('.footer-btn', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.7 });
+            gsap.fromTo('.footer-btn',     { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.7  });
             gsap.fromTo('.player-slot-card', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.5, ease: "back.out(1.5)" });
         }
-
-        // ─────────────────────────────────────────────
-        // PERMISSION LOCK LOGIC (HOST VS GUEST)
-        // ─────────────────────────────────────────────
-        function applyPermissionLock() {
-            const timerCtrls = document.querySelectorAll('.timer-ctrl');
-            const breaksToggle = document.getElementById('breaks-toggle');
-            const startBtn = document.getElementById('start-fight-btn');
-            const startIcon = document.getElementById('start-fight-icon');
-            const startText = document.getElementById('start-fight-text');
-
-            if (userRole === 'guest') {
-                // Lock all timer +/- controls for Guest
-                timerCtrls.forEach(ctrl => {
-                    ctrl.style.pointerEvents = 'none';
-                    ctrl.style.opacity = '0.3';
-                });
-                if (breaksToggle) { breaksToggle.style.pointerEvents = 'none'; breaksToggle.style.opacity = '0.4'; }
-                if (startBtn) {
-                    startBtn.classList.remove('primary-glow');
-                    startBtn.style.pointerEvents = 'none';
-                    startBtn.style.opacity = '0.45';
-                    startBtn.style.boxShadow = 'none';
-                }
-                if (startIcon) { startIcon.className = 'ph ph-hourglass-high'; startIcon.style.fontSize = '16px'; }
-                if (startText) { startText.innerText = 'WAITING FOR HOST...'; startText.style.fontSize = '9px'; }
-            } else {
-                // Full controls for Host
-                timerCtrls.forEach(ctrl => {
-                    ctrl.style.pointerEvents = 'auto';
-                    ctrl.style.opacity = '1';
-                });
-                if (breaksToggle) { breaksToggle.style.pointerEvents = 'auto'; breaksToggle.style.opacity = '1'; }
-                if (startBtn) {
-                    startBtn.classList.add('primary-glow');
-                    startBtn.style.pointerEvents = 'auto';
-                    startBtn.style.opacity = '1';
-                    startBtn.style.boxShadow = '';
-                }
-                if (startIcon) { startIcon.className = 'ph-fill ph-play'; startIcon.style.fontSize = '20px'; }
-                if (startText) { startText.innerText = 'START FIGHT'; startText.style.fontSize = ''; }
-            }
-        }
-
-        // ─────────────────────────────────────────────
-        // SHARED WHITEBOARD (localStorage State Sync)
-        // ─────────────────────────────────────────────
-        function getCurrentLobbyState() {
-            return {
-                fightMin: document.getElementById('fight-min')?.innerText || '25',
-                fightSec: document.getElementById('fight-sec')?.innerText || '00',
-                breakMin: document.getElementById('break-min')?.innerText || '05',
-                breakSec: document.getElementById('break-sec')?.innerText || '00',
-                includeBreaks: document.getElementById('breaks-toggle')?.classList.contains('active') || true,
-            };
-        }
-
-        function broadcastLobbyState() {
-            if (userRole !== 'host') return; // Only host can broadcast
-            localStorage.setItem('lobby_state', JSON.stringify(getCurrentLobbyState()));
-        }
-
-        function syncLobbyData() {
-            // Read Host's state from shared whiteboard
-            const raw = localStorage.getItem('lobby_state');
-            if (!raw) return; // No state yet — use defaults
-            try {
-                const state = JSON.parse(raw);
-                const fightMin = document.getElementById('fight-min');
-                const fightSec = document.getElementById('fight-sec');
-                const breakMin = document.getElementById('break-min');
-                const breakSec = document.getElementById('break-sec');
-                if (fightMin) fightMin.innerText = state.fightMin;
-                if (fightSec) fightSec.innerText = state.fightSec;
-                if (breakMin) breakMin.innerText = state.breakMin;
-                if (breakSec) breakSec.innerText = state.breakSec;
-            } catch(e) { console.warn('Sync failed', e); }
-        }
-
-        // Real-time cross-tab listener (Guest Auto-Update)
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'lobby_state' && userRole === 'guest') {
-                syncLobbyData();
-            }
-        });
 
         function copyRoomCode() {
             navigator.clipboard.writeText(currentRoomCode).catch(() => {
@@ -1436,13 +958,13 @@
                 document.execCommand('copy');
                 document.body.removeChild(ta);
             });
-            const copyBtn = document.getElementById('copy-btn');
+            const copyBtn  = document.getElementById('copy-btn');
             const copyText = document.getElementById('copy-text');
             copyText.textContent = "COPIED! ✨";
             copyBtn.classList.add('primary-glow');
             gsap.fromTo(copyBtn,
                 { scale: 1.1, backgroundColor: 'rgba(255,255,255,0.3)' },
-                { scale: 1, backgroundColor: 'rgba(20,20,20,0.6)', duration: 0.5 }
+                { scale: 1,   backgroundColor: 'rgba(20,20,20,0.6)',   duration: 0.5 }
             );
             setTimeout(() => {
                 copyText.textContent = "COPY ID";
@@ -1463,10 +985,9 @@
         function adjustTime(elementId, amount) {
             const el = document.getElementById(elementId);
             let v = parseInt(el.textContent) + amount;
-            if (v < 5) v = 5;
+            if (v < 5)  v = 5;
             if (v > 60) v = 60;
             el.textContent = v < 10 ? '0' + v : v;
-            broadcastLobbyState(); // Broadcast every time Host changes a value
         }
 
         function adjustSeconds(minId, secId, amount) {
@@ -1483,7 +1004,6 @@
             }
             secEl.textContent = sec === 0 ? '00' : (sec < 10 ? '0' + sec : sec);
             gsap.fromTo(secEl, { scale: 1.2 }, { scale: 1, duration: 0.2, ease: "bounce.out" });
-            broadcastLobbyState(); // Broadcast every time Host changes seconds
         }
 
 
@@ -1510,8 +1030,8 @@
                 icon.className = "ph ph-check-circle";
                 gsap.fromTo(tgl, { scale: 0.9 }, { scale: 1, duration: 0.5, ease: "elastic.out(1,0.5)" });
                 breakPanel.style.display = 'flex';
-                gsap.fromTo(breakPanel,
-                    { height: 0, opacity: 0, marginTop: -10 },
+                gsap.fromTo(breakPanel, 
+                    { height: 0, opacity: 0, marginTop: -10 }, 
                     { height: 'auto', opacity: 1, marginTop: 0, duration: 0.5, ease: "back.out(1.2)" }
                 );
             }
@@ -1545,164 +1065,8 @@
             navigateTo('main-menu');
             initCharacterSync();
             syncHubAvatar();
-            setupJoinInput();
         });
-        console.log("Focus Fighter System Initialized");
-    </script>
-    <script>
-        // ─────────────────────────────────────────────
-        // BATTLE HUD & SQUAD HUD LOGIC (GAME_SIDEBAR)
-        // ─────────────────────────────────────────────
-        let battleTimerInterval = null;
-
-        function onStartFight() {
-            const currentRole = userRole || localStorage.getItem('userRole');
-            console.log("[BATTLE] Click detected. Role:", currentRole);
-            
-            if (currentRole !== 'host') {
-                console.warn("[BATTLE] NOT host, aborting.");
-                return;
-            }
-
-            // 1. Get durations
-            const fightMin = parseInt(document.getElementById('fight-min').innerText);
-            const fightSec = parseInt(document.getElementById('fight-sec').innerText);
-            const totalSeconds = (fightMin * 60) + fightSec;
-
-            // 2. DYNAMICALLY CREATE the battle HUD (nuclear approach)
-            let battleHud = document.getElementById('battle-hud');
-            if (battleHud) battleHud.remove(); // Remove old one if exists
-
-            battleHud = document.createElement('div');
-            battleHud.id = 'battle-hud';
-            battleHud.style.cssText = 'position:fixed; inset:0; z-index:9999; pointer-events:auto; display:block; opacity:1;';
-
-            // Timer
-            const timerWrap = document.createElement('div');
-            timerWrap.id = 'battle-timer';
-            timerWrap.style.cssText = 'position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;';
-
-            const timeDisplay = document.createElement('div');
-            timeDisplay.id = 'battle-time-display';
-            timeDisplay.className = 'pixel-text heavy-glow';
-            timeDisplay.style.cssText = 'font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;';
-            const m = Math.floor(totalSeconds / 60);
-            const s = totalSeconds % 60;
-            timeDisplay.innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s);
-
-            const phaseLabel = document.createElement('div');
-            phaseLabel.id = 'battle-phase-label';
-            phaseLabel.className = 'pixel-text';
-            phaseLabel.style.cssText = 'font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;';
-            phaseLabel.innerText = 'FOCUS TIME';
-
-            timerWrap.appendChild(timeDisplay);
-            timerWrap.appendChild(phaseLabel);
-
-            // Squad HUD — RIGHT SIDE with char avatar + HP bar
-            const squadHud = document.createElement('div');
-            squadHud.id = 'squad-hud';
-            squadHud.style.cssText = 'position:absolute; right:4%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:20px;';
-
-            // Get player data
-            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
-            const selectedChar = localStorage.getItem('selectedChar') || 'char1.png';
-            const charSrc = '/static/characters/' + (selectedChar.includes('.png') ? selectedChar : 'char' + selectedChar + '.png');
-
-            // Build player card
-            const block = document.createElement('div');
-            block.className = 'squad-block';
-            block.style.cssText = 'display:flex; align-items:center; gap:12px;';
-            block.innerHTML = 
-                '<div style="width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.7); box-shadow:0 0 12px rgba(255,255,255,0.4); overflow:hidden; background:rgba(0,0,0,0.3); flex-shrink:0;">' +
-                    '<img src="' + charSrc + '" style="width:100%; height:100%; object-fit:contain; padding:4px;">' +
-                '</div>' +
-                '<div style="display:flex; flex-direction:column; gap:6px;">' +
-                    '<div class="pixel-text heavy-glow" style="font-size:10px; color:white; white-space:nowrap;">' + hostName.toUpperCase() + '</div>' +
-                    '<div style="width:120px; height:6px; border:1px solid rgba(255,255,255,0.5); border-radius:3px; box-shadow:0 0 6px rgba(255,255,255,0.2);">' +
-                        '<div style="width:100%; height:100%; background:#39FF14; border-radius:2px; box-shadow:0 0 8px #39FF14;"></div>' +
-                    '</div>' +
-                '</div>';
-            squadHud.appendChild(block);
-
-            battleHud.appendChild(timerWrap);
-            battleHud.appendChild(squadHud);
-            document.body.appendChild(battleHud);
-            console.log("[BATTLE] HUD injected into document.body");
-
-            // 3. Hide lobby
-            const lobbyOverlay = document.getElementById('lobby-overlay');
-            if (lobbyOverlay) {
-                gsap.to(lobbyOverlay, {
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.inOut",
-                    onComplete: () => {
-                        lobbyOverlay.style.display = 'none';
-                        console.log("[BATTLE] Lobby hidden");
-                    }
-                });
-            }
-
-            // 4. Animate in
-            gsap.fromTo(timerWrap, { scale: 0.5 }, { scale: 1, duration: 0.8, ease: "back.out(1.5)", delay: 0.3 });
-            gsap.fromTo(squadHud, { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.2 });
-
-            // 5. Start countdown
-            startBattleTimer(totalSeconds);
-            console.log("[BATTLE] Complete. Timer running.");
-        }
-
-        function renderSquadHud() {
-            const squadContainer = document.getElementById('squad-hud');
-            squadContainer.innerHTML = '';
-
-            // Pull Actual Names (No placeholders)
-            // If user hasn't set their name, default to 'Sadhana' as indicated in the spec example
-            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
-            
-            // For now, we only show valid connected sessions.
-            // Host is always present. 
-            const participants = [{ name: hostName, role: 'host', hp: 100 }];
-            
-            // (In a real multi-player scenario, we'd loop through participant session data here)
-            // Constraint: No placeholders (only show real names from session).
-            
-            participants.forEach(p => {
-                const block = document.createElement('div');
-                block.className = 'squad-block';
-                block.innerHTML = `
-                    <div class="pixel-text squad-name heavy-glow">${p.name.toUpperCase()}</div>
-                    <div class="hp-bar-track">
-                        <div class="hp-bar-fill"></div>
-                    </div>
-                `;
-                squadContainer.appendChild(block);
-            });
-        }
-
-        function startBattleTimer(seconds) {
-            if (battleTimerInterval) clearInterval(battleTimerInterval);
-            let timeLeft = seconds;
-            const display = document.getElementById('battle-time-display');
-
-            function update() {
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
-                display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-                gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
-            }
-
-            update();
-            battleTimerInterval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft < 0) {
-                    clearInterval(battleTimerInterval);
-                    return;
-                }
-                update();
-            }, 1000);
-        }
     </script>
 </body>
+
 </html>

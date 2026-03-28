@@ -1,8 +1,12 @@
-from flask import Flask, render_template, send_from_directory, jsonify, request
+from flask import Flask, render_template, send_from_directory, Response, jsonify, request
 import os
+import sqlite3
+import json
 import socket
 import shutil
 from flask_sqlalchemy import SQLAlchemy
+from Leader_board.arsenal import Character, Item, render_arsenal
+from Leader_board.leaderboard import render_leaderboard
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///focus_fighter.db'
@@ -44,6 +48,11 @@ teams_db = {
     "team_nova":  {"id": "team_nova",  "name": "Team Nova",  "points": 500,  "emblem": "🌟"},
 }
 
+def get_db_connection():
+    conn = sqlite3.connect('instance/focus_fighter.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -54,11 +63,69 @@ def lobby():
 
 @app.route('/arsenal')
 def arsenal():
-    return render_template('arsenal.html')
+    conn = get_db_connection()
+    players = conn.execute('SELECT * FROM player').fetchall()
+    
+    characters = []
+    for p in players:
+        # Fetch inventory for this player
+        items_db = conn.execute('SELECT * FROM inventory WHERE player_id = ?', (p['id'],)).fetchall()
+        inventory = []
+        for item in items_db:
+            effects = json.loads(item['effects_json']) if item['effects_json'] else {}
+            inventory.append(Item(
+                name=item['name'],
+                icon=item['icon'],
+                rarity=item['rarity'],
+                item_type=item['type'],
+                stat=item['stat'],
+                value=item['value'],
+                effects=effects
+            ))
+            
+        characters.append(Character(
+            name=p['username'],
+            level=p['level'],
+            role="Sovereign" if p['level'] > 10 else "Acolyte",
+            avatar_img=p['selected_char'] or 'char1.png',
+            stats={
+                "intellect": p['intellect'] if 'intellect' in p.keys() else 10,
+                "stamina": p['stamina'] if 'stamina' in p.keys() else 10,
+                "focus": p['focus'] if 'focus' in p.keys() else 10,
+                "creativity": p['creativity'] if 'creativity' in p.keys() else 10
+            },
+            inventory=inventory
+        ))
+    conn.close()
+    
+    html = render_arsenal(characters)
+    return Response(html, mimetype='text/html')
 
 @app.route('/leaderboard')
 def leaderboard():
-    return render_template('leaderboard.html')
+    conn = get_db_connection()
+    # Order by XP descending
+    players_db = conn.execute('SELECT * FROM player ORDER BY xp DESC').fetchall()
+    
+    players_list = []
+    for p in players_db:
+        players_list.append({
+            "id": p['id'],
+            "username": p['username'],
+            "avatar": p['selected_char'] or 'char1.png',
+            "xp": p['xp'],
+            "level": p['level'],
+            "stats": {
+                "intellect": p['intellect'] if 'intellect' in p.keys() else 10,
+                "stamina": p['stamina'] if 'stamina' in p.keys() else 10,
+                "focus": p['focus'] if 'focus' in p.keys() else 10,
+                "creativity": p['creativity'] if 'creativity' in p.keys() else 10
+            }
+        })
+    conn.close()
+    
+    html = render_leaderboard(players_list)
+    return Response(html, mimetype='text/html')
 
 # GET all teams sorted by points
 @app.route('/api/teams', methods=['GET'])
@@ -141,6 +208,10 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         
+    # Ensure instance directory exists
+    if not os.path.exists('instance'):
+        os.makedirs('instance')
+        
     # Ensure static directory exists
     if not os.path.exists('static'):
         os.makedirs('static')
@@ -155,7 +226,10 @@ if __name__ == '__main__':
             
     # Find local IP to display
     hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
+    try:
+        local_ip = socket.gethostbyname(hostname)
+    except:
+        local_ip = "127.0.0.1"
     
     print("="*50)
     print("Starting Focus Fighter Web App with Database...")
