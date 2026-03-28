@@ -789,101 +789,107 @@
     <div id="lobby-overlay">
         <div class="scanlines"></div>
 
+<<<<<<< Updated upstream
         <div id="lobby-setup">
         <div class="lobby-main-content py-4">
             <!-- Lottery Code Slots -->
             <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
+=======
+        <div id="lobby-setup" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div class="lobby-main-content py-4">
+                <!-- Lottery Code Slots -->
+                <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
+>>>>>>> Stashed changes
 
-            <div class="flex flex-col items-center">
-                <!-- Player Slots (Moved Up) -->
-
-                <!-- Player Slots -->
-                <div class="flex flex-col items-center mb-8">
-                    <div class="pixel-text"
-                        style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1
-                        / 4 PLAYERS JOINED</div>
-                    <div class="flex gap-4" style="position: relative;">
-                        <div class="player-slot-card filled" id="host-player-slot">
-                            <img src="/static/characters/char1.png" id="host-avatar" alt="Player 1 Avatar">
+                <div class="flex flex-col items-center">
+                    <!-- Player Slots -->
+                    <div class="flex flex-col items-center mb-8">
+                        <div class="pixel-text"
+                            style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">1
+                            / 4 PLAYERS JOINED</div>
+                        <div class="flex gap-4" style="position: relative;">
+                            <div class="player-slot-card filled" id="host-player-slot">
+                                <img src="/static/characters/char1.png" id="host-avatar" alt="Player 1 Avatar">
+                            </div>
+                            <div class="player-slot-card"><i class="ph ph-user"
+                                    style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                            <div class="player-slot-card"><i class="ph ph-user"
+                                    style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                            <div class="player-slot-card"><i class="ph ph-user"
+                                    style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
                         </div>
-                        <div class="player-slot-card"><i class="ph ph-user"
-                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
-                        <div class="player-slot-card"><i class="ph ph-user"
-                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
-                        <div class="player-slot-card"><i class="ph ph-user"
-                                style="color: rgba(255,255,255,0.2); font-size: 24px;"></i></div>
+                    </div>
+
+                    <!-- Pomodoro Settings -->
+                    <div class="flex flex-col items-center gap-4" style="width: 800px;">
+                        <!-- Fight Duration -->
+                        <div class="pomodoro-panel">
+                            <div class="pixel-text"
+                                style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">FIGHT DURATION
+                            </div>
+                            <div class="flex items-center gap-8 justify-center">
+                                <div class="flex items-center gap-4">
+                                    <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i
+                                            class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                    <div class="heavy-glow pixel-text pomo-num" id="fight-min"
+                                        style="font-size: 36px; color: white;">25</div>
+                                    <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i
+                                            class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                </div>
+                                <div class="pixel-text" style="font-size: 36px; color: white; opacity: 0.5;">:</div>
+                                <div class="flex items-center gap-4">
+                                    <button class="pomo-btn timer-ctrl"
+                                        onclick="adjustSeconds('fight-min','fight-sec',-15)"><i class="ph ph-minus"
+                                            style="font-size: 18px;"></i></button>
+                                    <div class="heavy-glow pixel-text pomo-num" id="fight-sec"
+                                        style="font-size: 36px; color: white;">00</div>
+                                    <button class="pomo-btn timer-ctrl"
+                                        onclick="adjustSeconds('fight-min','fight-sec',15)"><i class="ph ph-plus"
+                                            style="font-size: 18px;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Include Breaks Toggle (Ultra Compact) -->
+                        <div class="flex items-center gap-4" style="margin: -5px 0 5px 0;">
+                            <div class="pixel-text"
+                                style="font-size: 8px; color: white; opacity: 0.8; white-space: nowrap; letter-spacing: 1px;">
+                                INCLUDE BREAKS</div>
+                            <div class="pixel-toggle active" id="breaks-toggle" onclick="toggleBreaks()">
+                                <i class="ph ph-check-circle" id="breaks-icon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Break Time Row (Compact) -->
+                        <div class="pomodoro-panel overflow-hidden" id="break-timer-panel"
+                            style="padding: 4px 32px; margin-bottom: 0;">
+                            <div class="pixel-text"
+                                style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">BREAK TIME</div>
+                            <div class="flex items-center gap-8 justify-center">
+                                <div class="flex items-center gap-4">
+                                    <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i
+                                            class="ph ph-minus" style="font-size: 18px;"></i></button>
+                                    <div class="heavy-glow pixel-text pomo-num" id="break-min"
+                                        style="font-size: 32px; color: white;">05</div>
+                                    <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i
+                                            class="ph ph-plus" style="font-size: 18px;"></i></button>
+                                </div>
+                                <div class="pixel-text" style="font-size: 32px; color: white; opacity: 0.5;">:</div>
+                                <div class="flex items-center gap-4">
+                                    <button class="pomo-btn timer-ctrl"
+                                        onclick="adjustSeconds('break-min','break-sec',-15)"><i class="ph ph-minus"
+                                            style="font-size: 18px;"></i></button>
+                                    <div class="heavy-glow pixel-text pomo-num" id="break-sec"
+                                        style="font-size: 32px; color: white;">00</div>
+                                    <button class="pomo-btn timer-ctrl"
+                                        onclick="adjustSeconds('break-min','break-sec',15)"><i class="ph ph-plus"
+                                            style="font-size: 18px;"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Pomodoro Settings -->
-                <div class="flex flex-col items-center gap-4" style="width: 800px;">
-                    <!-- Fight Duration -->
-                    <div class="pomodoro-panel">
-                        <div class="pixel-text"
-                            style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">FIGHT DURATION
-                        </div>
-                        <div class="flex items-center gap-8 justify-center">
-                            <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', -5)"><i
-                                        class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="fight-min"
-                                    style="font-size: 36px; color: white;">25</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('fight-min', 5)"><i
-                                        class="ph ph-plus" style="font-size: 18px;"></i></button>
-                            </div>
-                            <div class="pixel-text" style="font-size: 36px; color: white; opacity: 0.5;">:</div>
-                            <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('fight-min','fight-sec',-15)"><i class="ph ph-minus"
-                                        style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="fight-sec"
-                                    style="font-size: 36px; color: white;">00</div>
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('fight-min','fight-sec',15)"><i class="ph ph-plus"
-                                        style="font-size: 18px;"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Include Breaks Toggle (Ultra Compact) -->
-                    <div class="flex items-center gap-4" style="margin: -5px 0 5px 0;">
-                        <div class="pixel-text"
-                            style="font-size: 8px; color: white; opacity: 0.8; white-space: nowrap; letter-spacing: 1px;">
-                            INCLUDE BREAKS</div>
-                        <div class="pixel-toggle active" id="breaks-toggle" onclick="toggleBreaks()">
-                            <i class="ph ph-check-circle" id="breaks-icon"></i>
-                        </div>
-                    </div>
-
-                    <!-- Break Time Row (Compact) -->
-                    <div class="pomodoro-panel overflow-hidden" id="break-timer-panel"
-                        style="padding: 4px 32px; margin-bottom: 0;">
-                        <div class="pixel-text"
-                            style="font-size: 8px; color: white; opacity: 0.8; letter-spacing: 2px;">BREAK TIME</div>
-                        <div class="flex items-center gap-8 justify-center">
-                            <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', -5)"><i
-                                        class="ph ph-minus" style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="break-min"
-                                    style="font-size: 32px; color: white;">05</div>
-                                <button class="pomo-btn timer-ctrl" onclick="adjustTime('break-min', 5)"><i
-                                        class="ph ph-plus" style="font-size: 18px;"></i></button>
-                            </div>
-                            <div class="pixel-text" style="font-size: 32px; color: white; opacity: 0.5;">:</div>
-                            <div class="flex items-center gap-4">
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('break-min','break-sec',-15)"><i class="ph ph-minus"
-                                        style="font-size: 18px;"></i></button>
-                                <div class="heavy-glow pixel-text pomo-num" id="break-sec"
-                                    style="font-size: 32px; color: white;">00</div>
-                                <button class="pomo-btn timer-ctrl"
-                                    onclick="adjustSeconds('break-min','break-sec',15)"><i class="ph ph-plus"
-                                        style="font-size: 18px;"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+<<<<<<< Updated upstream
             <!-- Footer Actions -->
             <div class="footer-action-container">
                 <button class="footer-btn" id="copy-btn" onclick="copyRoomCode()">
@@ -920,7 +926,51 @@
         <div id="squad-hud"
             style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
         </div>
+=======
+                <!-- Footer Actions -->
+                <div class="footer-action-container">
+                    <button class="footer-btn" id="copy-btn" onclick="copyRoomCode()">
+                        <i class="ph ph-copy" style="font-size: 18px;"></i>
+                        <span class="pixel-text" id="copy-text">COPY ID</span>
+                    </button>
+                    <div class="flex gap-4">
+                        <button class="footer-btn" onclick="navigateTo('main-menu')">
+                            <span class="pixel-text">LEAVE LOBBY</span>
+                        </button>
+                        <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
+                            <i class="ph-fill ph-play" id="start-fight-icon"
+                                style="font-size: 20px; margin-top: 2px;"></i>
+                            <span class="pixel-text" id="start-fight-text">START FIGHT</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LAYER 400: Battle HUD -->
+        <div id="battle-hud" style="display:none; opacity:0; position:absolute; inset:0; pointer-events:none;">
+            <!-- Centered Live Timer -->
+            <div id="battle-timer"
+                style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
+                <div id="battle-time-display" class="pixel-text heavy-glow"
+                    style="font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8); line-height:1;">
+                    25:00
+                </div>
+                <div id="battle-phase-label" class="pixel-text"
+                    style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;">
+                    FOCUS TIME
+                </div>
+            </div>
+
+            <!-- Left Squad HUD -->
+            <div id="squad-hud"
+                style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
+                <!-- Status blocks will be injected here -->
+            </div>
+        </div>
+>>>>>>> Stashed changes
     </div>
+
 
     <!-- ===================== SCRIPTS ===================== -->
     <script>
@@ -1268,8 +1318,10 @@
                 }
 
                 // Final char (random for host, typed code for guest)
+                // heavy-glow pre-applied so it's guaranteed visible on reveal
                 const finalChar = document.createElement('div');
-                finalChar.className = 'char final-char';
+                finalChar.className = 'char final-char heavy-glow';
+                finalChar.style.opacity = '0'; // hidden during spin, revealed in onComplete
                 finalChar.textContent = char;
                 inner.appendChild(finalChar);
 
@@ -1291,7 +1343,7 @@
                         delay: 0.1,
                         onComplete: () => {
                             const fc = inner.querySelector('.final-char');
-                            fc.classList.add('heavy-glow');
+                            // heavy-glow already on element — just reveal it
                             gsap.fromTo(fc, { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" });
                         }
                     }
@@ -1384,7 +1436,7 @@
                 if (fightSec) fightSec.innerText = state.fightSec;
                 if (breakMin) breakMin.innerText = state.breakMin;
                 if (breakSec) breakSec.innerText = state.breakSec;
-            } catch(e) { console.warn('Sync failed', e); }
+            } catch (e) { console.warn('Sync failed', e); }
         }
 
         // Real-time cross-tab listener (Guest Auto-Update)
@@ -1515,6 +1567,7 @@
             setupJoinInput();
         });
         console.log("Focus Fighter System Initialized");
+<<<<<<< Updated upstream
     </script>
     <script>
         // ─────────────────────────────────────────────
@@ -1670,6 +1723,131 @@
                 update();
             }, 1000);
         }
+=======
+>>>>>>> Stashed changes
     </script>
+    <script>
+        // ─────────────────────────────────────────────
+        // BATTLE TRANSITION & HUD LOGIC (RESTORED)
+        // ─────────────────────────────────────────────
+        let battleTimerInterval = null;
+
+        function onStartFight() {
+            console.log("Start Button Clicked - Transition Initiated");
+            if (userRole !== 'host') {
+                 console.warn("Unauthorized attempt to start fight. Host role required.");
+                 return;
+            }
+
+            // 1. Get durations from UI
+            const fightMinDisplay = document.getElementById('fight-min');
+            const fightSecDisplay = document.getElementById('fight-sec');
+            if (!fightMinDisplay || !fightSecDisplay) {
+                console.error("Critical Error: Timer elements not found!");
+                return;
+            }
+
+            const fightMin = parseInt(fightMinDisplay.innerText);
+            const fightSec = parseInt(fightSecDisplay.innerText);
+            const totalSeconds = (fightMin * 60) + fightSec;
+            console.log("Fight Duration Set:", totalSeconds, "seconds");
+
+            // 2. Prepare & Show Battle HUD
+            renderSquadHud();
+            const lobbySetup = document.getElementById('lobby-setup');
+            const battleHud = document.getElementById('battle-hud');
+            
+            battleHud.style.display = 'block';
+            battleHud.style.pointerEvents = 'auto';
+
+            // 3. GSAP Transition Sequence
+            const tl = gsap.timeline();
+
+            // Fade out lobby setup
+            console.log("Fading out Lobby Setup...");
+            tl.to(lobbySetup, { 
+                opacity: 0, 
+                duration: 0.5, 
+                ease: "power2.inOut",
+                onComplete: () => { 
+                    lobbySetup.style.display = 'none'; 
+                    console.log("Lobby Setup hidden.");
+                }
+            });
+
+            // Slide in Squad HUD and Fade in Battle HUD
+            tl.to(battleHud, { opacity: 1, duration: 0.5 }, "-=0.2");
+            
+            tl.fromTo('#battle-timer', 
+                { scale: 0.6, opacity: 0 }, 
+                { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }, 
+                "-=0.3"
+            );
+
+            tl.fromTo('.squad-block', 
+                { x: -100, opacity: 0 }, 
+                { x: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }, 
+                "-=0.6"
+            );
+
+            // 4. Start Countdown
+            startBattleTimer(totalSeconds);
+        }
+
+        function renderSquadHud() {
+            console.log("Rendering Squad HUD...");
+            const squadContainer = document.getElementById('squad-hud');
+            squadContainer.innerHTML = '';
+
+            const playerName = localStorage.getItem('focus_fighter_name') || 'YOU (HOST)';
+            const players = [
+                { name: playerName, hp: 100 },
+                { name: 'SQUADMATE 2', hp: 100 },
+                { name: 'SQUADMATE 3', hp: 100 },
+                { name: 'SQUADMATE 4', hp: 100 }
+            ];
+
+            players.forEach(p => {
+                const block = document.createElement('div');
+                block.className = 'squad-block';
+                block.innerHTML = `
+                    <div class="pixel-text squad-name">${p.name}</div>
+                    <div class="hp-bar-track">
+                        <div class="hp-bar-fill" style="width: ${p.hp}%"></div>
+                    </div>
+                `;
+                squadContainer.appendChild(block);
+            });
+        }
+
+        function startBattleTimer(seconds) {
+            console.log("Battle Timer Started.");
+            if (battleTimerInterval) clearInterval(battleTimerInterval);
+            
+            let timeLeft = seconds;
+            const display = document.getElementById('battle-time-display');
+
+            function updateDisplay() {
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+                gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
+            }
+
+            updateDisplay();
+
+            battleTimerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    timeLeft = 0;
+                    clearInterval(battleTimerInterval);
+                    display.innerText = "00:00";
+                    console.log("Focus Session Finished.");
+                }
+                updateDisplay();
+            }, 1000);
+        }
+    </script>
+
 </body>
 </html>
