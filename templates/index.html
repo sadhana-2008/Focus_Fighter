@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Socket.IO Client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Google Fonts -->
@@ -789,17 +791,10 @@
     <div id="lobby-overlay">
         <div class="scanlines"></div>
 
-<<<<<<< Updated upstream
         <div id="lobby-setup">
         <div class="lobby-main-content py-4">
             <!-- Lottery Code Slots -->
             <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
-=======
-        <div id="lobby-setup" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div class="lobby-main-content py-4">
-                <!-- Lottery Code Slots -->
-                <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
->>>>>>> Stashed changes
 
                 <div class="flex flex-col items-center">
                     <!-- Player Slots -->
@@ -889,7 +884,6 @@
                     </div>
                 </div>
 
-<<<<<<< Updated upstream
             <!-- Footer Actions -->
             <div class="footer-action-container">
                 <button class="footer-btn" id="copy-btn" onclick="copyRoomCode()">
@@ -897,7 +891,7 @@
                     <span class="pixel-text" id="copy-text">COPY ID</span>
                 </button>
                 <div class="flex gap-4">
-                    <button class="footer-btn" onclick="navigateTo('main-menu')">
+                    <button class="footer-btn" onclick="leaveLobby()">
                         <span class="pixel-text">LEAVE LOBBY</span>
                     </button>
                     <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
@@ -908,68 +902,6 @@
         </div>
         </div><!-- end #lobby-setup -->
     </div><!-- end #lobby-overlay -->
-
-    <!-- BATTLE HUD : top-level layer, NOT inside lobby-overlay -->
-    <div id="battle-hud" style="display:none; opacity:0; position:fixed; inset:0; z-index:9999; pointer-events:none;">
-        <!-- Centered Live Timer -->
-        <div id="battle-timer" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
-            <div id="battle-time-display" class="pixel-text heavy-glow"
-                style="font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.4); line-height:1;">
-                25:00
-            </div>
-            <div id="battle-phase-label" class="pixel-text"
-                style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;">
-                FOCUS TIME
-            </div>
-        </div>
-        <!-- Left Squad HUD -->
-        <div id="squad-hud"
-            style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
-        </div>
-=======
-                <!-- Footer Actions -->
-                <div class="footer-action-container">
-                    <button class="footer-btn" id="copy-btn" onclick="copyRoomCode()">
-                        <i class="ph ph-copy" style="font-size: 18px;"></i>
-                        <span class="pixel-text" id="copy-text">COPY ID</span>
-                    </button>
-                    <div class="flex gap-4">
-                        <button class="footer-btn" onclick="navigateTo('main-menu')">
-                            <span class="pixel-text">LEAVE LOBBY</span>
-                        </button>
-                        <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
-                            <i class="ph-fill ph-play" id="start-fight-icon"
-                                style="font-size: 20px; margin-top: 2px;"></i>
-                            <span class="pixel-text" id="start-fight-text">START FIGHT</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- LAYER 400: Battle HUD -->
-        <div id="battle-hud" style="display:none; opacity:0; position:absolute; inset:0; pointer-events:none;">
-            <!-- Centered Live Timer -->
-            <div id="battle-timer"
-                style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
-                <div id="battle-time-display" class="pixel-text heavy-glow"
-                    style="font-size:120px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.8); line-height:1;">
-                    25:00
-                </div>
-                <div id="battle-phase-label" class="pixel-text"
-                    style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;">
-                    FOCUS TIME
-                </div>
-            </div>
-
-            <!-- Left Squad HUD -->
-            <div id="squad-hud"
-                style="position:absolute; left:5%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:24px;">
-                <!-- Status blocks will be injected here -->
-            </div>
-        </div>
->>>>>>> Stashed changes
-    </div>
 
 
     <!-- ===================== SCRIPTS ===================== -->
@@ -1567,31 +1499,17 @@
             setupJoinInput();
         });
         console.log("Focus Fighter System Initialized");
-<<<<<<< Updated upstream
     </script>
     <script>
         // ─────────────────────────────────────────────
-        // BATTLE HUD & SQUAD HUD LOGIC (GAME_SIDEBAR)
+        // BATTLE HUD & SQUAD HUD LOGIC
         // ─────────────────────────────────────────────
         let battleTimerInterval = null;
 
-        function onStartFight() {
-            const currentRole = userRole || localStorage.getItem('userRole');
-            console.log("[BATTLE] Click detected. Role:", currentRole);
-            
-            if (currentRole !== 'host') {
-                console.warn("[BATTLE] NOT host, aborting.");
-                return;
-            }
-
-            // 1. Get durations
-            const fightMin = parseInt(document.getElementById('fight-min').innerText);
-            const fightSec = parseInt(document.getElementById('fight-sec').innerText);
-            const totalSeconds = (fightMin * 60) + fightSec;
-
-            // 2. DYNAMICALLY CREATE the battle HUD (nuclear approach)
+        function buildBattleHUD(players, totalSeconds) {
+            // Remove old HUD if exists
             let battleHud = document.getElementById('battle-hud');
-            if (battleHud) battleHud.remove(); // Remove old one if exists
+            if (battleHud) battleHud.remove();
 
             battleHud = document.createElement('div');
             battleHud.id = 'battle-hud';
@@ -1616,237 +1534,517 @@
             phaseLabel.style.cssText = 'font-size:14px; color:rgba(255,255,255,0.5); margin-top:24px; letter-spacing:6px;';
             phaseLabel.innerText = 'FOCUS TIME';
 
+            // Pause/Resume button
+            const pauseBtn = document.createElement('button');
+            pauseBtn.id = 'battle-pause-btn';
+            pauseBtn.className = 'pixel-text';
+            pauseBtn.style.cssText = 'margin-top:20px; padding:8px 24px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:white; cursor:pointer; font-size:10px; border-radius:6px; letter-spacing:2px;';
+            pauseBtn.innerText = 'PAUSE';
+            pauseBtn.onclick = toggleBattlePause;
+
             timerWrap.appendChild(timeDisplay);
             timerWrap.appendChild(phaseLabel);
+            timerWrap.appendChild(pauseBtn);
 
             // Squad HUD — RIGHT SIDE with char avatar + HP bar
             const squadHud = document.createElement('div');
             squadHud.id = 'squad-hud';
             squadHud.style.cssText = 'position:absolute; right:4%; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:20px;';
 
-            // Get player data
-            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
-            const selectedChar = localStorage.getItem('selectedChar') || 'char1.png';
-            const charSrc = '/static/characters/' + (selectedChar.includes('.png') ? selectedChar : 'char' + selectedChar + '.png');
-
-            // Build player card
-            const block = document.createElement('div');
-            block.className = 'squad-block';
-            block.style.cssText = 'display:flex; align-items:center; gap:12px;';
-            block.innerHTML = 
-                '<div style="width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.7); box-shadow:0 0 12px rgba(255,255,255,0.4); overflow:hidden; background:rgba(0,0,0,0.3); flex-shrink:0;">' +
-                    '<img src="' + charSrc + '" style="width:100%; height:100%; object-fit:contain; padding:4px;">' +
-                '</div>' +
-                '<div style="display:flex; flex-direction:column; gap:6px;">' +
-                    '<div class="pixel-text heavy-glow" style="font-size:10px; color:white; white-space:nowrap;">' + hostName.toUpperCase() + '</div>' +
-                    '<div style="width:120px; height:6px; border:1px solid rgba(255,255,255,0.5); border-radius:3px; box-shadow:0 0 6px rgba(255,255,255,0.2);">' +
-                        '<div style="width:100%; height:100%; background:#39FF14; border-radius:2px; box-shadow:0 0 8px #39FF14;"></div>' +
+            // Build player cards from real player data
+            players.forEach(p => {
+                const block = document.createElement('div');
+                block.className = 'squad-block';
+                block.setAttribute('data-sid', p.sid || '');
+                block.style.cssText = 'display:flex; align-items:center; gap:12px;';
+                const avatarSrc = '/static/characters/' + (p.avatar || 'char1.png');
+                const hpPercent = p.health || 100;
+                const hpColor = hpPercent > 50 ? '#39FF14' : hpPercent > 25 ? '#FFD700' : '#FF4444';
+                block.innerHTML = 
+                    '<div style="width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.7); box-shadow:0 0 12px rgba(255,255,255,0.4); overflow:hidden; background:rgba(0,0,0,0.3); flex-shrink:0;">' +
+                        '<img src="' + avatarSrc + '" style="width:100%; height:100%; object-fit:contain; padding:4px;">' +
                     '</div>' +
-                '</div>';
-            squadHud.appendChild(block);
+                    '<div style="display:flex; flex-direction:column; gap:6px;">' +
+                        '<div class="pixel-text heavy-glow" style="font-size:10px; color:white; white-space:nowrap;">' + (p.name || 'PLAYER').toUpperCase() + (p.is_host ? ' ★' : '') + '</div>' +
+                        '<div style="width:120px; height:6px; border:1px solid rgba(255,255,255,0.5); border-radius:3px; box-shadow:0 0 6px rgba(255,255,255,0.2);">' +
+                            '<div class="hp-fill" style="width:' + hpPercent + '%; height:100%; background:' + hpColor + '; border-radius:2px; box-shadow:0 0 8px ' + hpColor + '; transition:width 0.3s;"></div>' +
+                        '</div>' +
+                    '</div>';
+                squadHud.appendChild(block);
+            });
 
             battleHud.appendChild(timerWrap);
             battleHud.appendChild(squadHud);
             document.body.appendChild(battleHud);
-            console.log("[BATTLE] HUD injected into document.body");
+            console.log("[BATTLE] HUD injected with", players.length, "players");
+        }
 
-            // 3. Hide lobby
+        function transitionToBattle(players, totalSeconds) {
+            buildBattleHUD(players, totalSeconds);
+
+            // Hide lobby
             const lobbyOverlay = document.getElementById('lobby-overlay');
             if (lobbyOverlay) {
                 gsap.to(lobbyOverlay, {
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.inOut",
-                    onComplete: () => {
-                        lobbyOverlay.style.display = 'none';
-                        console.log("[BATTLE] Lobby hidden");
-                    }
+                    opacity: 0, duration: 0.5, ease: "power2.inOut",
+                    onComplete: () => { lobbyOverlay.style.display = 'none'; }
                 });
             }
 
-            // 4. Animate in
+            // Animate in
+            const timerWrap = document.getElementById('battle-timer');
+            const squadHud = document.getElementById('squad-hud');
             gsap.fromTo(timerWrap, { scale: 0.5 }, { scale: 1, duration: 0.8, ease: "back.out(1.5)", delay: 0.3 });
-            gsap.fromTo(squadHud, { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.2 });
+            gsap.fromTo(squadHud, { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.2 });
 
-            // 5. Start countdown
             startBattleTimer(totalSeconds);
-            console.log("[BATTLE] Complete. Timer running.");
         }
 
-        function renderSquadHud() {
-            const squadContainer = document.getElementById('squad-hud');
-            squadContainer.innerHTML = '';
+        function onStartFight() {
+            const currentRole = userRole || localStorage.getItem('userRole');
+            console.log("[BATTLE] Start clicked. Role:", currentRole);
+            
+            if (currentRole !== 'host') {
+                console.warn("[BATTLE] NOT host, aborting.");
+                return;
+            }
 
-            // Pull Actual Names (No placeholders)
-            // If user hasn't set their name, default to 'Sadhana' as indicated in the spec example
-            const hostName = localStorage.getItem('focus_fighter_name') || 'Sadhana';
-            
-            // For now, we only show valid connected sessions.
-            // Host is always present. 
-            const participants = [{ name: hostName, role: 'host', hp: 100 }];
-            
-            // (In a real multi-player scenario, we'd loop through participant session data here)
-            // Constraint: No placeholders (only show real names from session).
-            
-            participants.forEach(p => {
-                const block = document.createElement('div');
-                block.className = 'squad-block';
-                block.innerHTML = `
-                    <div class="pixel-text squad-name heavy-glow">${p.name.toUpperCase()}</div>
-                    <div class="hp-bar-track">
-                        <div class="hp-bar-fill"></div>
-                    </div>
-                `;
-                squadContainer.appendChild(block);
+            const fightMin = parseInt(document.getElementById('fight-min').innerText);
+            const fightSec = parseInt(document.getElementById('fight-sec').innerText);
+            const breakMin = parseInt(document.getElementById('break-min').innerText);
+            const breakSec = parseInt(document.getElementById('break-sec').innerText);
+            const workDuration = (fightMin * 60) + fightSec;
+            const breakDuration = (breakMin * 60) + breakSec;
+
+            // Emit start_game via Socket.IO — server broadcasts to all
+            socket.emit('start_game', {
+                room_code: currentRoomCode,
+                work_duration: workDuration,
+                break_duration: breakDuration
             });
+            console.log("[SOCKET] Emitted start_game for room", currentRoomCode);
+        }
+
+        let battlePaused = false;
+        function toggleBattlePause() {
+            battlePaused = !battlePaused;
+            const btn = document.getElementById('battle-pause-btn');
+            if (btn) btn.innerText = battlePaused ? 'RESUME' : 'PAUSE';
         }
 
         function startBattleTimer(seconds) {
             if (battleTimerInterval) clearInterval(battleTimerInterval);
             let timeLeft = seconds;
+            battlePaused = false;
             const display = document.getElementById('battle-time-display');
 
             function update() {
                 const m = Math.floor(timeLeft / 60);
                 const s = timeLeft % 60;
-                display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-                gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
+                if (display) display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+                if (display) gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
+
+                // Host syncs timer to all clients every 5 seconds
+                if (userRole === 'host' && timeLeft % 5 === 0) {
+                    socket.emit('timer_sync', { room_code: currentRoomCode, timer_remaining: timeLeft });
+                }
             }
 
             update();
             battleTimerInterval = setInterval(() => {
+                if (battlePaused) return;
                 timeLeft--;
                 if (timeLeft < 0) {
                     clearInterval(battleTimerInterval);
+                    // Phase complete — notify server
+                    if (userRole === 'host') {
+                        socket.emit('phase_change', { room_code: currentRoomCode, phase: 'break' });
+                    }
                     return;
                 }
                 update();
             }, 1000);
         }
-=======
->>>>>>> Stashed changes
+
+        function updateSquadHealth(players) {
+            players.forEach(p => {
+                const block = document.querySelector(`.squad-block[data-sid="${p.sid}"]`);
+                if (!block) return;
+                const hpFill = block.querySelector('.hp-fill');
+                if (hpFill) {
+                    const hp = p.health || 0;
+                    hpFill.style.width = hp + '%';
+                    hpFill.style.background = hp > 50 ? '#39FF14' : hp > 25 ? '#FFD700' : '#FF4444';
+                    hpFill.style.boxShadow = '0 0 8px ' + (hp > 50 ? '#39FF14' : hp > 25 ? '#FFD700' : '#FF4444');
+                }
+            });
+        }
+
+        function triggerScreenShake() {
+            const body = document.body;
+            gsap.timeline()
+                .to(body, { x: -10, duration: 0.05 })
+                .to(body, { x: 10, duration: 0.05 })
+                .to(body, { x: -8, duration: 0.05 })
+                .to(body, { x: 8, duration: 0.05 })
+                .to(body, { x: -5, duration: 0.05 })
+                .to(body, { x: 0, duration: 0.05 });
+        }
+
+        function showBossPopup(offenderName, url) {
+            const popup = document.createElement('div');
+            popup.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10000; text-align:center; pointer-events:none;';
+            popup.innerHTML = 
+                '<div class="pixel-text" style="font-size:48px; color:#FF4444; text-shadow:0 0 30px #FF4444, 0 0 60px #FF4444; animation:pulse 0.5s ease-in-out;">⚠️ BOSS ATTACK ⚠️</div>' +
+                '<div class="pixel-text" style="font-size:12px; color:white; margin-top:16px; opacity:0.8;">' + offenderName.toUpperCase() + ' visited ' + url + '</div>';
+            document.body.appendChild(popup);
+            gsap.fromTo(popup, { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" });
+            setTimeout(() => {
+                gsap.to(popup, { opacity: 0, scale: 0.5, duration: 0.3, onComplete: () => popup.remove() });
+            }, 2000);
+        }
+
+        function leaveLobby() {
+            // Disconnect socket (triggers server-side cleanup)
+            if (socket && socket.connected) {
+                socket.disconnect();
+            }
+            navigateTo('main-menu');
+            currentRoomCode = '';
+            userRole = 'spectator';
+        }
     </script>
+
+    <!-- ===================== SOCKET.IO CLIENT ===================== -->
     <script>
         // ─────────────────────────────────────────────
-        // BATTLE TRANSITION & HUD LOGIC (RESTORED)
+        // SOCKET.IO CONNECTION & EVENT WIRING
         // ─────────────────────────────────────────────
-        let battleTimerInterval = null;
+        const socket = io({ autoConnect: false });
 
-        function onStartFight() {
-            console.log("Start Button Clicked - Transition Initiated");
-            if (userRole !== 'host') {
-                 console.warn("Unauthorized attempt to start fight. Host role required.");
-                 return;
+        socket.on('connect', () => {
+            console.log('[SOCKET] Connected. SID:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('[SOCKET] Disconnected.');
+        });
+
+        // ─── ERROR HANDLING ───
+        socket.on('error', (data) => {
+            console.error('[SOCKET] Error:', data.message);
+            alert(data.message);
+        });
+
+        // ─── LOBBY CREATED (host only) ───
+        socket.on('lobby_created', (data) => {
+            console.log('[SOCKET] Lobby created:', data.room_code);
+            currentRoomCode = data.room_code;
+            // Display the room code using existing slot animation
+            generateRoomCode(data.room_code);
+        });
+
+        // ─── PLAYER JOINED ───
+        socket.on('player_joined', (data) => {
+            console.log('[SOCKET] Player joined:', data.player.name, '(' + data.player_count + '/4)');
+            updatePlayerSlots(data.players);
+        });
+
+        // ─── PLAYER LEFT ───
+        socket.on('player_left', (data) => {
+            console.log('[SOCKET] Player left:', data.player_name, '(' + data.player_count + '/4)');
+            updatePlayerSlots(data.players);
+        });
+
+        // ─── GAME STARTED (all players receive this) ───
+        socket.on('game_started', (data) => {
+            console.log('[SOCKET] Game started!', data.lobby);
+            const lobby = data.lobby;
+            transitionToBattle(lobby.players, lobby.timer_remaining);
+        });
+
+        // ─── BOSS ATTACK ───
+        socket.on('boss_attack_broadcast', (data) => {
+            console.log('[SOCKET] Boss attack!', data.offender_name, 'visited', data.url);
+            triggerScreenShake();
+            showBossPopup(data.offender_name, data.url);
+            updateSquadHealth(data.players);
+        });
+
+        // ─── XP UPDATED ───
+        socket.on('xp_updated', (data) => {
+            console.log('[SOCKET] XP updated:', data.type);
+            // Update any XP display elements here
+        });
+
+        // ─── PHASE CHANGED ───
+        socket.on('phase_changed', (data) => {
+            console.log('[SOCKET] Phase changed to:', data.phase);
+            const phaseLabel = document.getElementById('battle-phase-label');
+            if (phaseLabel) {
+                phaseLabel.innerText = data.phase === 'work' ? 'FOCUS TIME' : 'BREAK TIME';
+                phaseLabel.style.color = data.phase === 'work' ? 'rgba(255,255,255,0.5)' : 'rgba(57,255,20,0.7)';
             }
+            startBattleTimer(data.timer_remaining);
+        });
 
-            // 1. Get durations from UI
-            const fightMinDisplay = document.getElementById('fight-min');
-            const fightSecDisplay = document.getElementById('fight-sec');
-            if (!fightMinDisplay || !fightSecDisplay) {
-                console.error("Critical Error: Timer elements not found!");
-                return;
-            }
-
-            const fightMin = parseInt(fightMinDisplay.innerText);
-            const fightSec = parseInt(fightSecDisplay.innerText);
-            const totalSeconds = (fightMin * 60) + fightSec;
-            console.log("Fight Duration Set:", totalSeconds, "seconds");
-
-            // 2. Prepare & Show Battle HUD
-            renderSquadHud();
-            const lobbySetup = document.getElementById('lobby-setup');
-            const battleHud = document.getElementById('battle-hud');
-            
-            battleHud.style.display = 'block';
-            battleHud.style.pointerEvents = 'auto';
-
-            // 3. GSAP Transition Sequence
-            const tl = gsap.timeline();
-
-            // Fade out lobby setup
-            console.log("Fading out Lobby Setup...");
-            tl.to(lobbySetup, { 
-                opacity: 0, 
-                duration: 0.5, 
-                ease: "power2.inOut",
-                onComplete: () => { 
-                    lobbySetup.style.display = 'none'; 
-                    console.log("Lobby Setup hidden.");
-                }
-            });
-
-            // Slide in Squad HUD and Fade in Battle HUD
-            tl.to(battleHud, { opacity: 1, duration: 0.5 }, "-=0.2");
-            
-            tl.fromTo('#battle-timer', 
-                { scale: 0.6, opacity: 0 }, 
-                { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }, 
-                "-=0.3"
-            );
-
-            tl.fromTo('.squad-block', 
-                { x: -100, opacity: 0 }, 
-                { x: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }, 
-                "-=0.6"
-            );
-
-            // 4. Start Countdown
-            startBattleTimer(totalSeconds);
-        }
-
-        function renderSquadHud() {
-            console.log("Rendering Squad HUD...");
-            const squadContainer = document.getElementById('squad-hud');
-            squadContainer.innerHTML = '';
-
-            const playerName = localStorage.getItem('focus_fighter_name') || 'YOU (HOST)';
-            const players = [
-                { name: playerName, hp: 100 },
-                { name: 'SQUADMATE 2', hp: 100 },
-                { name: 'SQUADMATE 3', hp: 100 },
-                { name: 'SQUADMATE 4', hp: 100 }
-            ];
-
-            players.forEach(p => {
-                const block = document.createElement('div');
-                block.className = 'squad-block';
-                block.innerHTML = `
-                    <div class="pixel-text squad-name">${p.name}</div>
-                    <div class="hp-bar-track">
-                        <div class="hp-bar-fill" style="width: ${p.hp}%"></div>
-                    </div>
-                `;
-                squadContainer.appendChild(block);
-            });
-        }
-
-        function startBattleTimer(seconds) {
-            console.log("Battle Timer Started.");
-            if (battleTimerInterval) clearInterval(battleTimerInterval);
-            
-            let timeLeft = seconds;
+        // ─── TIMER SYNC (non-host clients) ───
+        socket.on('timer_synced', (data) => {
+            // Only update display, don't restart interval
             const display = document.getElementById('battle-time-display');
-
-            function updateDisplay() {
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
+            if (display) {
+                const m = Math.floor(data.timer_remaining / 60);
+                const s = data.timer_remaining % 60;
                 display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-                gsap.fromTo(display, { scale: 1.05 }, { scale: 1, duration: 0.3 });
+            }
+        });
+
+        // ─── FOCUS MODE ───
+        socket.on('focus_requested', (data) => {
+            console.log('[SOCKET] Focus requested by', data.requester_name);
+            if (data.requester_sid !== socket.id) {
+                const approve = confirm(data.requester_name + ' wants focus mode for ' + Math.floor(data.duration / 60) + ' min. Approve?');
+                if (approve) {
+                    socket.emit('focus_approved', { room_code: currentRoomCode, requester_sid: data.requester_sid });
+                }
+            }
+        });
+
+        socket.on('focus_vote_update', (data) => {
+            console.log('[SOCKET] Focus vote:', data.approvals + '/' + data.needed);
+        });
+
+        socket.on('focus_activated', (data) => {
+            console.log('[SOCKET] Focus mode activated for', data.requester_name);
+        });
+
+        // ─── BLOCKED SITES ───
+        socket.on('blocked_site_proposed', (data) => {
+            console.log('[SOCKET] Blocked site proposed:', data.url, 'by', data.proposed_by);
+            if (data.proposed_by !== (localStorage.getItem('playerName') || 'PLAYER ONE')) {
+                const approve = confirm('Block "' + data.url + '"? (proposed by ' + data.proposed_by + ')');
+                if (approve) {
+                    socket.emit('approve_blocked_site', { room_code: currentRoomCode, url: data.url });
+                }
+            }
+        });
+
+        socket.on('blocked_site_updated', (data) => {
+            console.log('[SOCKET] Blocked site updated:', data.url, data.is_active ? '✅ ACTIVE' : '⏳ ' + data.approvals + '/' + data.needed);
+        });
+
+        // ─── GAME OVER ───
+        socket.on('game_over', (data) => {
+            console.log('[SOCKET] Game over:', data.result);
+            if (battleTimerInterval) clearInterval(battleTimerInterval);
+
+            // Build game over screen
+            const overlay = document.createElement('div');
+            overlay.id = 'game-over-overlay';
+            overlay.style.cssText = 'position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center;';
+
+            if (data.result === 'won') {
+                overlay.innerHTML = 
+                    '<div class="pixel-text heavy-glow" style="font-size:48px; color:#39FF14; margin-bottom:16px;">🎉 VICTORY 🎉</div>' +
+                    '<div class="pixel-text" style="font-size:12px; color:white; opacity:0.7; margin-bottom:40px;">ALL PLAYERS EARN 150 XP</div>';
+            } else {
+                overlay.innerHTML = 
+                    '<div class="pixel-text" style="font-size:48px; color:#FF4444; text-shadow:0 0 20px #FF4444; margin-bottom:16px;">💀 DEFEATED 💀</div>' +
+                    '<div class="pixel-text" style="font-size:12px; color:white; opacity:0.7; margin-bottom:40px;">' + (data.reason || 'The team has fallen.') + '</div>';
             }
 
-            updateDisplay();
+            // Buttons
+            const btnContainer = document.createElement('div');
+            btnContainer.style.cssText = 'display:flex; gap:16px;';
 
-            battleTimerInterval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft <= 0) {
-                    timeLeft = 0;
-                    clearInterval(battleTimerInterval);
-                    display.innerText = "00:00";
-                    console.log("Focus Session Finished.");
+            if (userRole === 'host') {
+                const homeBtn = document.createElement('button');
+                homeBtn.className = 'footer-btn';
+                homeBtn.innerHTML = '<span class="pixel-text">BACK TO HOME</span>';
+                homeBtn.onclick = () => {
+                    socket.emit('host_redirect', { room_code: currentRoomCode });
+                    window.location.href = '/';
+                };
+                btnContainer.appendChild(homeBtn);
+
+                const replayBtn = document.createElement('button');
+                replayBtn.className = 'footer-btn primary-glow';
+                replayBtn.innerHTML = '<span class="pixel-text">REPLAY</span>';
+                replayBtn.onclick = () => {
+                    overlay.remove();
+                    const battleHud = document.getElementById('battle-hud');
+                    if (battleHud) battleHud.remove();
+                    socket.emit('replay', { room_code: currentRoomCode });
+                };
+                btnContainer.appendChild(replayBtn);
+            } else {
+                const homeBtn = document.createElement('button');
+                homeBtn.className = 'footer-btn';
+                homeBtn.innerHTML = '<span class="pixel-text">BACK TO HOME</span>';
+                homeBtn.onclick = () => { window.location.href = '/'; };
+                btnContainer.appendChild(homeBtn);
+
+                const waitText = document.createElement('div');
+                waitText.className = 'pixel-text';
+                waitText.style.cssText = 'font-size:10px; color:rgba(255,255,255,0.5); padding:14px 24px;';
+                waitText.innerText = 'WAITING FOR HOST...';
+                btnContainer.appendChild(waitText);
+            }
+
+            overlay.appendChild(btnContainer);
+            document.body.appendChild(overlay);
+            gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+        });
+
+        // ─── HOST REDIRECT ───
+        socket.on('redirect_home', (data) => {
+            console.log('[SOCKET] Host ended session:', data.message);
+            window.location.href = '/';
+        });
+
+        // ─── LOBBY DISSOLVED ───
+        socket.on('lobby_dissolved', (data) => {
+            console.log('[SOCKET] Lobby dissolved:', data.message);
+            alert(data.message);
+            window.location.href = '/';
+        });
+
+        // ─── GAME RESTARTED ───
+        socket.on('game_restarted', (data) => {
+            console.log('[SOCKET] Game restarted by host');
+            const battleHud = document.getElementById('battle-hud');
+            if (battleHud) battleHud.remove();
+            const gameOver = document.getElementById('game-over-overlay');
+            if (gameOver) gameOver.remove();
+
+            // Show lobby again
+            const lobbyOverlay = document.getElementById('lobby-overlay');
+            if (lobbyOverlay) {
+                lobbyOverlay.style.display = 'flex';
+                gsap.to(lobbyOverlay, { opacity: 1, duration: 0.4 });
+            }
+            updatePlayerSlots(data.lobby.players);
+        });
+
+        // ─────────────────────────────────────────────
+        // PLAYER SLOT UI UPDATER
+        // ─────────────────────────────────────────────
+        function updatePlayerSlots(players) {
+            const slots = document.querySelectorAll('.player-slot-card');
+            const countDisplay = document.querySelector('[class*="PLAYERS JOINED"]') || 
+                                 Array.from(document.querySelectorAll('.pixel-text')).find(el => el.textContent.includes('PLAYERS JOINED'));
+
+            // Update count text
+            if (countDisplay) {
+                countDisplay.textContent = players.length + ' / 4 PLAYERS JOINED';
+            }
+
+            // Fill slots
+            slots.forEach((slot, i) => {
+                if (i < players.length) {
+                    const p = players[i];
+                    slot.classList.add('filled');
+                    slot.innerHTML = '<img src="/static/characters/' + (p.avatar || 'char1.png') + '" alt="' + p.name + '">';
+                    if (p.is_host) {
+                        slot.style.filter = 'drop-shadow(0 0 12px white)';
+                        slot.classList.add('host-glow');
+                    }
+                } else {
+                    slot.classList.remove('filled', 'host-glow');
+                    slot.style.filter = '';
+                    slot.innerHTML = '<i class="ph ph-user" style="color: rgba(255,255,255,0.2); font-size: 24px;"></i>';
                 }
-                updateDisplay();
-            }, 1000);
+            });
         }
+
+        // ─────────────────────────────────────────────
+        // HOOK INTO EXISTING FUNCTIONS
+        // ─────────────────────────────────────────────
+
+        // Override createLobby to use Socket.IO
+        const _originalCreateLobby = createLobby;
+        createLobby = function() {
+            userRole = 'host';
+            localStorage.setItem('userRole', 'host');
+            guestJoinedCode = '';
+            
+            // Connect socket if not connected
+            if (!socket.connected) socket.connect();
+
+            const playerName = localStorage.getItem('playerName') || 'PLAYER ONE';
+            const avatar = localStorage.getItem('selectedChar') || 'char1.png';
+
+            socket.emit('create_lobby', {
+                name: playerName,
+                avatar: avatar,
+                work_duration: 1500,
+                break_duration: 300
+            });
+            console.log('[SOCKET] Emitted create_lobby');
+
+            navigateTo('lobby-overlay');
+        };
+
+        // Override attemptJoinRoom to use Socket.IO
+        const _originalAttemptJoinRoom = attemptJoinRoom;
+        attemptJoinRoom = function() {
+            const input = document.getElementById('room-code-input');
+            const val = input.value.toUpperCase();
+            
+            if (val.length >= 5) {
+                userRole = 'guest';
+                localStorage.setItem('userRole', 'guest');
+                currentRoomCode = val;
+                guestJoinedCode = val;
+
+                // Connect socket if not connected
+                if (!socket.connected) socket.connect();
+
+                const playerName = localStorage.getItem('playerName') || 'PLAYER TWO';
+                const avatar = localStorage.getItem('selectedChar') || 'char1.png';
+
+                socket.emit('join_lobby', {
+                    room_code: val,
+                    name: playerName,
+                    avatar: avatar
+                });
+                console.log('[SOCKET] Emitted join_lobby for room', val);
+
+                navigateTo('lobby-overlay');
+            } else {
+                // Shake animation on invalid input
+                gsap.timeline()
+                    .to(input, { x: -10, duration: 0.05 })
+                    .to(input, { x: 10, duration: 0.05 })
+                    .to(input, { x: -10, duration: 0.05 })
+                    .to(input, { x: 10, duration: 0.05 })
+                    .to(input, { x: 0, duration: 0.05 });
+            }
+        };
+
+        // Override broadcastLobbyState to use Socket.IO instead of localStorage
+        broadcastLobbyState = function() {
+            if (userRole !== 'host' || !socket.connected) return;
+            const state = getCurrentLobbyState();
+            socket.emit('lobby_settings', { room_code: currentRoomCode, settings: state });
+        };
+
+        // Listen for lobby settings from host (replaces localStorage listener)
+        socket.on('lobby_settings_updated', (data) => {
+            if (userRole === 'guest') {
+                const state = data.settings;
+                const fightMin = document.getElementById('fight-min');
+                const fightSec = document.getElementById('fight-sec');
+                const breakMin = document.getElementById('break-min');
+                const breakSec = document.getElementById('break-sec');
+                if (fightMin) fightMin.innerText = state.fightMin;
+                if (fightSec) fightSec.innerText = state.fightSec;
+                if (breakMin) breakMin.innerText = state.breakMin;
+                if (breakSec) breakSec.innerText = state.breakSec;
+            }
+        });
+
+        console.log('[SOCKET] Client layer loaded. Ready to connect.');
     </script>
 
 </body>

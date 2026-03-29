@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Socket.IO Client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Google Fonts -->
@@ -336,6 +338,65 @@
         function copyLink() {
             navigator.clipboard.writeText("http://127.0.0.1:5000/lobby?join=" + finalCode);
             alert("Lobby link has been copied to your clipboard!");
+        }
+    </script>
+
+    <!-- Socket.IO Client Wiring -->
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('[SOCKET] lobby.html connected. SID:', socket.id);
+        });
+
+        socket.on('player_joined', (data) => {
+            console.log('[SOCKET] Player joined:', data.player.name);
+            updateLobbyPlayers(data.players);
+        });
+
+        socket.on('player_left', (data) => {
+            console.log('[SOCKET] Player left:', data.player_name);
+            updateLobbyPlayers(data.players);
+        });
+
+        socket.on('game_started', (data) => {
+            console.log('[SOCKET] Game started! Redirecting...');
+            window.location.href = '/';
+        });
+
+        socket.on('lobby_dissolved', (data) => {
+            alert(data.message);
+            window.location.href = '/';
+        });
+
+        socket.on('error', (data) => {
+            alert(data.message);
+        });
+
+        function updateLobbyPlayers(players) {
+            const countEl = document.querySelector('.text-white.text-\\[10px\\]');
+            if (countEl) countEl.textContent = players.length + ' / 4 PLAYERS JOINED';
+
+            const cards = document.querySelectorAll('.player-card');
+            cards.forEach((card, i) => {
+                if (i < players.length) {
+                    const p = players[i];
+                    card.classList.add('filled');
+                    card.innerHTML = '<img src="/static/characters/' + (p.avatar || 'char1.png') + '" alt="' + p.name + '">';
+                } else {
+                    card.classList.remove('filled');
+                    card.innerHTML = '<i class="ph ph-user text-white/20 text-3xl"></i>';
+                }
+            });
+        }
+
+        // Auto-join if URL has ?join= param
+        const urlParams = new URLSearchParams(window.location.search);
+        const joinCode = urlParams.get('join');
+        if (joinCode) {
+            const playerName = localStorage.getItem('playerName') || 'PLAYER';
+            const avatar = localStorage.getItem('selectedChar') || 'char1.png';
+            socket.emit('join_lobby', { room_code: joinCode, name: playerName, avatar: avatar });
         }
     </script>
 </body>
