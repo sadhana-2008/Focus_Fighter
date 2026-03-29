@@ -175,6 +175,56 @@
         }
 
         /* =====================
+           GLOBAL NAVIGATION (Arsenal/Ranking)
+        ======================== */
+        #global-nav-left {
+            position: fixed;
+            top: 100px;
+            left: 24px;
+            z-index: 210;
+            display: flex;
+            gap: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-icon-btn {
+            background: rgba(10, 10, 15, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 80px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-icon-btn i {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00f2ff;
+            color: #fff;
+            transform: scale(1.1) translateY(-2px);
+            text-shadow: 0 0 8px #00f2ff;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        /* =====================
            LAYER 200: MAIN MENU
         ======================== */
         #main-menu {
@@ -627,6 +677,18 @@
     <!-- LAYER 0: Forest Background -->
     <div class="bg-gif"></div>
 
+    <!-- GLOBAL NAV (Quick Access) -->
+    <nav id="global-nav-left">
+        <a href="/arsenal" class="nav-icon-btn">
+            <i class="ph ph-sword"></i>
+            <span class="nav-label">Arsenal</span>
+        </a>
+        <a href="/leaderboard" class="nav-icon-btn">
+            <i class="ph ph-trophy"></i>
+            <span class="nav-label">Ranking</span>
+        </a>
+    </nav>
+
     <!-- LAYER 5: Bottom vignette (behind footer buttons) -->
     <div class="bottom-vignette"></div>
 
@@ -963,18 +1025,23 @@
             gsap.to(target, { opacity: 1, duration: 0.4 });
 
             // 3. Logic specific to target
+            const globalNav = document.getElementById('global-nav-left');
+            
             if (targetId === 'main-menu') {
                 target.style.pointerEvents = 'none'; // Allow clicking gear icon through background
                 gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
+                if (globalNav) gsap.to(globalNav, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
             } else {
                 if (targetId === 'lobby-overlay') {
                     showLobbyAnimations();
                     initCharacterSync();
                     gsap.to(settingsGear, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
+                    if (globalNav) gsap.to(globalNav, { opacity: 1, pointerEvents: 'auto', duration: 0.3 });
                 }
                 if (targetId === 'profile-overlay' || targetId === 'join-layer') {
-                    // Hide gear to prevent overlap
+                    // Hide gear and nav to prevent overlap
                     gsap.to(settingsGear, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
+                    if (globalNav) gsap.to(globalNav, { opacity: 0, pointerEvents: 'none', duration: 0.3 });
 
                     if (targetId === 'profile-overlay') {
                         setTimeout(() => {
