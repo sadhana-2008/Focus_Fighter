@@ -848,6 +848,57 @@ def handle_host_redirect(data):
 
 
 # ─────────────────────────────────────────────
+# SOCKET.IO EVENT: LEAVE LOBBY
+# ─────────────────────────────────────────────
+@socketio.on('leave_lobby')
+def handle_leave_lobby(data):
+    """Player manually clicks 'Leave Lobby'."""
+    from flask import request
+    sid = request.sid
+    # Fallback to 'room' if 'room_code' missing just in case
+    room_code = data.get("room_code", data.get("room", "")).upper().strip()
+
+    if room_code not in lobbies:
+        if sid in sid_to_room:
+            del sid_to_room[sid]
+        return
+
+    lobby = lobbies[room_code]
+
+    if sid in sid_to_room:
+        del sid_to_room[sid]
+
+    leave_room(room_code)
+
+    # If host left, dissolve the lobby
+    if sid == lobby["host_sid"]:
+        emit('lobby_dissolved', {
+            "message": "Host left the lobby. Lobby closed."
+        }, room=room_code)
+
+        for remaining_sid in list(lobby["players"].keys()):
+            if remaining_sid in sid_to_room:
+                del sid_to_room[remaining_sid]
+
+        del lobbies[room_code]
+        print(f"[LOBBY] Room {room_code} dissolved — host left.")
+        return
+
+    # Non-host left
+    player = lobby["players"].pop(sid, None)
+    player_name = player["name"] if player else "Unknown"
+
+    emit('player_left', {
+        "player_name": player_name,
+        "player_sid": sid,
+        "players": get_player_list(room_code),
+        "player_count": len(lobby["players"])
+    }, room=room_code)
+
+    print(f"[LOBBY] {player_name} left room {room_code} via leave_lobby ({len(lobby['players'])}/4)")
+
+
+# ─────────────────────────────────────────────
 # SOCKET.IO EVENT: PLAYER DISCONNECT
 # ─────────────────────────────────────────────
 @socketio.on('disconnect')

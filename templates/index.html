@@ -1722,8 +1722,12 @@
         }
 
         function leaveLobby() {
-            socket.emit('disconnect'); // Emitting generic cleanly leaves
-            window.location.reload();
+            if (socket.connected && currentRoomCode) {
+                socket.emit('leave_lobby', { room_code: currentRoomCode });
+            }
+            currentRoomCode = '';
+            userRole = 'spectator';
+            navigateTo('main-menu');
         }
     </script>
 
