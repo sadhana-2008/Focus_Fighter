@@ -886,9 +886,9 @@
                 </div>
 
                 <!-- Blocked Sites Section -->
-                <div class="flex flex-col items-start" style="position: absolute; left: 40px; bottom: 10vh; width: 350px; z-index: 20;">
-                    <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 12px; letter-spacing: 2px;">TEAM BLOCKED SITES</div>
-                    <div class="flex w-full max-w-lg gap-4 mb-4">
+                <div class="flex flex-col items-start" style="position: absolute; left: 40px; top: 50%; transform: translateY(-50%); width: 350px; z-index: 20; background: rgba(10, 10, 10, 0.7); padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 0 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+                    <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 16px; letter-spacing: 2px;">TEAM BLOCKED SITES</div>
+                    <div class="flex w-full max-w-lg gap-4 mb-6">
                         <input type="text" id="propose-site-input" placeholder="URL TO BLOCK"
                                class="bg-transparent border border-white text-white outline-none px-4 flex-1"
                                style="font-family: 'Press Start 2P', monospace; font-size: 8px; border-color: rgba(255,255,255,0.4); border-radius: 4px; height: 36px; padding-left: 12px;">
@@ -910,15 +910,13 @@
                     <i class="ph ph-copy" style="font-size: 18px;"></i>
                     <span class="pixel-text" id="copy-text">COPY ID</span>
                 </button>
-                <div class="flex gap-4">
-                    <button class="footer-btn" onclick="leaveLobby()">
-                        <span class="pixel-text">LEAVE LOBBY</span>
-                    </button>
-                    <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
-                        <i class="ph-fill ph-play" id="start-fight-icon" style="font-size: 20px; margin-top: 2px;"></i>
-                        <span class="pixel-text" id="start-fight-text">START FIGHT</span>
-                    </button>
-                </div>
+                <button class="footer-btn" onclick="leaveLobby()">
+                    <span class="pixel-text">LEAVE LOBBY</span>
+                </button>
+                <button class="footer-btn primary-glow" id="start-fight-btn" onclick="onStartFight()">
+                    <i class="ph-fill ph-play" id="start-fight-icon" style="font-size: 20px; margin-top: 2px;"></i>
+                    <span class="pixel-text" id="start-fight-text">START FIGHT</span>
+                </button>
             </div>
         </div><!-- end .lobby-main-content -->
     </div><!-- end #lobby-setup -->
@@ -1714,8 +1712,8 @@
             gsap.to(pop, { y: "-=50", opacity: 0, duration: 2, delay: 2, onComplete: () => pop.remove() });
         }
 
-        function leaveLobby() {
-            if (socket.connected && currentRoomCode) {
+        window.leaveLobby = function() {
+            if (typeof socket !== 'undefined' && socket && socket.connected && currentRoomCode) {
                 socket.emit('leave_lobby', { room: currentRoomCode, room_code: currentRoomCode });
             }
             currentRoomCode = '';
