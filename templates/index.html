@@ -592,15 +592,8 @@
             position: relative;
             z-index: 10;
             gap: 20px;
-            padding-top: 6vh;
-            padding-bottom: 12vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .lobby-main-content::-webkit-scrollbar {
-            display: none;
+            padding-top: 8vh;
+            overflow: hidden;
         }
 
         .scanlines {
@@ -893,9 +886,9 @@
                 </div>
 
                 <!-- Blocked Sites Section -->
-                <div class="flex flex-col items-center mt-6" style="width: 800px; z-index: 20;">
+                <div class="flex flex-col items-start" style="position: absolute; left: 40px; bottom: 10vh; width: 350px; z-index: 20;">
                     <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 12px; letter-spacing: 2px;">TEAM BLOCKED SITES</div>
-                    <div class="flex w-full max-w-lg gap-4 mb-4" style="padding: 0 32px;">
+                    <div class="flex w-full max-w-lg gap-4 mb-4">
                         <input type="text" id="propose-site-input" placeholder="URL TO BLOCK"
                                class="bg-transparent border border-white text-white outline-none px-4 flex-1"
                                style="font-family: 'Press Start 2P', monospace; font-size: 8px; border-color: rgba(255,255,255,0.4); border-radius: 4px; height: 36px; padding-left: 12px;">
@@ -903,11 +896,11 @@
                     </div>
 
                     <!-- Pending Sites List -->
-                    <div id="pending-sites-list" class="w-full max-w-lg flex flex-col gap-2 mb-4" style="padding: 0 32px;">
+                    <div id="pending-sites-list" class="w-full max-w-lg flex flex-col gap-2 mb-4">
                     </div>
 
                     <!-- Confirmed Sites List -->
-                    <div id="confirmed-sites-list" class="w-full max-w-lg flex flex-col gap-2" style="padding: 0 32px;">
+                    <div id="confirmed-sites-list" class="w-full max-w-lg flex flex-col gap-2">
                     </div>
                 </div>
 
@@ -1723,7 +1716,7 @@
 
         function leaveLobby() {
             if (socket.connected && currentRoomCode) {
-                socket.emit('leave_lobby', { room_code: currentRoomCode });
+                socket.emit('leave_lobby', { room: currentRoomCode, room_code: currentRoomCode });
             }
             currentRoomCode = '';
             userRole = 'spectator';
