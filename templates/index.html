@@ -1007,8 +1007,8 @@
 
             input.addEventListener('input', (e) => {
                 let val = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                if (val.length > 4) {
-                    val = val.slice(0, 4) + '-' + val.slice(4, 5);
+                if (val.length > 3) {
+                    val = val.slice(0, 3) + '-' + val.slice(3, 5);
                 }
                 e.target.value = val;
 
