@@ -201,11 +201,14 @@ def handle_create_lobby(data):
     sid_to_room[sid] = room_code
     join_room(room_code)
 
+    print(f"[CREATE_LOBBY] ✅ Room '{room_code}' created by SID={sid} name='{data.get('name', 'Host')}'")
+    print(f"[CREATE_LOBBY] Active lobbies now: {list(lobbies.keys())}")
+
     emit('lobby_created', {
         "room_code": room_code,
         "lobby": get_lobby_state(room_code)
     })
-    print(f"[LOBBY] Created room {room_code} by {data.get('name', 'Host')}")
+    print(f"[CREATE_LOBBY] lobby_created event emitted to SID={sid}")
 
 
 # ─────────────────────────────────────────────
@@ -220,8 +223,12 @@ def handle_join_lobby(data):
     name = data.get("name", "Player")
     avatar = data.get("avatar", "char1.png")
 
+    print(f"[JOIN_LOBBY] SID={sid} name='{name}' trying to join room='{room_code}'")
+    print(f"[JOIN_LOBBY] Active lobbies at join time: {list(lobbies.keys())}")
+
     # Validate room exists
     if room_code not in lobbies:
+        print(f"[JOIN_LOBBY] ❌ Room '{room_code}' NOT FOUND in lobbies!")
         emit('error', {"message": "Room not found. Check the code and try again."})
         return
 
@@ -940,5 +947,8 @@ if __name__ == '__main__':
     print(f"WebSocket real-time multiplayer: ENABLED")
     print("="*50)
     
-    # Use socketio.run instead of app.run for WebSocket support
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    # IMPORTANT: use_reloader=False is required when using eventlet with debug=True.
+    # Flask's reloader spawns a child process, which creates a SEPARATE in-memory
+    # lobbies dict. Rooms created by the host in process A are invisible to the
+    # guest hitting process B — causing 'Room not found' errors.
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True, use_reloader=False)
