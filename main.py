@@ -15,7 +15,7 @@ from Leader_board.leaderboard import render_leaderboard
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'the-last-braincell-secret'
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet', allow_upgrades=True, ping_timeout=60, ping_interval=25)
 
 # ─────────────────────────────────────────────
 # IN-MEMORY LOBBY STATE
