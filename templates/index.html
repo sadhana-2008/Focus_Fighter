@@ -592,8 +592,15 @@
             position: relative;
             z-index: 10;
             gap: 20px;
-            padding-top: 8vh;
-            overflow: hidden;
+            padding-top: 6vh;
+            padding-bottom: 12vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .lobby-main-content::-webkit-scrollbar {
+            display: none;
         }
 
         .scanlines {
@@ -881,6 +888,26 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Blocked Sites Section -->
+                <div class="flex flex-col items-center mt-6" style="width: 800px; z-index: 20;">
+                    <div class="pixel-text" style="font-size: 8px; color: white; opacity: 0.8; margin-bottom: 12px; letter-spacing: 2px;">TEAM BLOCKED SITES</div>
+                    <div class="flex w-full max-w-lg gap-4 mb-4" style="padding: 0 32px;">
+                        <input type="text" id="propose-site-input" placeholder="URL TO BLOCK"
+                               class="bg-transparent border border-white text-white outline-none px-4 flex-1"
+                               style="font-family: 'Press Start 2P', monospace; font-size: 8px; border-color: rgba(255,255,255,0.4); border-radius: 4px; height: 36px; padding-left: 12px;">
+                        <button class="footer-btn" onclick="proposeBlockedSite()" style="height: 36px; padding: 0 16px; min-width: auto; margin: 0;">PROPOSE</button>
+                    </div>
+
+                    <!-- Pending Sites List -->
+                    <div id="pending-sites-list" class="w-full max-w-lg flex flex-col gap-2 mb-4" style="padding: 0 32px;">
+                    </div>
+
+                    <!-- Confirmed Sites List -->
+                    <div id="confirmed-sites-list" class="w-full max-w-lg flex flex-col gap-2" style="padding: 0 32px;">
                     </div>
                 </div>
 
@@ -1728,12 +1755,18 @@
             // Display the room code using existing slot animation
             generateRoomCode(data.room_code);
             updatePlayerSlots(data.lobby.players);
+            if (typeof updateBlockedSitesUI === 'function') {
+                updateBlockedSitesUI(data.lobby.blocked_sites || [], data.lobby.players.length);
+            }
         });
 
         // ─── PLAYER JOINED ───
         socket.on('player_joined', (data) => {
             console.log('[SOCKET] Player joined:', data.player.name, '(' + data.player_count + '/4)');
             updatePlayerSlots(data.players);
+            if (typeof updateBlockedSitesUI === 'function' && data.blocked_sites) {
+                updateBlockedSitesUI(data.blocked_sites, data.player_count);
+            }
         });
 
         // ─── PLAYER LEFT ───
@@ -1805,18 +1838,91 @@
         });
 
         // ─── BLOCKED SITES ───
+        function proposeBlockedSite() {
+            if (!socket.connected || !currentRoomCode) return;
+            const input = document.getElementById('propose-site-input');
+            const url = input.value.trim().toLowerCase();
+            if(!url) return;
+            socket.emit('propose_blocked_site', { room_code: currentRoomCode, url: url });
+            input.value = '';
+        }
+
+        function approveSite(url) {
+            if (!socket.connected || !currentRoomCode) return;
+            socket.emit('approve_blocked_site', { room_code: currentRoomCode, url: url });
+        }
+
+        function updateBlockedSitesUI(sites, needed) {
+            const pendingList = document.getElementById('pending-sites-list');
+            const confirmedList = document.getElementById('confirmed-sites-list');
+            if(!pendingList || !confirmedList) return;
+
+            pendingList.innerHTML = '';
+            confirmedList.innerHTML = '';
+
+            const mySid = socket.id;
+
+            sites.forEach(site => {
+                const isConfirmed = site.is_active;
+                const approvals = site.approved_by.length;
+
+                const card = document.createElement('div');
+                card.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(20,20,20,0.6); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; backdrop-filter: blur(4px);';
+                
+                const left = document.createElement('div');
+                left.className = 'pixel-text';
+                left.style.cssText = 'font-size: 8px; color: white; display: flex; flex-direction: column; gap: 6px;';
+                left.innerHTML = `<span>${site.url}</span>`;
+                
+                if(!isConfirmed) {
+                    const status = document.createElement('span');
+                    status.style.cssText = 'color: #ffcc00; font-size: 6px;';
+                    status.innerText = `⏳ ${approvals}/${needed} approved`;
+                    left.appendChild(status);
+                }
+
+                card.appendChild(left);
+
+                if(!isConfirmed) {
+                    const hasApproved = site.approved_by.includes(mySid);
+                    const btn = document.createElement('button');
+                    btn.className = 'footer-btn' + (hasApproved ? '' : ' primary-glow');
+                    btn.style.cssText = 'height: 28px; padding: 0 12px; font-size: 6px; margin: 0; min-width: auto;';
+                    btn.innerText = hasApproved ? 'APPROVED' : 'APPROVE';
+                    btn.disabled = hasApproved;
+                    if(hasApproved) {
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'not-allowed';
+                        btn.style.borderColor = 'rgba(255,255,255,0.2)';
+                    } else {
+                        btn.onclick = () => approveSite(site.url);
+                    }
+                    card.appendChild(btn);
+                    pendingList.appendChild(card);
+                } else {
+                    const icon = document.createElement('i');
+                    icon.className = 'ph-fill ph-shield-warning';
+                    icon.style.cssText = 'color: #ff4444; font-size: 16px; filter: drop-shadow(0 0 8px #ff4444);';
+                    card.appendChild(icon);
+                    confirmedList.appendChild(card);
+                }
+            });
+        }
+
         socket.on('blocked_site_proposed', (data) => {
             console.log('[SOCKET] Blocked site proposed:', data.url, 'by', data.proposed_by);
-            if (data.proposed_by !== (localStorage.getItem('playerName') || 'PLAYER ONE')) {
-                const approve = confirm('Block "' + data.url + '"? (proposed by ' + data.proposed_by + ')');
-                if (approve) {
-                    socket.emit('approve_blocked_site', { room_code: currentRoomCode, url: data.url });
-                }
-            }
+            updateBlockedSitesUI(data.blocked_sites, data.needed);
         });
 
         socket.on('blocked_site_updated', (data) => {
-            console.log('[SOCKET] Blocked site updated:', data.url, data.is_active ? '✅ ACTIVE' : '⏳ ' + data.approvals + '/' + data.needed);
+            console.log('[SOCKET] Blocked site updated:', data.url);
+            updateBlockedSitesUI(data.blocked_sites, data.needed);
+        });
+
+        socket.on('blocked_site_confirmed', (data) => {
+            console.log('[SOCKET] Blocked site confirmed:', data.url);
+            // Re-render to move to confirmed list. For needed count, the max is sufficient since we know it's fully confirmed
+            updateBlockedSitesUI(data.blocked_sites, 4); 
         });
 
         // ─── GAME OVER ───
@@ -1910,6 +2016,9 @@
                 gsap.to(lobbyOverlay, { opacity: 1, duration: 0.4 });
             }
             updatePlayerSlots(data.lobby.players);
+            if (typeof updateBlockedSitesUI === 'function' && data.lobby.blocked_sites) {
+                updateBlockedSitesUI(data.lobby.blocked_sites, data.lobby.players.length);
+            }
         });
 
         // ─────────────────────────────────────────────

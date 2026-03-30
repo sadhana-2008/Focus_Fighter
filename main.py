@@ -261,7 +261,8 @@ def handle_join_lobby(data):
     emit('player_joined', {
         "player": {"sid": sid, "name": name, "avatar": avatar},
         "players": get_player_list(room_code),
-        "player_count": len(lobby["players"])
+        "player_count": len(lobby["players"]),
+        "blocked_sites": lobby["blocked_sites"]
     }, room=room_code, include_self=True)
 
     print(f"[LOBBY] {name} joined room {room_code} ({len(lobby['players'])}/4)")
@@ -730,13 +731,22 @@ def handle_propose_blocked_site(data):
         "is_active": False
     })
 
-    emit('blocked_site_proposed', {
-        "url": url,
-        "proposed_by": proposer_name,
-        "approvals": 1,
-        "needed": len(lobby["players"]),
-        "blocked_sites": lobby["blocked_sites"]
-    }, room=room_code)
+    needed = len(lobby["players"])
+    if needed <= 1:
+        # Auto-confirm if 1 player
+        lobby["blocked_sites"][-1]["is_active"] = True
+        emit('blocked_site_confirmed', {
+            "url": url,
+            "blocked_sites": lobby["blocked_sites"]
+        }, room=room_code)
+    else:
+        emit('blocked_site_proposed', {
+            "url": url,
+            "proposed_by": proposer_name,
+            "approvals": 1,
+            "needed": needed,
+            "blocked_sites": lobby["blocked_sites"]
+        }, room=room_code)
 
 
 @socketio.on('approve_blocked_site')
@@ -760,6 +770,11 @@ def handle_approve_blocked_site(data):
             # Check if unanimously approved
             if len(site["approved_by"]) >= len(lobby["players"]):
                 site["is_active"] = True
+                emit('blocked_site_confirmed', {
+                    "url": url,
+                    "blocked_sites": lobby["blocked_sites"]
+                }, room=room_code)
+                return
 
             emit('blocked_site_updated', {
                 "url": url,
