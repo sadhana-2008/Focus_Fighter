@@ -61,7 +61,8 @@ def get_player_list(room_code):
             "health": p["health"],
             "xp": p["xp"],
             "is_alive": p["is_alive"],
-            "is_host": sid == lobby["host_sid"]
+            "is_host": sid == lobby["host_sid"],
+            "in_focus": p.get("in_focus", False)
         }
         for sid, p in lobby["players"].items()
     ]
@@ -185,7 +186,8 @@ def handle_create_lobby(data):
                 "avatar": data.get("avatar", "char1.png"),
                 "health": 100,
                 "xp": 0,
-                "is_alive": True
+                "is_alive": True,
+                "in_focus": False
             }
         },
         "phase": "lobby",
@@ -241,7 +243,8 @@ def handle_join_lobby(data):
         "avatar": avatar,
         "health": 100,
         "xp": 0,
-        "is_alive": True
+        "is_alive": True,
+        "in_focus": False
     }
 
     sid_to_room[sid] = room_code
@@ -252,7 +255,7 @@ def handle_join_lobby(data):
         "player": {"sid": sid, "name": name, "avatar": avatar},
         "players": get_player_list(room_code),
         "player_count": len(lobby["players"])
-    }, room=room_code)
+    }, room=room_code, include_self=True)
 
     print(f"[LOBBY] {name} joined room {room_code} ({len(lobby['players'])}/4)")
 
@@ -300,9 +303,9 @@ def handle_start_game(data):
         emit('error', {"message": "Only the host can start the game."})
         return
 
-    # Need all 4 players
-    if len(lobby["players"]) < 4:
-        emit('error', {"message": f"Need 4 players to start. Currently {len(lobby['players'])}/4."})
+    # Need at least 2 players
+    if len(lobby["players"]) < 2:
+        emit('error', {"message": f"Need at least 2 players to start. Currently {len(lobby['players'])} joined."})
         return
 
     # Update phase + apply custom durations from data if provided
@@ -315,6 +318,7 @@ def handle_start_game(data):
     for p in lobby["players"].values():
         p["health"] = 100
         p["is_alive"] = True
+        p["in_focus"] = False
 
     emit('game_started', {
         "lobby": get_lobby_state(room_code)
@@ -345,6 +349,10 @@ def handle_boss_attack(data):
 
     # Only attack during work phase
     if lobby["phase"] != "work":
+        return
+
+    # Ignore if offender is in Focus Mode
+    if lobby["players"].get(sid, {}).get("in_focus", False):
         return
 
     offender_name = lobby["players"].get(sid, {}).get("name", "Unknown")
@@ -589,6 +597,9 @@ def handle_focus_approved(data):
 
     if approvals >= needed:
         # All approved — activate focus mode
+        if requester_sid in lobby["players"]:
+            lobby["players"][requester_sid]["in_focus"] = True
+
         emit('focus_activated', {
             "requester_sid": requester_sid,
             "requester_name": requester_name,
@@ -604,6 +615,82 @@ def handle_focus_approved(data):
             "requester_name": requester_name,
             "approvals": approvals,
             "needed": needed
+        }, room=room_code)
+
+
+# ─────────────────────────────────────────────
+# SOCKET.IO EVENT: EXIT FOCUS
+# ─────────────────────────────────────────────
+@socketio.on('exit_focus')
+def handle_exit_focus(data):
+    """Player manually exits focus mode, or their timer expires without penalty."""
+    from flask import request
+    sid = request.sid
+    room_code = data.get("room_code", "").upper().strip()
+
+    if room_code not in lobbies:
+        return
+
+    lobby = lobbies[room_code]
+
+    if sid in lobby["players"]:
+        lobby["players"][sid]["in_focus"] = False
+        print(f"[FOCUS] {lobby['players'][sid]['name']} exited focus mode in room {room_code}")
+
+
+# ─────────────────────────────────────────────
+# SOCKET.IO EVENT: FOCUS PENALTY 
+# ─────────────────────────────────────────────
+@socketio.on('focus_penalty')
+def handle_focus_penalty(data):
+    """Player stayed in focus mode past their approved duration. Gradual health drain."""
+    from flask import request
+    sid = request.sid
+    room_code = data.get("room_code", "").upper().strip()
+
+    if room_code not in lobbies:
+        return
+
+    lobby = lobbies[room_code]
+
+    if sid not in lobby["players"]:
+        return
+
+    player = lobby["players"][sid]
+
+    # Only drain if they are still alive
+    if player["is_alive"]:
+        # PRD: "No XP penalty — health reduction only"
+        player["health"] = max(0, player["health"] - 5)  # 5 HP drain per tick
+        
+        # Check for death from focus penalty
+        if player["health"] <= 0:
+            player["is_alive"] = False
+            
+            # PRD Death rules apply: All lose 10 XP, offender loses 20 XP
+            for p_sid, p in lobby["players"].items():
+                p["xp"] = max(0, p["xp"] - 10)
+            
+            player["xp"] = max(0, player["xp"] - 20)
+            
+            lobby["phase"] = "failed"
+            
+            emit('game_over', {
+                "result": "failed",
+                "reason": f"{player['name']} withered away in the void of Focus Mode.",
+                "killed_by": "Focus Overtime",
+                "offender": player["name"],
+                "players": get_player_list(room_code)
+            }, room=room_code)
+            
+            print(f"[GAME] Room {room_code} FAILED — {player['name']} died from focus overtime")
+            return
+
+        # Broadcast the updated health sequence to the room
+        emit('focus_health_drain', {
+            "player_sid": sid,
+            "player_name": player["name"],
+            "players": get_player_list(room_code)
         }, room=room_code)
 
 

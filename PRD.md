@@ -36,7 +36,7 @@ The game supports two modes: **Solo Mode** (single-player pomodoro timer) and **
 
 ### Group Mode
 - 2–4 players. Host generates a unique 6-character lobby code.
-- Game starts **only when all 4 player slots are filled** and the host clicks **Start Game**.
+- Game starts **only when at least 2 player slots are filled** and the host clicks **Start Game**.
 - Includes the full boss mechanic, XP/health system, blocked sites, and focus mode.
 - Accessible from the landing page via **Create Lobby → Group Mode**.
 
@@ -56,11 +56,11 @@ Two primary actions:
 - Shows 4 player slots. Each player picks an **avatar** and **name** from preset characters.
 - Host sets the **work duration** and **break duration** (custom pomodoro structure).
 - Team collectively builds the **blocked websites list** (see approval rules below).
-- The **Start Game** button is visible to host only and is enabled only when all 4 players have joined.
+- The **Start Game** button is visible to host only and is enabled when at least 2 players have joined.
 
 ### Blocked Websites List (Group Mode)
 - Any player can propose a website to block.
-- A site is **only added** to the blocked list when **all 4 members approve** the addition.
+- A site is **only added** to the blocked list when **all active members approve** the addition.
 - The blocked list is finalized before the game starts but can also be modified during break phases with unanimous approval.
 
 ---
@@ -81,7 +81,7 @@ Two primary actions:
 ```
 ┌─────────────────────────────────────────────────┐
 │  LOBBY: Host sets timers, team blocks sites     │
-│  All 4 players join → Host clicks Start Game    │
+│  At least 2 players join → Host clicks Start Game    │
 └──────────────────────┬──────────────────────────┘
                        ▼
 ┌─────────────────────────────────────────────────┐
@@ -213,7 +213,7 @@ A player navigates to a website on the team's blocked list during a work phase.
 | XP & Health tracking system | High |
 | Pomodoro timer with pause/resume (functional) | High |
 | Work/break phase alternation logic | High |
-| Game start trigger (host-only, 4-player gate) | High |
+| Game start trigger (host-only, 2-player gate) | High |
 | Win screen with celebration GIF | Medium |
 | Game over / retry flow | Medium |
 | Focus Mode (request, approve, timer, health drain) | Medium |

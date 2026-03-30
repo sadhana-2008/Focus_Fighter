@@ -231,7 +231,7 @@
 
         <!-- Players Section -->
         <div class="flex flex-col items-center">
-            <div class="text-white text-[10px] mb-8 tracking-[2px] opacity-80 text-shadow-sm">1 / 4 PLAYERS JOINED</div>
+            <div id="player-count" class="text-white text-[10px] mb-8 tracking-[2px] opacity-80 text-shadow-sm">1 / 4 PLAYERS JOINED</div>
             <div class="flex gap-8 mb-16">
                 <!-- Filled Slot (Current User) -->
                 <div class="player-card filled">
@@ -250,14 +250,14 @@
         </div>
     </div>
 
-    <!-- GSAP Animations -->
+    <!-- GSAP Animations + Full Socket Flow -->
     <script>
+        // ─── Bright Mode Toggle ───────────────────────────────────────────
         let isBrightMode = false;
         function toggleBrightMode() {
             isBrightMode = !isBrightMode;
             const bgElement = document.querySelector('.bg-gif');
             const btnIcon = document.getElementById('bright-mode-icon');
-
             if (isBrightMode) {
                 bgElement.classList.add('bright-mode');
                 if (btnIcon) btnIcon.classList.replace('ph-sun', 'ph-moon');
@@ -267,90 +267,121 @@
             }
         }
 
-        const finalCode = "AX72-P";
+        // ─── Room Code Slot Animation ─────────────────────────────────────
         const slotsContainer = document.getElementById('code-slots');
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const slotHeight = 90;
 
-        // Setup slots
-        finalCode.split('').forEach((char, index) => {
-            if (char === '-') {
-                const dash = document.createElement('div');
-                dash.className = 'dash';
-                dash.innerText = '-';
-                slotsContainer.appendChild(dash);
-            } else {
-                const slot = document.createElement('div');
-                slot.className = 'slot';
+        // Builds the spinning slot DOM for a given code string and animates it
+        function animateRoomCode(code) {
+            slotsContainer.innerHTML = '';
+            code.split('').forEach((char, index) => {
+                if (char === '-') {
+                    const dash = document.createElement('div');
+                    dash.className = 'dash';
+                    dash.innerText = '-';
+                    slotsContainer.appendChild(dash);
+                } else {
+                    const slot = document.createElement('div');
+                    slot.className = 'slot';
+                    const inner = document.createElement('div');
+                    inner.className = 'slot-inner';
 
-                const inner = document.createElement('div');
-                inner.className = 'slot-inner';
+                    const spinCount = 20 + (index * 5);
+                    for (let i = 0; i < spinCount; i++) {
+                        const randomChar = document.createElement('div');
+                        randomChar.className = 'char';
+                        randomChar.innerText = characters.charAt(Math.floor(Math.random() * characters.length));
+                        inner.appendChild(randomChar);
+                    }
 
-                // Add random characters for the spin (longer strip for longer spin)
-                const spinCount = 20 + (index * 5); // Add more characters for later slots to keep them spinning longer
-                for (let i = 0; i < spinCount; i++) {
-                    const randomChar = document.createElement('div');
-                    randomChar.className = 'char';
-                    randomChar.innerText = characters.charAt(Math.floor(Math.random() * characters.length));
-                    inner.appendChild(randomChar);
+                    const targetChar = document.createElement('div');
+                    targetChar.className = 'char final-char';
+                    targetChar.innerText = char;
+                    inner.appendChild(targetChar);
+
+                    slot.appendChild(inner);
+                    slotsContainer.appendChild(slot);
+
+                    gsap.set(inner, { y: 0 });
+                    const distance = -((inner.children.length - 1) * slotHeight);
+                    gsap.to(inner, {
+                        y: distance,
+                        duration: 2 + (index * 0.4),
+                        ease: 'power4.inOut',
+                        onComplete: () => {
+                            const finalChar = inner.querySelector('.final-char');
+                            if (finalChar) finalChar.classList.add('pulse-glow');
+                        }
+                    });
                 }
+            });
+        }
 
-                // Add final character
-                const targetChar = document.createElement('div');
-                targetChar.className = 'char final-char';
-                targetChar.innerText = char;
-                inner.appendChild(targetChar);
+        function copyLink() {
+            if (!window.currentRoomCode) { alert('Room code not ready yet.'); return; }
+            navigator.clipboard.writeText(window.location.origin + '/lobby?join=' + window.currentRoomCode);
+            alert('Lobby link copied to clipboard!');
+        }
 
-                slot.appendChild(inner);
-                slotsContainer.appendChild(slot);
+        // ─── Player Slots UI ──────────────────────────────────────────────
+        function updateLobbyPlayers(players) {
+            const countEl = document.getElementById('player-count');
+            if (countEl) countEl.textContent = players.length + ' / 4 PLAYERS JOINED';
+
+            const cards = document.querySelectorAll('.player-card');
+            cards.forEach((card, i) => {
+                if (i < players.length) {
+                    const p = players[i];
+                    card.classList.add('filled');
+                    card.innerHTML = '<img src="/static/characters/' + (p.avatar || 'char1.png') + '" alt="' + p.name + '">';
+                } else {
+                    card.classList.remove('filled');
+                    card.innerHTML = '<i class="ph ph-user text-white/20 text-3xl"></i>';
+                }
+            });
+        }
+
+        // ─── Socket.IO ───────────────────────────────────────────────────
+        const socket = io();
+        const urlParams = new URLSearchParams(window.location.search);
+        const joinCode = urlParams.get('join');
+        const isGuest = !!joinCode;
+
+        socket.on('connect', () => {
+            console.log('[SOCKET] Connected. SID:', socket.id, '| Guest?', isGuest);
+
+            if (isGuest) {
+                // ── Guest: join existing lobby ──
+                const playerName = localStorage.getItem('playerName') || 'PLAYER';
+                const avatar = localStorage.getItem('selectedChar') || 'char1.png';
+                console.log('[SOCKET] Emitting join_lobby for room:', joinCode);
+                socket.emit('join_lobby', { room_code: joinCode, name: playerName, avatar: avatar });
+                // Show the code while waiting for confirmation
+                window.currentRoomCode = joinCode;
+                animateRoomCode(joinCode);
+            } else {
+                // ── Host: create a new lobby ──
+                const playerName = localStorage.getItem('playerName') || 'HOST';
+                const avatar = localStorage.getItem('selectedChar') || 'char1.png';
+                console.log('[SOCKET] Emitting create_lobby as host:', playerName);
+                socket.emit('create_lobby', { name: playerName, avatar: avatar });
             }
         });
 
-        // Setup the animation using GSAP
-        const slotInners = document.querySelectorAll('.slot-inner');
-        const slotHeight = 90; // matches CSS height
-
-        // Ensure starting position is top
-        gsap.set('.slot-inner', { y: 0 });
-
-        // Trigger animation on load
-        window.onload = () => {
-            slotInners.forEach((inner, index) => {
-                // Calculate total distance to scroll: (total elements - 1) * element height
-                const totalElements = inner.children.length;
-                const distance = -((totalElements - 1) * slotHeight);
-
-                // Spin animation
-                gsap.to(inner, {
-                    y: distance,
-                    duration: 2 + (index * 0.4), // Stagger the stopping times
-                    ease: "power4.inOut",       // Start fast, slow down nicely
-                    onComplete: () => {
-                        // After stopping, add the pulsing neon glow
-                        const finalChar = inner.querySelector('.final-char');
-                        if (finalChar) {
-                            finalChar.classList.add('pulse-glow');
-                        }
-                    }
-                });
-            });
-        };
-
-        function copyLink() {
-            navigator.clipboard.writeText("http://127.0.0.1:5000/lobby?join=" + finalCode);
-            alert("Lobby link has been copied to your clipboard!");
-        }
-    </script>
-
-    <!-- Socket.IO Client Wiring -->
-    <script>
-        const socket = io();
-
-        socket.on('connect', () => {
-            console.log('[SOCKET] lobby.html connected. SID:', socket.id);
+        // Host receives confirmation with real room code
+        socket.on('lobby_created', (data) => {
+            console.log('[SOCKET] Lobby created:', data.room_code);
+            window.currentRoomCode = data.room_code;
+            animateRoomCode(data.room_code);
+            if (data.lobby && data.lobby.players) {
+                updateLobbyPlayers(data.lobby.players);
+            }
         });
 
+        // Guest receives confirmation that they joined
         socket.on('player_joined', (data) => {
-            console.log('[SOCKET] Player joined:', data.player.name);
+            console.log('[SOCKET] player_joined received. Player:', data.player.name, '| Total:', data.player_count);
             updateLobbyPlayers(data.players);
         });
 
@@ -370,34 +401,9 @@
         });
 
         socket.on('error', (data) => {
+            console.error('[SOCKET] Error:', data.message);
             alert(data.message);
         });
-
-        function updateLobbyPlayers(players) {
-            const countEl = document.querySelector('.text-white.text-\\[10px\\]');
-            if (countEl) countEl.textContent = players.length + ' / 4 PLAYERS JOINED';
-
-            const cards = document.querySelectorAll('.player-card');
-            cards.forEach((card, i) => {
-                if (i < players.length) {
-                    const p = players[i];
-                    card.classList.add('filled');
-                    card.innerHTML = '<img src="/static/characters/' + (p.avatar || 'char1.png') + '" alt="' + p.name + '">';
-                } else {
-                    card.classList.remove('filled');
-                    card.innerHTML = '<i class="ph ph-user text-white/20 text-3xl"></i>';
-                }
-            });
-        }
-
-        // Auto-join if URL has ?join= param
-        const urlParams = new URLSearchParams(window.location.search);
-        const joinCode = urlParams.get('join');
-        if (joinCode) {
-            const playerName = localStorage.getItem('playerName') || 'PLAYER';
-            const avatar = localStorage.getItem('selectedChar') || 'char1.png';
-            socket.emit('join_lobby', { room_code: joinCode, name: playerName, avatar: avatar });
-        }
     </script>
 </body>
 
