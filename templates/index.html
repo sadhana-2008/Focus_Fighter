@@ -1953,20 +1953,26 @@
             userRole = 'host';
             localStorage.setItem('userRole', 'host');
             guestJoinedCode = '';
-            
-            // Connect socket if not connected
-            if (!socket.connected) socket.connect();
 
             const playerName = localStorage.getItem('playerName') || 'PLAYER ONE';
             const avatar = localStorage.getItem('selectedChar') || 'char1.png';
 
-            socket.emit('create_lobby', {
-                name: playerName,
-                avatar: avatar,
-                work_duration: 1500,
-                break_duration: 300
-            });
-            console.log('[SOCKET] Emitted create_lobby');
+            const doEmit = () => {
+                socket.emit('create_lobby', {
+                    name: playerName,
+                    avatar: avatar,
+                    work_duration: 1500,
+                    break_duration: 300
+                });
+                console.log('[SOCKET] Emitted create_lobby');
+            };
+
+            if (socket.connected) {
+                doEmit();
+            } else {
+                socket.once('connect', doEmit);
+                socket.connect();
+            }
 
             navigateTo('lobby-overlay');
         };
@@ -1976,25 +1982,31 @@
         attemptJoinRoom = function() {
             const input = document.getElementById('room-code-input');
             const val = input.value.toUpperCase();
-            
+
             if (val.length >= 5) {
                 userRole = 'guest';
                 localStorage.setItem('userRole', 'guest');
                 currentRoomCode = val;
                 guestJoinedCode = val;
 
-                // Connect socket if not connected
-                if (!socket.connected) socket.connect();
-
                 const playerName = localStorage.getItem('playerName') || 'PLAYER TWO';
                 const avatar = localStorage.getItem('selectedChar') || 'char1.png';
 
-                socket.emit('join_lobby', {
-                    room_code: val,
-                    name: playerName,
-                    avatar: avatar
-                });
-                console.log('[SOCKET] Emitted join_lobby for room', val);
+                const doEmit = () => {
+                    socket.emit('join_lobby', {
+                        room_code: val,
+                        name: playerName,
+                        avatar: avatar
+                    });
+                    console.log('[SOCKET] Emitted join_lobby for room', val);
+                };
+
+                if (socket.connected) {
+                    doEmit();
+                } else {
+                    socket.once('connect', doEmit);
+                    socket.connect();
+                }
 
                 navigateTo('lobby-overlay');
             } else {
