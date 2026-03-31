@@ -678,6 +678,34 @@
             animation: hostPulse 2s infinite ease-in-out;
             background-color: rgba(255, 255, 255, 0.15) !important;
         }
+
+        /* =====================
+           BATTLE HUD STYLES
+        ======================== */
+        #battle-hud > div:first-child {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 4px !important;
+            width: 100% !important;
+            left: 0 !important;
+            padding-top: 32px !important;
+            position: absolute !important;
+            top: 0 !important;
+        }
+
+        #battle-phase-label, 
+        #battle-time-display {
+            text-align: center !important;
+            margin: 0 !important;
+            position: static !important;
+        }
+
+        #battle-time-display {
+            font-size: 40px !important; /* Slightly larger for emphasis */
+            margin-top: -4px !important;
+        }
     </style>
 </head>
 
