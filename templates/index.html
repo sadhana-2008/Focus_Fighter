@@ -395,6 +395,10 @@
             align-items: center;
             height: 90px;
             overflow: visible;
+            transform: scale(1.3);
+            transform-origin: center top;
+            width: 100%;
+            margin: 0 auto 40px auto; /* extra bottom margin to account for scaling */
         }
 
         .slot {
@@ -796,7 +800,7 @@
         <div id="lobby-setup">
         <div class="lobby-main-content py-4">
             <!-- Lottery Code Slots -->
-            <div id="fs-code-slots" class="slot-container" style="margin-bottom: 20px;"></div>
+            <div id="fs-code-slots" class="slot-container"></div>
 
                 <div class="flex flex-col items-center">
                     <!-- Player Slots -->
