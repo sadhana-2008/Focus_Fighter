@@ -104,12 +104,12 @@ To run **The Last Braincell** on your own machine, follow these steps:
 ---
 
 ## 👥 The Team
--   **[Your Name / Team Name Here]** — Core Development, UI/UX, Backend Engine.
+-   **[CTRL+CHAOS / The last braincell]** — Core Development, UI/UX, Backend Engine.
 
 ---
 
 ## 📄 License
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Apache License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
